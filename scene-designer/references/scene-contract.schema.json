@@ -1,0 +1,528 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dula.local/schemas/scene-contract-v1.json",
+  "title": "Dula Scene Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractVersion",
+    "episode",
+    "sourceStory",
+    "intent",
+    "registrations",
+    "scenes",
+    "entities",
+    "state",
+    "events",
+    "blocking",
+    "shotChecks",
+    "acceptance"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "contractVersion": { "const": "1.0" },
+    "episode": { "$ref": "#/$defs/id" },
+    "sourceStory": { "type": "string", "minLength": 1 },
+    "intent": { "$ref": "#/$defs/episodeIntent" },
+    "registrations": { "$ref": "#/$defs/registrations" },
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/scene" }
+    },
+    "entities": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/entity" }
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/stateValue" }
+    },
+    "events": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/event" }
+    },
+    "blocking": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/blocking" }
+    },
+    "shotChecks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/shotCheck" }
+    },
+    "acceptance": { "$ref": "#/$defs/acceptance" }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "not": { "pattern": "^TODO" }
+    },
+    "stringList": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "vec3": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": { "type": "number" }
+    },
+    "bounds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["min", "max"],
+      "properties": {
+        "min": { "$ref": "#/$defs/vec3" },
+        "max": { "$ref": "#/$defs/vec3" }
+      }
+    },
+    "episodeIntent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["premise", "audience", "designPriorities"],
+      "properties": {
+        "premise": { "$ref": "#/$defs/nonEmptyString" },
+        "audience": { "$ref": "#/$defs/nonEmptyString" },
+        "designPriorities": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "registrations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bootstrap", "scenes", "characters"],
+      "properties": {
+        "bootstrap": { "type": "string", "minLength": 1 },
+        "scenes": { "$ref": "#/$defs/stringList" },
+        "characters": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "implementation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "name", "module", "export", "bootstrap", "readiness"],
+      "properties": {
+        "kind": { "enum": ["official", "alias", "extend", "episode-local"] },
+        "name": { "$ref": "#/$defs/id" },
+        "module": { "type": "string", "minLength": 1 },
+        "export": { "$ref": "#/$defs/id" },
+        "bootstrap": { "type": "string", "minLength": 1 },
+        "readiness": { "enum": ["synchronous", "readyPromise"] }
+      }
+    },
+    "sceneIntent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["location", "timeOfDay", "tone", "storyFunction", "visualRules"],
+      "properties": {
+        "location": { "$ref": "#/$defs/nonEmptyString" },
+        "timeOfDay": { "$ref": "#/$defs/nonEmptyString" },
+        "tone": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" },
+          "uniqueItems": true
+        },
+        "storyFunction": { "$ref": "#/$defs/nonEmptyString" },
+        "visualRules": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "coordinates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit", "upAxis", "horizontalAxes", "groundY"],
+      "properties": {
+        "unit": { "const": "meter" },
+        "upAxis": { "const": "+Y" },
+        "horizontalAxes": {
+          "type": "array",
+          "prefixItems": [{ "const": "X" }, { "const": "Z" }],
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "groundY": { "type": "number" }
+      }
+    },
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["space", "relativeTo", "position", "purpose"],
+      "properties": {
+        "space": { "enum": ["world", "local"] },
+        "relativeTo": { "type": "string", "minLength": 1 },
+        "position": { "$ref": "#/$defs/vec3" },
+        "purpose": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "zone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "bounds", "walkable", "purpose"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "bounds": { "$ref": "#/$defs/bounds" },
+        "walkable": { "type": "boolean" },
+        "purpose": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bounds", "zones", "anchors"],
+      "properties": {
+        "bounds": { "$ref": "#/$defs/bounds" },
+        "zones": { "type": "array", "items": { "$ref": "#/$defs/zone" } },
+        "anchors": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/anchor" }
+        }
+      }
+    },
+    "lighting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mood", "readabilityRules"],
+      "properties": {
+        "mood": { "$ref": "#/$defs/nonEmptyString" },
+        "keyDirection": { "$ref": "#/$defs/vec3" },
+        "fillDirection": { "$ref": "#/$defs/vec3" },
+        "readabilityRules": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    },
+    "cameraObstacle": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "type", "space", "center", "radius"],
+          "properties": {
+            "id": { "$ref": "#/$defs/id" },
+            "type": { "const": "sphere" },
+            "space": { "const": "world" },
+            "center": { "$ref": "#/$defs/vec3" },
+            "radius": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "type", "space", "start", "end", "radius"],
+          "properties": {
+            "id": { "$ref": "#/$defs/id" },
+            "type": { "const": "capsule" },
+            "space": { "const": "world" },
+            "start": { "$ref": "#/$defs/vec3" },
+            "end": { "$ref": "#/$defs/vec3" },
+            "radius": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "type", "space", "center", "size"],
+          "properties": {
+            "id": { "$ref": "#/$defs/id" },
+            "type": { "const": "box" },
+            "space": { "const": "world" },
+            "center": { "$ref": "#/$defs/vec3" },
+            "size": { "$ref": "#/$defs/vec3" }
+          }
+        }
+      ]
+    },
+    "audioAnchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "semantic", "position", "radius", "loop"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "kind": { "enum": ["roomtone", "point", "region", "offscreen"] },
+        "semantic": { "$ref": "#/$defs/nonEmptyString" },
+        "position": { "$ref": "#/$defs/vec3" },
+        "radius": { "type": "number", "minimum": 0 },
+        "loop": { "type": "boolean" }
+      }
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "path", "required"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "type": { "enum": ["texture", "model", "font", "module", "other"] },
+        "path": { "type": "string", "minLength": 1 },
+        "required": { "type": "boolean" }
+      }
+    },
+    "scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "registryName",
+        "implementation",
+        "intent",
+        "coordinates",
+        "stage",
+        "lighting",
+        "cameraObstacles",
+        "audioAnchors",
+        "dependencies"
+      ],
+      "properties": {
+        "registryName": { "$ref": "#/$defs/id" },
+        "implementation": { "$ref": "#/$defs/implementation" },
+        "intent": { "$ref": "#/$defs/sceneIntent" },
+        "coordinates": { "$ref": "#/$defs/coordinates" },
+        "stage": { "$ref": "#/$defs/stage" },
+        "lighting": { "$ref": "#/$defs/lighting" },
+        "cameraObstacles": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/cameraObstacle" }
+        },
+        "audioAnchors": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/audioAnchor" }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/dependency" }
+        }
+      }
+    },
+    "transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["space", "relativeTo", "position"],
+      "properties": {
+        "space": { "enum": ["world", "local"] },
+        "relativeTo": { "type": "string", "minLength": 1 },
+        "position": { "$ref": "#/$defs/vec3" },
+        "rotation": { "$ref": "#/$defs/vec3" },
+        "scale": { "$ref": "#/$defs/vec3" }
+      }
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "scene", "kind", "binding", "parent", "initialPresence", "initial"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "scene": { "$ref": "#/$defs/id" },
+        "kind": { "enum": ["character", "prop"] },
+        "runtimeName": { "type": "string", "minLength": 1 },
+        "objectName": { "type": "string", "minLength": 1 },
+        "binding": { "type": "string", "minLength": 1 },
+        "parent": { "type": "string", "minLength": 1 },
+        "initialPresence": { "enum": ["offstage", "onstage", "concealed"] },
+        "visualForwardAxis": { "enum": ["+X", "-X", "+Y", "-Y", "+Z", "-Z", "unknown"] },
+        "focusPoints": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/vec3" }
+        },
+        "initial": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["visible", "transform"],
+          "properties": {
+            "visible": { "type": "boolean" },
+            "transform": { "$ref": "#/$defs/transform" }
+          }
+        },
+        "states": { "$ref": "#/$defs/stringList" },
+        "initialState": { "type": "string", "minLength": 1 }
+      }
+    },
+    "stateValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "initial", "binding"],
+      "properties": {
+        "type": { "enum": ["boolean", "number", "string"] },
+        "initial": {},
+        "binding": { "type": "string", "minLength": 1 }
+      }
+    },
+    "presenceEffect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["op", "character", "from", "to"],
+      "properties": {
+        "op": { "const": "presence" },
+        "character": { "$ref": "#/$defs/id" },
+        "from": { "enum": ["offstage", "onstage", "concealed"] },
+        "to": { "enum": ["offstage", "onstage", "concealed"] },
+        "by": { "$ref": "#/$defs/id" }
+      }
+    },
+    "setStateEffect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["op", "state", "value"],
+      "properties": {
+        "op": { "const": "setState" },
+        "state": { "$ref": "#/$defs/id" },
+        "value": {}
+      }
+    },
+    "setEntityStateEffect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["op", "entity", "from", "to"],
+      "properties": {
+        "op": { "const": "setEntityState" },
+        "entity": { "$ref": "#/$defs/id" },
+        "from": { "type": "string", "minLength": 1 },
+        "to": { "type": "string", "minLength": 1 }
+      }
+    },
+    "reparentEffect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["op", "entity", "to", "preserveWorld"],
+      "properties": {
+        "op": { "const": "reparent" },
+        "entity": { "$ref": "#/$defs/id" },
+        "to": { "type": "string", "minLength": 1 },
+        "preserveWorld": { "type": "boolean" }
+      }
+    },
+    "motionTarget": {
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["entity", "offset"],
+          "properties": {
+            "entity": { "$ref": "#/$defs/id" },
+            "offset": { "$ref": "#/$defs/vec3" }
+          }
+        },
+        { "$ref": "#/$defs/vec3" }
+      ]
+    },
+    "motionEffect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["op", "entity", "space", "relativeTo", "from", "to"],
+      "properties": {
+        "op": { "const": "motion" },
+        "entity": { "$ref": "#/$defs/id" },
+        "space": { "enum": ["world", "local"] },
+        "relativeTo": { "type": "string", "minLength": 1 },
+        "from": { "$ref": "#/$defs/motionTarget" },
+        "to": { "$ref": "#/$defs/motionTarget" },
+        "conversion": { "enum": ["worldToLocal", "localToWorld"] },
+        "tolerance": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "effect": {
+      "oneOf": [
+        { "$ref": "#/$defs/presenceEffect" },
+        { "$ref": "#/$defs/setStateEffect" },
+        { "$ref": "#/$defs/setEntityStateEffect" },
+        { "$ref": "#/$defs/reparentEffect" },
+        { "$ref": "#/$defs/motionEffect" }
+      ]
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tag", "scene", "handler", "argumentMode", "durationSeconds", "requires", "effects"],
+      "properties": {
+        "tag": { "$ref": "#/$defs/id" },
+        "scene": { "$ref": "#/$defs/id" },
+        "handler": { "$ref": "#/$defs/id" },
+        "argumentMode": { "enum": ["none", "engine-special"] },
+        "durationSeconds": { "type": "number", "minimum": 0 },
+        "requires": { "$ref": "#/$defs/stringList" },
+        "effects": { "type": "array", "items": { "$ref": "#/$defs/effect" } }
+      }
+    },
+    "blocking": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "scene", "character", "entry", "from", "to", "zone", "clearance", "purpose"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "scene": { "$ref": "#/$defs/id" },
+        "character": { "$ref": "#/$defs/id" },
+        "entry": { "type": "integer", "minimum": 1 },
+        "from": { "$ref": "#/$defs/vec3" },
+        "to": { "$ref": "#/$defs/vec3" },
+        "zone": { "$ref": "#/$defs/id" },
+        "clearance": { "type": "number", "minimum": 0 },
+        "purpose": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "mustSee": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entity", "minFrameArea", "maxOcclusion", "safeMargin"],
+      "properties": {
+        "entity": { "$ref": "#/$defs/id" },
+        "focus": { "$ref": "#/$defs/id" },
+        "minFrameArea": { "type": "number", "minimum": 0, "maximum": 1 },
+        "maxOcclusion": { "type": "number", "minimum": 0, "maximum": 1 },
+        "safeMargin": { "type": "number", "minimum": 0, "maximum": 0.5 },
+        "minFacingDot": { "type": "number", "minimum": -1, "maximum": 1 }
+      }
+    },
+    "presenceCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["character", "value"],
+      "properties": {
+        "character": { "$ref": "#/$defs/id" },
+        "value": { "enum": ["offstage", "onstage", "concealed"] }
+      }
+    },
+    "shotCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "scene", "entry", "offsetSeconds", "purpose", "mustSee", "mustHavePresence", "mustShowTogether"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "scene": { "$ref": "#/$defs/id" },
+        "entry": { "type": "integer", "minimum": 1 },
+        "offsetSeconds": { "type": "number", "minimum": 0 },
+        "purpose": { "$ref": "#/$defs/nonEmptyString" },
+        "mustSee": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/mustSee" } },
+        "mustHavePresence": { "type": "array", "items": { "$ref": "#/$defs/presenceCheck" } },
+        "mustShowTogether": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "acceptance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["staticChecks", "runtimeChecks"],
+      "properties": {
+        "staticChecks": { "$ref": "#/$defs/stringList" },
+        "runtimeChecks": { "$ref": "#/$defs/stringList" }
+      }
+    }
+  }
+}

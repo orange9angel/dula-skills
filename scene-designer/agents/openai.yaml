@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scene Designer"
+  short_description: "Design executable Dula scenes from story semantics"
+  default_prompt: "Use $scene-designer to turn this episode story into a validated Dula scene contract and implementation plan."
