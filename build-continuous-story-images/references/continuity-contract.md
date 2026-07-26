@@ -6,7 +6,7 @@ Use one JSON sequence plan as the source of truth for narrative intent, visual l
 
 `init_sequence.py` creates the supported schema. Keep these sections:
 
-- `schemaVersion`: contract version. Current value is `1`.
+- `schemaVersion`: contract version. Current value is `2`.
 - `sequenceId`: stable lowercase identifier for the action group.
 - `source`: optional story, storyboard, or timing source.
 - `paths.projectRoot`: project root relative to the plan file.
@@ -14,6 +14,7 @@ Use one JSON sequence plan as the source of truth for narrative intent, visual l
 - `provider`: selected provider, model, declared capabilities, and non-secret options.
 - `continuity`: master references, hard locks, negative constraints, and grouping policy.
 - `shots`: ordered action phases and their review/output state.
+- `candidates`: provider outputs not yet assigned to a narrative shot.
 - `runs`: append-only generation records. Do not store API keys or bearer tokens.
 
 ## Reference roles
@@ -144,6 +145,36 @@ group B:             05 06 07 08 09
 
 Do not publish the overlap twice.
 
+## Counts and candidate assignment
+
+Keep these concepts separate:
+
+- **desired count:** the number of narrative shots in `shots`;
+- **requested count:** a count parameter or prompt request sent to the provider, when supported;
+- **returned count:** the number of image files actually received.
+
+Never make final validity depend on `returned count == desired count`. A provider may ignore a requested count, return fewer results, return alternatives, or expose no fixed-count control.
+
+Record every unassigned result in `candidates`:
+
+```json
+{
+  "path": "assets/images/jump/_candidates/imagen_01.png",
+  "status": "unassigned",
+  "suggestedShotId": null,
+  "assignedShotId": null,
+  "sourceRunId": "20260726T120000Z-external-group"
+}
+```
+
+Use candidate statuses:
+
+- `unassigned`: retained for visual matching;
+- `assigned`: selected as one shot's working or approved output;
+- `rejected`: unusable or redundant.
+
+Assign by output position only when `orderedSequentialOutputs=true`. Otherwise inspect action phase, body state, prop position, and camera continuity before assigning. On shortfall, generate only the unfilled shots. On surplus, keep alternatives until the sequence is approved.
+
 ## Review states
 
 Use:
@@ -170,7 +201,11 @@ Append one object per provider attempt:
   "referencePaths": ["assets/character_reference.png"],
   "taskId": "provider-task-id",
   "seed": null,
+  "requestedCount": 2,
+  "returnedCount": 3,
+  "assignmentMode": "visual-review",
   "outputs": ["assets/images/jump/shot_01.png"],
+  "candidateOutputs": ["assets/images/jump/_candidates/extra_01.png"],
   "createdAt": "2026-07-26T12:00:00Z"
 }
 ```

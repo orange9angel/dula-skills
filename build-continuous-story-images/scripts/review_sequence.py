@@ -70,6 +70,20 @@ def main() -> int:
         output = portable_project_path(project_root, args.output)
         if not resolve_project_path(project_root, output).is_file():
             parser.error(f"output does not exist: {args.output}")
+        for candidate in plan.get("candidates", []):
+            if candidate.get("path") != output:
+                continue
+            assigned_shot = candidate.get("assignedShotId")
+            if assigned_shot and assigned_shot != args.shot:
+                parser.error(
+                    f"candidate is already assigned to another shot: {assigned_shot}"
+                )
+            candidate["status"] = (
+                "rejected" if args.status == "rejected" else "assigned"
+            )
+            candidate["assignedShotId"] = (
+                None if args.status == "rejected" else args.shot
+            )
         shot["output"] = output
     if args.status == "accepted":
         output = shot.get("output")

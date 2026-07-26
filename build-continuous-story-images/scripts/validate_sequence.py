@@ -9,6 +9,7 @@ from pathlib import Path
 
 
 VALID_STATUSES = {"planned", "generated", "accepted", "needs_repair", "rejected"}
+VALID_CANDIDATE_STATUSES = {"unassigned", "assigned", "rejected"}
 REFERENCE_KEYS = ("identityReferences", "styleReferences", "settingReferences")
 
 
@@ -50,8 +51,8 @@ def main() -> int:
         print(f"ERROR: {exc}")
         return 1
 
-    if plan.get("schemaVersion") != 1:
-        errors.append("schemaVersion must be 1")
+    if plan.get("schemaVersion") != 2:
+        errors.append("schemaVersion must be 2")
     if not isinstance(plan.get("sequenceId"), str) or not plan["sequenceId"].strip():
         errors.append("sequenceId must be a non-empty string")
 
@@ -76,6 +77,20 @@ def main() -> int:
     if not isinstance(capabilities, dict):
         errors.append("provider.capabilities must be an object")
         capabilities = {}
+    if (
+        capabilities.get("guaranteesRequestedCount") is True
+        and capabilities.get("acceptsRequestedCount") is not True
+    ):
+        warnings.append(
+            "provider guaranteesRequestedCount=true without acceptsRequestedCount=true"
+        )
+    if (
+        capabilities.get("orderedSequentialOutputs") is True
+        and capabilities.get("sequentialGroup") is not True
+    ):
+        warnings.append(
+            "provider orderedSequentialOutputs=true without sequentialGroup=true"
+        )
 
     continuity = plan.get("continuity")
     if not isinstance(continuity, dict):
@@ -221,6 +236,13 @@ def main() -> int:
         warnings.append("long sequence exceeds maxShotsPerGroup without an overlap anchor")
     if len(shots) > 1 and capabilities.get("sequentialGroup") is not True:
         infos.append("provider has no confirmed sequentialGroup capability; use reviewed-frame fallback")
+    elif (
+        len(shots) > 1
+        and capabilities.get("orderedSequentialOutputs") is not True
+    ):
+        infos.append(
+            "provider output order is not confirmed; register candidates and assign by visual review"
+        )
 
     for index, shot in enumerate(shots):
         if not isinstance(shot, dict):
@@ -229,9 +251,80 @@ def main() -> int:
         if reference_frame and output_status.get(reference_frame) == "rejected":
             errors.append(f"shots[{index}] inherits from a rejected output: {reference_frame}")
 
+    candidates = plan.get("candidates")
+    if not isinstance(candidates, list):
+        errors.append("candidates must be an array")
+        candidates = []
+    candidate_paths: set[str] = set()
+    shot_by_id = {
+        shot.get("id"): shot for shot in shots if isinstance(shot, dict)
+    }
+    for index, candidate in enumerate(candidates):
+        prefix = f"candidates[{index}]"
+        if not isinstance(candidate, dict):
+            errors.append(f"{prefix} must be an object")
+            continue
+        path = candidate.get("path")
+        if not isinstance(path, str) or not path:
+            errors.append(f"{prefix}.path must be a non-empty path")
+            continue
+        if path in candidate_paths:
+            errors.append(f"duplicate candidate path: {path}")
+        candidate_paths.add(path)
+        if not resolve_project_path(project_root, path).is_file():
+            errors.append(f"{prefix} file does not exist: {path}")
+        status = candidate.get("status")
+        if status not in VALID_CANDIDATE_STATUSES:
+            errors.append(
+                f"{prefix}.status must be one of: "
+                + ", ".join(sorted(VALID_CANDIDATE_STATUSES))
+            )
+        assigned_shot_id = candidate.get("assignedShotId")
+        if status == "assigned":
+            assigned_shot = shot_by_id.get(assigned_shot_id)
+            if assigned_shot is None:
+                errors.append(f"{prefix} references unknown assignedShotId")
+            elif assigned_shot.get("output") != path:
+                errors.append(
+                    f"{prefix} is assigned to {assigned_shot_id} but its output differs"
+                )
+        elif assigned_shot_id is not None:
+            errors.append(f"{prefix}.assignedShotId must be null unless status=assigned")
+        if not isinstance(candidate.get("sourceRunId"), str) or not candidate.get(
+            "sourceRunId"
+        ):
+            errors.append(f"{prefix}.sourceRunId must be a non-empty string")
+    if args.final:
+        unassigned_count = sum(
+            1 for candidate in candidates if candidate.get("status") == "unassigned"
+        )
+        if unassigned_count:
+            infos.append(
+                f"{unassigned_count} surplus candidate(s) remain unassigned; "
+                "they do not block final delivery"
+            )
+
     runs = plan.get("runs")
     if not isinstance(runs, list):
         errors.append("runs must be an array")
+        runs = []
+    for index, run in enumerate(runs):
+        prefix = f"runs[{index}]"
+        if not isinstance(run, dict):
+            errors.append(f"{prefix} must be an object")
+            continue
+        requested_count = run.get("requestedCount")
+        returned_count = run.get("returnedCount")
+        if requested_count is not None and (
+            not isinstance(requested_count, int) or requested_count < 1
+        ):
+            errors.append(f"{prefix}.requestedCount must be null or a positive integer")
+        if returned_count is not None and (
+            not isinstance(returned_count, int) or returned_count < 0
+        ):
+            errors.append(
+                f"{prefix}.returnedCount must be null or a non-negative integer"
+            )
 
     for message in infos:
         print(f"INFO: {message}")

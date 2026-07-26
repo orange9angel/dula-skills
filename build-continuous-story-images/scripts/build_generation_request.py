@@ -55,8 +55,8 @@ def group_prompt(plan: dict) -> str:
     continuity = plan["continuity"]
     shots = plan["shots"]
     lines = [
-        f"Create one ordered sequential story-image group containing exactly {len(shots)} frames.",
-        "The output order must exactly match the numbered action phases below.",
+        f"Aim to create one ordered sequential story-image group with one image for each of these {len(shots)} narrative shots.",
+        "Preserve the numbered action order even if the active tool controls the actual return count.",
         "Treat the frames as neighboring moments of one continuous action, not unrelated variants.",
         "Keep the same character identity, scene state, visual style, camera setup, lighting, scale, and screen direction unless a shot explicitly allows a change.",
         "",
@@ -156,8 +156,16 @@ def main() -> int:
             }
         )
 
+    capabilities = plan.get("provider", {}).get("capabilities", {})
+    desired_count = len(plan["shots"])
+    requested_count = (
+        desired_count if capabilities.get("acceptsRequestedCount") is True else None
+    )
+    ordered_outputs = capabilities.get("orderedSequentialOutputs") is True
+    guaranteed_count = capabilities.get("guaranteesRequestedCount") is True
+
     request = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "sequenceId": plan["sequenceId"],
         "sequencePlan": portable_relative(plan_path, output_path.parent),
         "projectRoot": portable_relative(project_root, output_path.parent),
@@ -176,10 +184,21 @@ def main() -> int:
         "aspectRatio": plan.get("output", {}).get("aspectRatio", "16:9"),
         "references": references,
         "negativeConstraints": plan["continuity"].get("negativeConstraints", []),
+        "candidateDirectory": (
+            Path(output_directory) / "_candidates"
+        ).as_posix(),
         "group": {
             "prompt": group_prompt(plan),
             "shotIds": [shot["id"] for shot in plan["shots"]],
-            "count": len(plan["shots"]),
+            "desiredCount": desired_count,
+            "requestedCount": requested_count,
+        },
+        "resultPolicy": {
+            "countIsAdvisory": not guaranteed_count,
+            "orderIsAdvisory": not ordered_outputs,
+            "assignmentMode": "position" if ordered_outputs else "visual-review",
+            "onShortfall": "assign valid returns, then generate only unfilled shots",
+            "onSurplus": "retain extras as unassigned candidates",
         },
         "shots": shots,
     }

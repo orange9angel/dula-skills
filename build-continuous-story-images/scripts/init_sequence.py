@@ -94,6 +94,9 @@ def provider_config(name: str, model: str) -> dict:
         "referenceImages": None,
         "multiImageReference": None,
         "sequentialGroup": None,
+        "acceptsRequestedCount": None,
+        "guaranteesRequestedCount": None,
+        "orderedSequentialOutputs": None,
         "imageEdit": None,
         "seed": None,
         "negativePrompt": None,
@@ -108,6 +111,9 @@ def provider_config(name: str, model: str) -> dict:
                 "referenceImages": True,
                 "multiImageReference": True,
                 "sequentialGroup": True,
+                "acceptsRequestedCount": True,
+                "guaranteesRequestedCount": False,
+                "orderedSequentialOutputs": True,
                 "imageEdit": True,
                 "seed": False,
                 "negativePrompt": False,
@@ -222,7 +228,7 @@ def main() -> int:
 
     project_root_from_plan = portable_relative(project, plan_path.parent)
     plan = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "sequenceId": sequence_id,
         "source": {"story": story, "notes": ""},
         "paths": {
@@ -252,6 +258,7 @@ def main() -> int:
             },
         },
         "shots": shots,
+        "candidates": [],
         "runs": [],
     }
 
