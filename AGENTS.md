@@ -17,6 +17,7 @@ dula-skills/
 ├── performance-director/# 表情/动作表演优化
 ├── scene-designer/      # 场景设计与实现规范
 ├── character-modeler/   # 程序化角色建模（Three.js 手绘 + sketch 描边）
+├── build-continuous-story-images/# 跨模型的连续分镜生图与角色锁定
 ├── direct-episode-audio/# 配音、环境音、音效、配乐的声音总导演
 ├── build-character-voice/# 语境化角色配音与逐句后期
 ├── build-ambience-foley/# 环境音、Foley 与事件音效
@@ -75,6 +76,21 @@ python ../dula-skills/build-character-voice/scripts/compile_voice_direction.py \
   ./episodes/<episode> --force
 python ../dula-skills/episode-scoring/scripts/run_scoring.py ./episodes/<episode>
 python ../dula-engine/tools/generate_audio.py ./episodes/<episode>
+```
+
+### 生成连续分镜图
+
+```bash
+cd dula-story
+python ../dula-skills/build-continuous-story-images/scripts/init_sequence.py \
+  ./episodes/<episode> --sequence-id <sequence> \
+  --reference ./episodes/<episode>/assets/character_reference.png \
+  --shot "<动作阶段1>" --shot "<动作阶段2>" --shot "<动作阶段3>"
+# 完成 config/image_sequences/<sequence>.json 的人物、场景、机位锁定后：
+python ../dula-skills/build-continuous-story-images/scripts/validate_sequence.py \
+  ./episodes/<episode>/config/image_sequences/<sequence>.json --strict
+python ../dula-skills/build-continuous-story-images/scripts/build_generation_request.py \
+  ./episodes/<episode>/config/image_sequences/<sequence>.json
 ```
 
 ### 渲染视频

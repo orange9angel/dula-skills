@@ -1,0 +1,4 @@
+interface:
+  display_name: "Continuous Story Images"
+  short_description: "Lock characters and motion across generated shots"
+  default_prompt: "Use $build-continuous-story-images to plan and generate a character-consistent action sequence."
