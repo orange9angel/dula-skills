@@ -17,8 +17,11 @@ dula-skills/
 ├── performance-director/# 表情/动作表演优化
 ├── scene-designer/      # 场景设计与实现规范
 ├── character-modeler/   # 程序化角色建模（Three.js 手绘 + sketch 描边）
-├── f5-tts-voice/        # 个性化配音生成
-├── episode-scoring/     # 语义化 BGM 生成
+├── direct-episode-audio/# 配音、环境音、音效、配乐的声音总导演
+├── build-character-voice/# 语境化角色配音与逐句后期
+├── build-ambience-foley/# 环境音、Foley 与事件音效
+├── f5-tts-voice/        # 可选的 F5 个性化配音后端
+├── episode-scoring/     # 剧情与画面驱动的 BGM
 ├── fighting-sfx/        # 格斗音效生成
 └── pixabay-downloader/  # 音频素材下载
 ```
@@ -63,6 +66,13 @@ AI 在开发时应直接阅读对应目录下的 `SKILL.md` 和 `references/` �
 
 ```bash
 cd dula-story
+python ../dula-skills/direct-episode-audio/scripts/init_audio_direction.py \
+  ./episodes/<episode>
+# 人工/AI 完成 config/audio_direction.json 的语境导演审阅后：
+python ../dula-skills/direct-episode-audio/scripts/validate_audio_direction.py \
+  ./episodes/<episode>
+python ../dula-skills/build-character-voice/scripts/compile_voice_direction.py \
+  ./episodes/<episode> --force
 python ../dula-skills/episode-scoring/scripts/run_scoring.py ./episodes/<episode>
 python ../dula-engine/tools/generate_audio.py ./episodes/<episode>
 ```

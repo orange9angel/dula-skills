@@ -1,0 +1,4 @@
+interface:
+  display_name: "Episode Audio Director"
+  short_description: "Coordinate dialogue, ambience, effects, and music"
+  default_prompt: "Use $direct-episode-audio to design and coordinate the complete sound plan for this episode."

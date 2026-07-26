@@ -20,7 +20,63 @@ from music_director import MusicDirector
 from generate_music import ensure_music_file
 
 
-def run(episode_dir: str, placeholder_duration: float = 30.0, download: bool = True):
+def _load_directed_music(episode_dir: str, direction_path: str | None = None):
+    """Return reviewed cues, an intentional empty list, or None for auto mode."""
+    path = (
+        os.path.abspath(direction_path)
+        if direction_path
+        else os.path.join(episode_dir, "config", "audio_direction.json")
+    )
+    if not os.path.exists(path):
+        return None, None
+    with open(path, "r", encoding="utf-8") as f:
+        direction = json.load(f)
+    mode = direction.get("policies", {}).get("musicMode", "auto")
+    if mode == "auto":
+        return None, path
+    if direction.get("status") != "reviewed":
+        raise ValueError(
+            f"Audio direction must be reviewed before consuming musicMode={mode!r}: {path}"
+        )
+    if mode == "none":
+        return [], path
+    if mode != "directed":
+        raise ValueError(f"Unsupported audio direction musicMode: {mode!r}")
+
+    cues = []
+    for ordinal, source in enumerate(direction.get("music", []), start=1):
+        start = float(source["startTime"])
+        end = float(source["endTime"])
+        if start < 0 or end <= start:
+            raise ValueError(f"Invalid directed music cue timing: {source!r}")
+        mood = str(source.get("mood", source.get("name", ""))).strip()
+        if not mood:
+            raise ValueError(f"Directed music cue needs mood or name: {source!r}")
+        cue = dict(source)
+        cue.update(
+            {
+                "action": str(source.get("action", "Play")),
+                "mood": mood,
+                "startTime": start,
+                "endTime": end,
+                "fadeIn": float(source.get("fadeIn", 0.5)),
+                "fadeOut": float(source.get("fadeOut", 0.5)),
+                "baseVolume": float(source.get("baseVolume", source.get("volume", 0.3))),
+                "name": str(source.get("name", mood)),
+            }
+        )
+        cue.setdefault("id", f"music-{ordinal}-{mood}")
+        cues.append(cue)
+    return cues, path
+
+
+def run(
+    episode_dir: str,
+    placeholder_duration: float = 30.0,
+    download: bool = True,
+    direction_path: str | None = None,
+    ignore_direction: bool = False,
+):
     episode_dir = os.path.abspath(episode_dir)
     story_path = os.path.join(episode_dir, "script.story")
     if not os.path.exists(story_path):
@@ -33,9 +89,21 @@ def run(episode_dir: str, placeholder_duration: float = 30.0, download: bool = T
     with open(story_path, "r", encoding="utf-8") as f:
         story_text = f.read()
 
-    director = MusicDirector()
-    segments = director.analyze_story(story_text)
-    cues = director.build_cue_timeline(segments)
+    cues = None
+    direction_source = None
+    if not ignore_direction:
+        cues, direction_source = _load_directed_music(episode_dir, direction_path)
+    if cues is None:
+        director = MusicDirector()
+        segments = director.analyze_story(story_text)
+        cues = director.build_cue_timeline(segments)
+        cue_source = "semantic-auto"
+    else:
+        cue_source = "audio-direction"
+        print(
+            f"[EpisodeScoring] Using {len(cues)} reviewed cue(s) from "
+            f"{direction_source}"
+        )
 
     longest_cue_duration = max(
         (
@@ -61,6 +129,7 @@ def run(episode_dir: str, placeholder_duration: float = 30.0, download: bool = T
     manifest = {
         "version": 1,
         "generated": True,
+        "source": cue_source,
         "cues": cues,
     }
 
@@ -86,9 +155,17 @@ def main():
     parser.add_argument("episode", help="Path to episode directory")
     parser.add_argument("--placeholder-duration", type=float, default=30.0, help="Duration of generated placeholder loops")
     parser.add_argument("--no-download", action="store_true", help="Skip Pixabay downloads, always generate placeholders")
+    parser.add_argument("--direction", help="Explicit audio_direction.json path")
+    parser.add_argument("--ignore-direction", action="store_true", help="Ignore audio direction and regenerate semantic draft cues")
     args = parser.parse_args()
 
-    ok = run(args.episode, placeholder_duration=args.placeholder_duration, download=not args.no_download)
+    ok = run(
+        args.episode,
+        placeholder_duration=args.placeholder_duration,
+        download=not args.no_download,
+        direction_path=args.direction,
+        ignore_direction=args.ignore_direction,
+    )
     sys.exit(0 if ok else 1)
 
 

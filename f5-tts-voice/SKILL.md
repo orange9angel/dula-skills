@@ -30,6 +30,26 @@ It is designed as an **optional enhancement**, not a replacement for the default
 - You need fast bulk generation. Keep using edge-tts or DashScope for that.
 - You have a clean 3-10s real human recording. F5-TTS works best with real references, not synthesized ones.
 - Your machine has no Python environment with `f5-tts` installed.
+- You only need a younger, older, feminine, masculine, Taiwanese, or other locale identity. Select a matching native provider voice instead of manufacturing identity with pitch/formant shifts.
+
+## Audio Director Integration
+
+When `config/audio_direction.json` exists, use `$build-character-voice` first:
+
+```powershell
+python ../dula-skills/build-character-voice/scripts/compile_voice_direction.py `
+  ./episodes/<episode> --force
+```
+
+The compiled `tone_manifest.json` supplies reviewed macro TTS delivery plus
+`postEffect.semantic`. This F5 workflow gives those contextual controls
+precedence over isolated text-keyword effects for the same parameters.
+
+Treat the legacy `female`, `male`, `child`, and `elder` personality presets
+below as stylized effects, not casting tools. Do not apply them by default.
+They contain large pitch/formant shifts that can make teenagers sound older,
+shrill, or processed. Cast a suitable native voice and reserve SOX for light
+EQ, dynamics, distance, and restrained space.
 
 ## Prerequisites
 

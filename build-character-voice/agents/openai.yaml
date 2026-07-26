@@ -1,0 +1,4 @@
+interface:
+  display_name: "Character Voice Director"
+  short_description: "Direct natural contextual character performances"
+  default_prompt: "Use $build-character-voice to direct and generate natural character voices for this episode."

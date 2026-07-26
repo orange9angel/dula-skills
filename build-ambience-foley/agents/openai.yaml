@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ambience and Foley"
+  short_description: "Design restrained ambience and story-driven Foley"
+  default_prompt: "Use $build-ambience-foley to design and implement ambience and Foley for this episode."

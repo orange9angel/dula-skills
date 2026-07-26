@@ -208,6 +208,14 @@ def attach_tone_manifest(entries, episode):
         entry["toneEntry"] = tone_entry
         entry["toneId"] = tone_entry.get("toneId")
         entry["toneTtsParams"] = dict(tts_params)
+        post_effect = tone_entry.get("postEffect", {})
+        if isinstance(post_effect, dict):
+            entry["tonePreserveIdentity"] = bool(
+                post_effect.get("preserveIdentity", True)
+            )
+            semantic_post = post_effect.get("semantic", post_effect)
+            if isinstance(semantic_post, dict):
+                entry["tonePostEffect"] = dict(semantic_post)
         matched += 1
 
     print(f"[tone] attached {matched}/{len(entries)} validated tone entries")
@@ -917,13 +925,28 @@ async def generate_base_tts(
         # Analyze text for per-line prosody (edge-tts) and timbre (sox/ffmpeg).
         semantic = semantic_analyzer.analyze(dialogue, cfg)
         prosody = dict(semantic.get("prosody", {}))
-        post_effect = semantic.get("post_effect", {})
+        post_effect = dict(semantic.get("post_effect", {}))
         tone_params = entry.get("toneTtsParams", {})
         tone_prosody = tone_params_to_prosody(tone_params)
         if tone_prosody:
             # Explicit/validated ToneDirector controls own macro delivery.
             # Text analysis still contributes timbre and any unspecified field.
             prosody.update(tone_prosody)
+        directed_post = entry.get("tonePostEffect", {})
+        if directed_post:
+            # Reviewed scene/shot-aware direction owns explicitly supplied
+            # post fields. Suppress text-only identity/modulation guesses so a
+            # cute particle cannot reintroduce pitch, formant, or chorus.
+            for identity_key in (
+                "pitch",
+                "formant",
+                "speed",
+                "vibrato",
+                "chorus",
+                "flanger",
+            ):
+                post_effect.pop(identity_key, None)
+            post_effect.update(directed_post)
 
         # Combine base prosody with semantic deltas and feed directly to edge-tts.
         combined_rate, combined_pitch, combined_volume = combine_prosody(
@@ -954,12 +977,23 @@ async def generate_base_tts(
         if post_effect:
             effect = merge_effects(effect, post_effect)
 
+        if entry.get("tonePreserveIdentity"):
+            for identity_key in (
+                "pitch",
+                "formant",
+                "speed",
+                "vibrato",
+                "chorus",
+                "flanger",
+            ):
+                effect.pop(identity_key, None)
+
         if effect:
             tone_label = entry.get("toneId") or entry.get("voiceTag") or "text"
             print(
                 f"[base] {char} entry {entry['index']} tone={tone_label} "
                 f"personality={personality_tags} prosody={prosody} "
-                f"semantic_post={post_effect} -> {effect}"
+                f"contextual_post={post_effect} -> {effect}"
             )
         apply_effect(raw_path, out_path, effect, use_sox=use_sox)
 
