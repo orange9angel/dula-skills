@@ -90,7 +90,8 @@ Inspect both individual frames and a chronological contact sheet. Check:
 - character count, limb count, prop count, and hand-object contact;
 - background layout, light direction, camera height, focal scale, and horizon;
 - screen direction, foot placement, body balance, action progression, and prop trajectory;
-- whether adjacent frames show actual motion rather than unrelated poses.
+- whether adjacent frames show actual motion rather than unrelated poses;
+- whether frames intended as opposite action phases actually differ in phase — name the concrete phase marker (e.g. which leg is forward, which arm is raised) and verify it swapped. A "walk alt" that copies the reference's leg assignment is a reject, even when composition and identity are perfect. Do not accept an in-between merely because it exists in the timeline.
 
 Do not assign by array index when output order is unconfirmed. If the provider returns fewer images than planned, assign the valid candidates first and generate only missing shots. If it returns more, retain the surplus as unassigned alternatives until review is complete.
 
