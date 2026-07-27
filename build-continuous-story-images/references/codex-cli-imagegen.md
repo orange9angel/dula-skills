@@ -1,0 +1,33 @@
+# Codex CLI built-in imagegen adapter（2026-07 验证）
+
+当环境里装有 Codex CLI（已登录 ChatGPT 订阅）时，可把它当作零边际成本的图像生成/编辑 provider。
+首次完整验证：`dula-story/episodes/rainy_rooftop_cat`（31 秒日漫短片，2 张角色母版 + 18 张关键帧 + 6 张嘴部局部编辑，全部一次通过）。
+
+## 调用形态
+
+```bash
+codex exec "<prompt>" --skip-git-repo-check --ephemeral -s workspace-write \
+  -i <ref1.png> -i <ref2.png>
+```
+
+## 已验证能力与坑
+
+- `-i/--image` 是**可变参数**：把 prompt 作为位置参数放在 `-i` 之前，或 prompt 走 stdin；否则 prompt 会被吞成“文件”，报 `No prompt provided via stdin`。
+- 只读沙箱（默认）下 agent 无法把图保存到项目目录：加 `-s workspace-write`。
+- 成品落在哪由 prompt 里给的绝对路径决定；不给路径时原始输出在 `~/.codex/generated_images/<uuid>/call_*.png`。
+- 输出尺寸约 1672×941（偶发 1664×936 / 1672×938），近 16:9；渲染侧 cover-crop 适配即可。
+- 多参考图：母版（身份锁）+ 紧邻前一帧（构图连续）+ 构图参照，图序即权重序，在 prompt 里注明「image 1 = identity, image 2 = staging, image 3 = composition only」。
+- **局部编辑（嘴部变体）可用且稳定**：指示“只改嘴部为 half-open/open，其余像素不变”，实测差异 confined 在嘴部小矩形（60–830 像素，<0.06%），其余像素零变化。适合做 lipsync image-mode rig 的 half/open 变体；生成后仍需像素 diff 校验 + 羽化贴回基帧（模板 `lock_mouth_variant.py`）。
+- **局部编辑同样适用于眨眼变体**（rainy_rooftop_cat V3 验证，7 张）：指示“只把双眼改成闭合，其余像素不变”，产物按 mouth 变体同一流程羽化锁定。eye rig 的 rect 可以从 base↔variant 的像素 diff bbox + margin 直接得到。
+- **prompt 里的输出尺寸必须等于该基帧的真实尺寸**：同一剧集的不同关键帧尺寸可能不同（实测同集混有 1672×941 / 1664×936 / 1672×938）。批量脚本若硬编码统一尺寸，尺寸不符的帧会被 agent 整体重渲染，构图偏移几十像素、局部编辑失败。逐帧先 `ffprobe`/PIL 确认尺寸再写进 prompt。
+- **不要让 codex 把成品保存到项目绝对路径**（Windows 实测翻车）：其保存步骤会走 PowerShell `Add-Type` 内嵌 C# 合成，可能编译失败导致文件不落盘。改为生成后从 `~/.codex/generated_images/<session-id>/` 自行回收——文件名可能是 `call_*.png` 或 `exec-*.png`，session id 从 `codex exec` stdout 的 `session id:` 行抓取。
+- **agent 会自选输出文件名，且串行批量时不同 run 可能互相覆盖**（实测 half 变体先写成 `frame_06_mouth_open.png`，后续 open run 又写同名文件）。每个 run 结束后立即按日志验收并归档到规范命名，再跑下一个。
+- **羽化锁定工具的 rect 必须给足羽化余量**：`lock_mouth_variant.py` 的羽化区从 rect 边缘向内延伸约 `inset + 2×feather`（feather=14 时 ≈46px）。目标特征（眼睛/嘴）若贴 rect 边缘，会被羽化混回基帧内容（实测猫眼变“半睁”）。rect 每边至少留 40–50px 余量，锁定后必须全分辨率目检特征本身，不能只看 diff bbox。
+- 连续性纪律沿用 continuity-contract.md：design lock 逐字写死、共享锁文本每帧追加、逐张目检、废帧记录原因后局部纠偏。
+- 每张耗时约 1–2 分钟；**不要用 Kimi 的后台任务并行派发多个 codex exec 生图后放任不管**——子代理 turn 结束时其后台进程会被回收，任务无声丢失（本片因此丢过 4 张变体）。串行前台执行，或自己用 shell 脚本批量。
+- 费用走 ChatGPT 订阅配额，不计 API 现金；大量生图时注意订阅侧的速率限制。
+
+## 何时不用它
+
+- 需要精确 seed/negative prompt/mask API 等结构化参数时——它没有这些旋钮，一切靠自然语言。
+- 需要程序化批量（>30 张）且要求失败可重试的流水线时——自然语言 agent 回路不如直连 API 可控，建议走 dashscope-bailian.md 的适配器。
