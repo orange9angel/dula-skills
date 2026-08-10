@@ -79,6 +79,31 @@ Read [provider-adapters.md](references/provider-adapters.md) before invoking Ima
 - **Text-only generation:** keep the same model, aspect ratio, seed when available, and full locks, but report lower confidence; create a character sheet first when possible.
 - **DashScope/Bailian:** read [dashscope-bailian.md](references/dashscope-bailian.md) and use `scripts/run_dashscope_sequence.py`.
 
+#### Lightweight DashScope mode (no sequence plan)
+
+For single artifacts that do not need the plan ceremony — style tests, character/scene
+masters, one-off keyframes, and local-edit variants (mouth/eye) — call the adapter
+directly. This is the replacement for the Codex built-in imagegen path
+(`codex exec -i <ref>`); everything downstream (diff-lock paste-back, review gates)
+is unchanged.
+
+```bash
+# single image / edit variant
+python scripts/gen_image.py --out <episode>/assets/keyframes/frame_00.png \
+  --ref <episode>/assets/style_master.png --ref <episode>/assets/scene_room.png \
+  --prompt "Use case: establishing shot ... <style hardLock> <avoid list>"
+
+# batch from a JSON shot list (replaces per-day gen_*.sh scripts)
+python scripts/gen_batch.py <episode>/tools/gen_day2_seg1.json [--only frame_00] [--overwrite]
+```
+
+Reference order is weight order: identity master first, nearest approved frame next.
+Edit variants are the same call with only the base frame as `--ref` and an instruction
+prompt ("change only the mouth to half-open"); still diff-check and feather-lock the
+result back onto the base frame with the episode's existing tools. Run batches
+serially and review each frame before it becomes the next frame's reference. Use the
+full sequence plan instead whenever shots form an action-phase group.
+
 Never claim a capability because another model from the same vendor supports it.
 
 ### 5. Review as a sequence
