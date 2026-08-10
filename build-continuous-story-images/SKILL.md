@@ -77,25 +77,35 @@ Read [provider-adapters.md](references/provider-adapters.md) before invoking Ima
 - **Variable or unordered group output:** save every return as an unassigned candidate, then map candidates to shots by visual action-phase review.
 - **Reference edit but no sequential group:** generate the first approved frame from master references, then use master references plus the nearest approved frame for each next shot.
 - **Text-only generation:** keep the same model, aspect ratio, seed when available, and full locks, but report lower confidence; create a character sheet first when possible.
-- **DashScope/Bailian:** read [dashscope-bailian.md](references/dashscope-bailian.md) and use `scripts/run_dashscope_sequence.py`.
+- **DashScope/Bailian（按量付费，2026-08 起默认停用，用前须先确认费用）:** read [dashscope-bailian.md](references/dashscope-bailian.md) and use `scripts/run_dashscope_sequence.py`.
 
-#### Lightweight DashScope mode (no sequence plan)
+#### Lightweight single-image mode (no sequence plan)
 
 For single artifacts that do not need the plan ceremony — style tests, character/scene
-masters, one-off keyframes, and local-edit variants (mouth/eye) — call the adapter
-directly. This is the replacement for the Codex built-in imagegen path
-(`codex exec -i <ref>`); everything downstream (diff-lock paste-back, review gates)
-is unchanged.
+masters, one-off keyframes, and local-edit variants (mouth/eye/walk cels) — call a
+lightweight adapter directly. Everything downstream (diff-lock paste-back, review
+gates) is unchanged.
+
+**Default provider: Codex built-in imagegen (gpt-image, ChatGPT subscription, zero
+marginal cost)** — `scripts/gen_image_codex.py`, wraps `codex exec -i <ref>` and
+harvests the product from `~/.codex/generated_images/` itself:
 
 ```bash
 # single image / edit variant
-python scripts/gen_image.py --out <episode>/assets/keyframes/frame_00.png \
+python scripts/gen_image_codex.py --out <episode>/assets/keyframes/frame_00.png \
   --ref <episode>/assets/style_master.png --ref <episode>/assets/scene_room.png \
-  --prompt "Use case: establishing shot ... <style hardLock> <avoid list>"
-
-# batch from a JSON shot list (replaces per-day gen_*.sh scripts)
-python scripts/gen_batch.py <episode>/tools/gen_day2_seg1.json [--only frame_00] [--overwrite]
+  --prompt "Use case: establishing shot ... <style hardLock> <avoid list>" \
+  --size 1672x941
 ```
+
+Read [codex-cli-imagegen.md](references/codex-cli-imagegen.md) first — prompt-before-`-i`
+ordering, never let codex save into the project, serial foreground runs only.
+
+**Suspended: DashScope/Bailian (`scripts/gen_image.py`, wan2.7-image-pro)** — 按量付费，
+2026-08 用户决定停用（一次走路 cel 批量约 ¥8）。Only use when structured API knobs
+(seed, mask, negative prompt) are truly required, and confirm cost with the user first.
+`scripts/gen_batch.py` drives the DashScope path and is suspended with it; for batches,
+run `gen_image_codex.py` serially from a shell loop.
 
 Reference order is weight order: identity master first, nearest approved frame next.
 Edit variants are the same call with only the base frame as `--ref` and an instruction
