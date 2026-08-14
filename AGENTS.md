@@ -24,6 +24,7 @@ dula-skills/
 ├── f5-tts-voice/        # 可选的 F5 个性化配音后端
 ├── episode-scoring/     # 剧情与画面驱动的 BGM
 ├── fighting-sfx/        # 格斗音效生成
+├── walk-director/       # 走路/移动镜头：cel 选择、跟随运镜、时间线展开与验收
 └── pixabay-downloader/  # 音频素材下载
 ```
 

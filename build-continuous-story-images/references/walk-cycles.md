@@ -22,6 +22,18 @@
 > 横移（该集 `walk_follow` 预设），且多个 cel 子切用 `motionGroup` 共用整镜头
 > 运动进度、逐 cel 不重启（重启会造成往返抖动）。原地踏步感主要来自画面不动，
 > 不全来自 cel 数量；背影镜头的 A/B 相位差要做得比侧景更夸张才可读。
+>
+> 2026-08-15 再补充（cat_leads frame_06 段）：A/B 连续换脚**只在 cel 对能
+> 像素级锁定时成立**（背景 0.00%、上身 ≤0.2% 像素差）。两张 cel 各自整图
+> 重生成时，平色背景区互闪 + 下半身整体偏移，遮罩合成救不回（接缝只会
+> 转移）。锁不住就放弃连续动作：单帧 + `walk_away` 拉远，或近/远两张
+> 同机位静帧硬切。选型规则见
+> `dula-skills/walk-director/references/keyframe-walk-shots.md`「选型」节。
+>
+> 2-cel 方案没有过渡帧，上文第 3 步「以过渡A为参考生成触地B」不适用；
+> 全幅 B 帧的换腿 prompt 控制写法（viewer 视角逐字写腿位、等幅反相、
+> 分离度量化、锁死上半身）见
+> `dula-skills/walk-director/references/keyframe-walk-shots.md`。
 
 ## 生成顺序（按模型可靠性排序）
 
