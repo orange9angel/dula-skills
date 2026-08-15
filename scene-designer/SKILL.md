@@ -19,6 +19,7 @@ Translate dramatic intent into a validated visual contract and Dula runtime impl
 
 - Read [references/scene-contract.md](references/scene-contract.md) before creating or changing a contract.
 - Read [references/dula-scene-runtime.md](references/dula-scene-runtime.md) before editing scene JavaScript, bootstrap registrations, custom events, coordinate spaces, or camera obstacles.
+- For 2D keyframe sequence scenes (`*SequenceScene.js` with source-space procedural layers), read [references/2d-sequence-scene-layers.md](references/2d-sequence-scene-layers.md) — layer coordinates must be measured, never eyeballed.
 - Read the target `script.story`, `bootstrap.js`, existing scene/config files, and only the character modules needed for scale and focus points.
 
 Extract facts before making design choices:

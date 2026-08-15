@@ -114,6 +114,21 @@ result back onto the base frame with the episode's existing tools. Run batches
 serially and review each frame before it becomes the next frame's reference. Use the
 full sequence plan instead whenever shots form an action-phase group.
 
+**表演密度（2026-08-15 snow_fox_shrine 复盘）**：只有口型+眨眼两个通道的静帧
+剧集会显得"表情变化少、动作少"。在像素锁定纪律内可以低成本加戏，全部走
+局部编辑 + 锁区贴回：
+
+- **表情变体**：同一基帧加做一张情绪局部变体（闭眼微笑、眯眼笑），镜头
+  中段硬切一次；
+- **反应变体**：动物/角色的耳朵竖起、尾巴拍地等小幅局部变体，在故事节拍点
+  （钟声、被叫名字）切入；
+- **姿态中间画**：蹲下↔起身这类大姿态切换加一张 in-between（参考 cat_leads
+  的 crouch_mid）；
+- **镜头内二次构图**：长镜头中段切一次更近的取景（新画一张，不要只改 crop）。
+
+这些不是 A/B 连续动作（walk-director 的锁定红线不适用），因为每张变体在
+时间线上只出现一次、不构成高频交替。
+
 Never claim a capability because another model from the same vendor supports it.
 
 ### 5. Review as a sequence

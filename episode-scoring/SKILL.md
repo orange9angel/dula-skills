@@ -28,6 +28,10 @@ Score the story rather than every line. Make music support the emotional arc whi
 
 4. Prepare assets.
    - Prefer a curated episode asset in `assets/audio/music/` or `materials/bgm/`.
+   - **正式集 BGM 首选 Pixabay 真人曲目**（走 pixabay-downloader，保留许可
+     元数据）。程序化合成只作占位/兜底：2026-08-15 snow_fox_shrine 实证，
+     numpy 合成的八音盒旋律（`tools/build_bgm.py` 路线）可用但作曲水准
+     明显低于真人曲目，用户评审要求正式集配乐一律网上选曲。
    - Use download or procedural generation only as a fallback.
    - Preserve licensing metadata for external music.
    - Treat procedural loops as placeholders unless their quality is intentionally accepted.
