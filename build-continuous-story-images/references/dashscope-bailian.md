@@ -88,3 +88,13 @@ The fallback output is still only `generated`. Review it before treating it as a
 - If subject scale or camera changes inside a group, strengthen camera locks or split at the intended cut.
 - If a ball or hand is wrong but identity and staging are sound, prefer a local edit over full regeneration.
 - Never store response image URLs; they may be signed and temporary.
+
+## 局部编辑模型选择（2026-08 xiaoju_secret 生产确认）
+
+- **`qwen-image-edit`**（MultiModalConversation，构图锁定提示词）：角色 cel 局部编辑首选，
+  本体保持强。完整工作流与翻车记录见 [qwen-image-edit-local-cels.md](qwen-image-edit-local-cels.md)。
+- **`wanx2.1-imageedit`**（description_edit_with_mask）：掩码内是"重理解再画"，
+  **不可用于角色一致性编辑**（会把角色花纹/脸型画成另一个）；仅适合允许重绘的编辑。
+  输入图高需 ≥512px（裁剪图先放大）；提示词须明说「眼球消失」类否定约束。
+- 配音通路 `cosyvoice-v3-flash`（HttpSpeechSynthesizer）当前免费；
+  音色选择可用自相关基频（F0）分析：少年男声选 f0≈150–170Hz 档（如 longshu_v3）。

@@ -77,7 +77,7 @@ Read [provider-adapters.md](references/provider-adapters.md) before invoking Ima
 - **Variable or unordered group output:** save every return as an unassigned candidate, then map candidates to shots by visual action-phase review.
 - **Reference edit but no sequential group:** generate the first approved frame from master references, then use master references plus the nearest approved frame for each next shot.
 - **Text-only generation:** keep the same model, aspect ratio, seed when available, and full locks, but report lower confidence; create a character sheet first when possible.
-- **DashScope/Bailian（按量付费，2026-08 起默认停用，用前须先确认费用）:** read [dashscope-bailian.md](references/dashscope-bailian.md) and use `scripts/run_dashscope_sequence.py`.
+- **DashScope/Bailian（按量付费；2026-08-16 起用户已充值启用，为当前图像编辑主通路）:** read [dashscope-bailian.md](references/dashscope-bailian.md) and use `scripts/run_dashscope_sequence.py`. **角色 cel 局部编辑（眨眼/口型/互动中间画）走 `qwen-image-edit`**，见 [qwen-image-edit-local-cels.md](references/qwen-image-edit-local-cels.md)。
 
 #### Lightweight single-image mode (no sequence plan)
 

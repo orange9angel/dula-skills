@@ -40,3 +40,12 @@ codex exec "<prompt>" --skip-git-repo-check --ephemeral -s workspace-write \
 
 - 需要精确 seed/negative prompt/mask API 等结构化参数时——它没有这些旋钮，一切靠自然语言。
 - 需要程序化批量（>30 张）且要求失败可重试的流水线时——自然语言 agent 回路不如直连 API 可控，建议走 dashscope-bailian.md 的适配器。
+
+## 2026-08 xiaoju_secret 补充：局部编辑的两种失败与对策
+
+- **整图局部编辑可能静默漂移**（"只改嘴部其余不变"失效）：同一批 41 个变体中约半数被整体
+  重渲染（diff bbox 覆盖全图）。对策是**裁剪强制局部编辑**：裁出特征区单独送编辑、再羽化
+  贴回，局部性由构造保证；且贴回必须只贴特征小 rect，整张贴回会在 cel 切换时闪（矩形内
+  重绘噪声）。完整流程见 qwen-image-edit-local-cels.md（对 codex/qwen 均适用）。
+- **配额锁定时的替代**：codex 报 `usage limit` 后按提示日期恢复；期间用 qwen-image-edit
+  （百炼按量付费）做角色 cel 编辑，本体保持同级别，见上述参考。
