@@ -19,6 +19,9 @@ Create acting first and audio processing second. Preserve a believable native vo
    - For Taiwanese Mandarin, audition native `zh-TW` voices before any pitch or formant processing.
    - Compare complete lines at normal volume. Do not cast from isolated syllables.
    - Keep character identity controls in `voice_config.json`; keep per-line acting in `audio_direction.json`.
+   - **客观指标只能筛掉错答案，筛不出好答案**（2026-08 xiaoju_secret 教训）：F0 基频分析能锁定音高年龄段（少年男声 ≈150–170Hz），但筛不出表现力。`longshu_v3` 这类"温暖叙事/说书"音色读旁白优秀、读台词带播音腔——**先查音色的设计戏路**（陪伴/活泼/叙事/新闻），叙事腔音色不要给对话多的角色。
+   - **主角音色必须盲听 A/B**：同一两句代表性台词（一句平静、一句情绪点）生成 2–3 个候选音色，让导演盲听盲选；不要让频谱数据替导演做决定。
+   - 参数给足情绪跨度：gentle/bright 等状态的 rate/pitch 要拉开（如 0.93 vs 1.08），全部压在 1.0 附近会显得"端着"。
 
 3. Compile reviewed delivery.
    - Require `audio_direction.status=reviewed`.
