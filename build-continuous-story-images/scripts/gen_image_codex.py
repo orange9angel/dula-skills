@@ -5,9 +5,11 @@ Default zero-marginal-cost provider for lightweight single artifacts (style
 tests, character/scene masters, one-off keyframes, mouth/eye/leg local-edit
 variants). Bills against the ChatGPT subscription quota, not API cash.
 
-The paid DashScope/Bailian path (gen_image.py, wan2.7-image-pro) was
-suspended 2026-08 by user decision; use it only when structured API knobs
-(seed, mask, negative prompt) are truly required.
+The paid DashScope/Bailian path (gen_image.py, wan2.7-image-pro) is the
+automatic fallback for codex quota exhaustion (2026-08, user decision);
+gen_image_auto.py implements the codex-first chain. Direct gen_image.py use
+is still appropriate when structured API knobs (seed, mask, negative prompt)
+are truly required.
 
 Usage:
   python gen_image_codex.py --out <episode>/assets/keyframes/frame_00.png \

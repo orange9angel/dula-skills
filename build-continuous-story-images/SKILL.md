@@ -77,7 +77,7 @@ Read [provider-adapters.md](references/provider-adapters.md) before invoking Ima
 - **Variable or unordered group output:** save every return as an unassigned candidate, then map candidates to shots by visual action-phase review.
 - **Reference edit but no sequential group:** generate the first approved frame from master references, then use master references plus the nearest approved frame for each next shot.
 - **Text-only generation:** keep the same model, aspect ratio, seed when available, and full locks, but report lower confidence; create a character sheet first when possible.
-- **DashScope/Bailian（按量付费；2026-08-16 起用户已充值启用，为当前图像编辑主通路）:** read [dashscope-bailian.md](references/dashscope-bailian.md) and use `scripts/run_dashscope_sequence.py`. **角色 cel 局部编辑（眨眼/口型/互动中间画）走 `qwen-image-edit`**，见 [qwen-image-edit-local-cels.md](references/qwen-image-edit-local-cels.md)。
+- **DashScope/Bailian（按量付费；2026-08 起为 codex 配额耗尽后的 fallback，不再是主通路）:** read [dashscope-bailian.md](references/dashscope-bailian.md) and use `scripts/run_dashscope_sequence.py`. **角色 cel 局部编辑（眨眼/口型/互动中间画）优先走 codex，配额耗尽时 fallback 到 `qwen-image-edit`**，见 [qwen-image-edit-local-cels.md](references/qwen-image-edit-local-cels.md)。
 
 #### Lightweight single-image mode (no sequence plan)
 
@@ -101,11 +101,27 @@ python scripts/gen_image_codex.py --out <episode>/assets/keyframes/frame_00.png 
 Read [codex-cli-imagegen.md](references/codex-cli-imagegen.md) first — prompt-before-`-i`
 ordering, never let codex save into the project, serial foreground runs only.
 
-**Suspended: DashScope/Bailian (`scripts/gen_image.py`, wan2.7-image-pro)** — 按量付费，
-2026-08 用户决定停用（一次走路 cel 批量约 ¥8）。Only use when structured API knobs
-(seed, mask, negative prompt) are truly required, and confirm cost with the user first.
-`scripts/gen_batch.py` drives the DashScope path and is suspended with it; for batches,
-run `gen_image_codex.py` serially from a shell loop.
+**Default chain: `scripts/gen_image_auto.py` — Codex first, DashScope fallback.**
+Codex bills against the ChatGPT subscription quota (zero marginal cost, 2026-08
+用户决策：优先用 codex，配额耗尽自动切百炼）. The wrapper runs
+`gen_image_codex.py` first and, only when the output matches a usage/quota/rate
+limit, falls back to the paid `gen_image.py` (wan2.7-image-pro). Same interface
+as `gen_image_codex.py` plus `--provider auto|codex|dashscope` and
+`--dashscope-size`:
+
+```bash
+python scripts/gen_image_auto.py --out <episode>/assets/keyframes/frame_00.png \
+  --ref <episode>/assets/style_master.png --ref <episode>/assets/scene_room.png \
+  --prompt "Use case: establishing shot ... <style hardLock> <avoid list>" \
+  --size 1672x941
+```
+
+**Fallback provider: DashScope/Bailian (`scripts/gen_image.py`, wan2.7-image-pro)** —
+按量付费。Only reached automatically on codex quota exhaustion (via
+`gen_image_auto.py`), or directly when structured API knobs (seed, mask,
+negative prompt) are truly required. `scripts/gen_batch.py` drives the DashScope
+path directly (paid every call); for batches, run `gen_image_auto.py` serially
+from a shell loop.
 
 Reference order is weight order: identity master first, nearest approved frame next.
 Edit variants are the same call with only the base frame as `--ref` and an instruction
