@@ -77,7 +77,7 @@ Read [provider-adapters.md](references/provider-adapters.md) before invoking Ima
 - **Variable or unordered group output:** save every return as an unassigned candidate, then map candidates to shots by visual action-phase review.
 - **Reference edit but no sequential group:** generate the first approved frame from master references, then use master references plus the nearest approved frame for each next shot.
 - **Text-only generation:** keep the same model, aspect ratio, seed when available, and full locks, but report lower confidence; create a character sheet first when possible.
-- **DashScope/Bailian（按量付费；2026-08 起为 codex 配额耗尽后的 fallback，不再是主通路）:** read [dashscope-bailian.md](references/dashscope-bailian.md) and use `scripts/run_dashscope_sequence.py`. **角色 cel 局部编辑（眨眼/口型/互动中间画）优先走 codex，配额耗尽时 fallback 到 `qwen-image-edit`**，见 [qwen-image-edit-local-cels.md](references/qwen-image-edit-local-cels.md)。
+- **DashScope/Bailian（按量付费；2026-08 起为 codex 配额耗尽后的 fallback，不再是主通路）:** read [dashscope-bailian.md](references/dashscope-bailian.md) and use `scripts/run_dashscope_sequence.py`. **角色 cel 局部编辑（眨眼/口型/互动中间画）只有 codex 局部编辑一条达标通路；配额耗尽就等配额，不要 fallback**——qwen-image-edit / wanx 掩码在贴回型 cel 上均已验证不合格（E02 V2–V4：喊叫嘴、半眯眼、贴回区色调漂移），qwen 全图变体只允许作为整帧独立镜头（不贴回）或废案 donor，见 [qwen-image-edit-local-cels.md](references/qwen-image-edit-local-cels.md)。
 
 #### Lightweight single-image mode (no sequence plan)
 
@@ -122,6 +122,34 @@ python scripts/gen_image_auto.py --out <episode>/assets/keyframes/frame_00.png \
 negative prompt) are truly required. `scripts/gen_batch.py` drives the DashScope
 path directly (paid every call); for batches, run `gen_image_auto.py` serially
 from a shell loop.
+
+**图生视频（`scripts/gen_i2v.py`, wan2.6-i2v-flash）** — 连续动作镜头（走路/跑跳）
+的首选用法：先用本 skill 生成该镜头的首帧关键帧，再
+`gen_i2v.py --first-frame <kf> --duration 3 --resolution 720P --extract-cels <dir>`
+产出 3s 无声视频并抽 12fps cel 铺进时间线（`move: static`）。成本 ¥0.15/s ≈
+¥0.45/条（720P 无声）。首帧构图必须给动作留空间（角色放画面左 1/3、面向右、
+前方留空），prompt 明说镜头固定/风格锁定/不加新元素。选型细节与验收见
+[walk-director/references/keyframe-walk-shots.md](../../walk-director/references/keyframe-walk-shots.md)
+「选型」节。
+
+**I2V 选型结论（2026-08-29，cat_leads_e03_dusk_homecoming 实测）**：
+- flash 档（¥0.15/s）：动作生动但快速动作会轻微 off-model
+- 标准档（¥0.6/s）：一致性够但**动作量保守**（人物并腿滑行，E03 V1 翻车点）
+- **seedance-2-0-mini（~¥0.5/s，限时 4 折更低）：动作量+一致性兼得，
+  当前首选**。mini 最短 4s，比镜头槽长时取前段抽帧填槽
+- seedance 2.0 的 `--ref` 多图参考可锁身份，但与 `--first-frame` 互斥，
+  首帧连续性优先的场景仍用首帧模式
+
+**图生视频 Seedance 变体（`scripts/gen_i2v_seedance.py`, 火山方舟）** — 当
+wan2.6 系在快速动作中出现角色漂移或动作量不足时的对照/升级通路。CLI 与
+`gen_i2v.py` 一致，可同首帧同 prompt 直接 A/B。需要 `ARK_API_KEY`（开通有
+¥200 余额门槛，后付费按量计费，开通本身免费）。默认
+`doubao-seedance-2-0-260128`（~¥0.99/s 720p，4-15s，支持 `--ref` 多图参考锁
+身份，与 `--first-frame` 互斥；2.x 记得无声要显式 `generate_audio=false`，
+脚本已处理）；便宜档 `doubao-seedance-2-0-mini`（~¥0.50/s）；1.0 pro
+（~¥0.32/s，最短 5s，支持 `--camera-fixed`）。注意：E03（2026-08-29）实测百炼两档都不够（flash 漂移、标准档滑行），
+**seedance 2.0 mini 4 段一次通过成为正片采用方案**；`.env.ark` 放
+dula-story 根目录（已 gitignore），`set -a && source .env.ark` 后用。
 
 Reference order is weight order: identity master first, nearest approved frame next.
 Edit variants are the same call with only the base frame as `--ref` and an instruction

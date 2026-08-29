@@ -36,6 +36,12 @@ codex exec "<prompt>" --skip-git-repo-check --ephemeral -s workspace-write \
 - **Kimi 后台任务仍会被静默回收**：超过前台 300s 上限的 codex run 被转入后台后，曾出现进程消失、任务状态卡在 running 直到超时的情况。可用模式：后台任务跑 codex + 前台 sleep 轮询产物文件保持 turn 存活；失败/超时则 harvest session 目录。
 - **背面视角 down/recoil 相位极易锚定失败**：以 contact2 为 ref 生成 down2 时，模型两次把前后腿画反（沿用接触 A 的腿序）或收成并腿。对策：prompt 里用 viewer 视角逐字描述参考图的脚位（"viewer 右侧的鞋在画面中更高=在前"），第三次成功。
 
+## 2026-08-23 bio_armor_academy_s1e1：换行丢附件的根因坐实并修复
+
+- **根因确认**:`gen_image_codex.py` 的 `build_prompt()` 会给 prompt 追加多行后缀（`\n\nReference images...` 等）,prompt 经 `cmd /c` 时在第一个换行处被截断，**排在 prompt 之后的 `-i` 参数根本到不了 codex**——这就是「间歇性丢附件」的真相，不是概率问题：凡经 build_prompt 的调用 100% 丢附件，直传单行 prompt 的调用 100% 正常。同一会话里"数附件数量"的探针永远正常（附件其实在会话里）,只有 image_gen 工具调用报 `only 0 were available`，极易误判成工具 bug。
+- **修复**:`build_prompt()` 末尾把整段 prompt 压成单行(`re.sub(r"\s+", " ", ...)`)。修复后 17 张关键帧 + 连续多张母版全部一次通过。
+- **次要教训**：角色身体特征的左右归属必须用 viewer 视角写死（"the arm on the VIEWER'S LEFT side of the image is his RIGHT arm")，只写 "his right hand" 约有一半概率画反。
+
 ## 何时不用它
 
 - 需要精确 seed/negative prompt/mask API 等结构化参数时——它没有这些旋钮，一切靠自然语言。
@@ -49,3 +55,22 @@ codex exec "<prompt>" --skip-git-repo-check --ephemeral -s workspace-write \
   重绘噪声）。完整流程见 qwen-image-edit-local-cels.md（对 codex/qwen 均适用）。
 - **配额锁定时的替代**：codex 报 `usage limit` 后按提示日期恢复；期间用 qwen-image-edit
   （百炼按量付费）做角色 cel 编辑，本体保持同级别，见上述参考。
+
+## 2026-08 bio_armor_academy_s1e1 补充：全图低噪重编码下的窗口化锁定
+
+- 27 张口型/眨眼变体（gen_image_auto.py 单发串行）全部构图保持、特征编辑正确，但**每张都带全图低幅
+  重编码噪声**：threshold=12 时 diff bbox 覆盖全图、changed px 占 3–8%，不再是早期「其余像素零变化」。
+  不是整图漂移——用 20px cell 密度分析（threshold≥30）可见真实编辑仍高密度聚集在特征区。
+- 对策：`lock_region_variant.py --window X Y W H` 把 diff 检测限制在特征窗内（窗口按 cell 密度簇定位），
+  配 `--threshold 25 --margin 40 --feather 6`；窗口外噪声全部被裁掉，locked 图在 rect+pad 外与基帧零差异。
+- 此时 `--max-area-frac` 要按窗口尺寸放宽（0.02 会误拒大特征区，实测用到 0.08）；防漂移职责由 --window 承担。
+- 胡须角色（白岚）的 half 变体视觉差异极小（嘴部仅 ~20px），密度统计可确认编辑真实发生但目检几乎不可见，
+  可接受，不必重抽。
+
+## 2026-08-29 cat_leads_e03_dusk_homecoming：配额耗尽的断点续跑模式
+
+codex 订阅配额在一天内可能多次耗尽（E03 26 张变体被撞停两次）。可用模式：
+**批量脚本幂等化**（每个产物先 `[ -s out.png ] && skip`，重跑只补缺口）+
+按错误信息里的重置时间点挂一次性定时任务自动续跑。E03 两轮续跑零废案、
+零 fallback 污染。注意：撞限后同一脚本里排在后面的任务会连续快速失败，
+日志里每个 MISSING 都对应一条 usage limit 报错，属预期，重跑即可。
