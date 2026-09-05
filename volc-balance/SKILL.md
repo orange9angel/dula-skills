@@ -1,6 +1,6 @@
 ---
 name: volc-balance
-description: Query the Volcengine (火山引擎) account balance from the CLI — cash balance, available balance, frozen amount, arrears — via the billing-center OpenAPI (QueryBalanceAcct), without logging into the console. Use when checking remaining funds before running paid Volcengine pipelines (Seedance I2V, seed-tts/Seed-Audio, OmniHuman), since all of them draw from the same account-level balance.
+description: Volcengine (火山引擎) account utilities — check account balance via billing-center QueryBalanceAcct (现金/可用/冻结/欠费) without logging into the console, and list seed-tts speaker voices via ListSpeakers (filter by age/gender, with trial text/audio URLs) for casting characters. Use before running paid Volcengine pipelines (Seedance I2V, seed-tts/Seed-Audio, OmniHuman) to check funds, or when picking TTS voices.
 ---
 
 # Volc Balance（火山引擎余额查询）
@@ -60,8 +60,51 @@ IAM 子用户（`VOLC_ACCESSKEY` / `VOLC_SECRETKEY`，存 `dula-story/.env.cv`�
 
 退出码约定：0 成功 / 2 凭证缺失 / 3 权限不足 / 1 其他错误。
 
+## 附：seed-tts 音色列表工具（scripts/list_speakers.py）
+
+调火山语音 `ListSpeakers`（Version=2025-05-20，service=speech_saas_prod，
+region=cn-beijing，host=open.volcengineapi.com）拉音色库，自动翻页拉全
+（seed-tts-2.0 实测 444 个音色，每页 100 共 5 页）。给角色选音色用。
+
+```bash
+cd dula-story
+.venv/Scripts/python.exe ../dula-skills/volc-balance/scripts/list_speakers.py
+# 筛选（打详情，含试听文本和试听链接）：
+.../list_speakers.py --age 老年 --gender 男
+# 原始 JSON（合并全部分页的音色数组）：
+.../list_speakers.py --json
+```
+
+- `--age` / `--gender` 精确匹配返回字段（老年/中年/青年/儿童，男/女）。
+- 不带筛选参数时打摘要行；带筛选时打详情块（描述、`Languages[0].Text`
+  试听文本、`TrialURL` 试听音频直链，可直接下载试听）。
+- 支持多情感的音色会标 `[多情感:生气,快乐,...]`。
+- `--resource-id` 可切 `seed-tts-1.0`。
+- 权限：凭证加载与退出码纪律同 check_balance.py；实测现有子用户
+  （CVFullAccess + TOSFullAccess，余额查询授权后）可直接调用 ListSpeakers，
+  **无需额外语音服务策略**。若遇 AccessDenied，去 IAM 控制台加语音技术
+  相关读权限，策略名以控制台列表为准。
+
+### 老周（河边钓鱼老爷爷）选音色实测（2026-09-06）
+
+老年男声中文**只有 1 个**：`ICL_uranus_zh_male_youmodaye_tob`（幽默大爷 2.0，
+矍铄沧桑的乐观爷爷，通透豁达又从容）——气质贴合"温暖沉稳"，**首选**，
+先用它的 TrialURL 试听验收语气是否够"沉"。备选（中年男、描述偏沉稳）：
+
+| VoiceType | 名称 | 描述要点 |
+|-----------|------|---------|
+| `ICL_uranus_zh_male_huzishushu_tob` | 胡子叔叔 2.0 | 历经风雨后变得沉稳的大叔，果敢可信赖，多情感 |
+| `ICL_uranus_zh_male_shenmifashi_tob` | 神秘法师 2.0 | 低沉浑厚，满是慈爱，让人信赖 |
+| `ICL_uranus_zh_male_ruyacaijun_tob` | 儒雅才俊 2.0 | 稳重儒雅大叔，温润平和 |
+| `zh_male_tangseng_uranus_bigtts` | 唐僧 2.0 | 语调平缓慈悲（角色感太强，慎用） |
+
 ## 翻车记录
 
+- 2026-09-06 ListSpeakers 实测：偶发 `CodeN 100016` 瞬时错误（疑似限流/
+  服务抖动），重试即恢复；SDK 的 `.json()` 在非 2xx 时抛的是
+  `Exception(bytes)`，错误解析要先 decode，否则 JSON 解析落空、错误提示
+  被误分类（已在 list_speakers.py 中修复，check_balance.py 用的 `.get()`
+  抛 str 不受影响）。
 - 2026-09-14 首次接入实测：子用户只挂 CVFullAccess + TOSFullAccess 时
   `QueryBalanceAcct` 返回 `AccessDenied`（退出码 3，提示路径验证通过）。
   任务原始描述里写的策略名 `FinanceReadOnlyAccess` 在火山 IAM 并不存在，
