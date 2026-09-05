@@ -67,3 +67,7 @@ IAM 子用户（`VOLC_ACCESSKEY` / `VOLC_SECRETKEY`，存 `dula-story/.env.cv`�
   任务原始描述里写的策略名 `FinanceReadOnlyAccess` 在火山 IAM 并不存在，
   官方正确名称是 **BillingCenterReadOnlyAccess**（费用中心 → 权限管理文档确认）。
   加完策略后重跑即可。
+- 2026-09-14 授权流程实测（用户操作）：IAM「添加权限」弹窗勾选策略后，
+  **弹窗底部还有「提交」按钮，要下拉到弹窗底部才能看到**——只勾选不提交
+  授权不生效（AccessDenied 依旧）。授权成功后输出示例：可用余额/现金余额/
+  冻结金额/欠费金额/信控额度 五个字段 + 原始 JSON，欠费 >0 时打警告。
