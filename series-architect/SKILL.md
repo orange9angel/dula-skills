@@ -21,10 +21,14 @@ information ledger. Read the target series bible before any planning.
   landing. The arc is carried by planted elements that cost no runtime
   and change no plot. Never sacrifice a single episode to the arc.
 - **The audience runs ahead of the characters.** In a series with a
-  hidden layer, that gap is the engine. No character may explain the
-  hidden layer in dialogue. Information reaches characters only through
+  hidden layer, that gap is the engine — but the gap must create
+  yearning, not apprehension. Every planned movement of a hidden thread
+  must specify its emotional sign, and in warm-toned series the sign is
+  always positive (wonder, fondness, awe). No character may explain the
+  hidden layer in dialogue; information reaches characters through
   witnesses who do not understand what they saw, or through images
-  nobody interprets.
+  nobody interprets. Witnesses are keepers and friends of the wonder,
+  not frightened reporters of it.
 - **Register before writing.** A foreshadow element enters the series
   bible registry before it enters any script. The registry update and
   the episode are separate commits of intent.

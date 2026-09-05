@@ -34,6 +34,18 @@ each character knows, and what the world actually is.
   characters is the engine. Characters must never explain the hidden
   layer in dialogue; information reaches them only through witnesses who
   do not understand what they saw, or through images nobody interprets.
+- **Valence discipline (learned from director review):** in warm-toned
+  series the information gap must create *yearning*, not apprehension.
+  Same machinery, opposite sign — every hidden-layer beat must read
+  "the world is larger and kinder than expected", never "something is
+  wrong". Forbidden grammar: lowered-voice retelling of unseen wonders,
+  uneasy exchanged glances, withholding the spectacle or flashing it
+  subliminally, evasive silence in answer to a direct question, fearful
+  animal expressions, audio dropouts under stillness. Required grammar:
+  tellers speak with fondness, listeners' eyes light up, wonders are
+  shown openly and beautifully, wonderstruck beats keep the music
+  flowing. A scared face at the wrong beat converts awe into horror and
+  breaks the series tone.
 
 ## 3. Emotional Core Under Mechanics
 
