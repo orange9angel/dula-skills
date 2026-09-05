@@ -70,7 +70,14 @@ Reject a candidate with any score below `3`. Prefer the candidate with the clear
 
 ## Critic Pass
 
-After the first complete draft, review it once from six perspectives:
+Run the critic as a separate reading, not a self-review. The critic sees
+only the draft and this rubric — never the author's intent, candidate
+notes, or discarded alternatives. When an orchestration tool allows it,
+run the critic as an independent agent instance; otherwise re-read the
+draft after a full context break and argue against it.
+
+Score 1-5 on the six selection dimensions above, then answer the
+directing-craft checks (see `directing-craft.md`):
 
 1. Can the premise be understood by entry 3?
 2. Does the middle escalate, or merely repeat at the same intensity?
@@ -78,5 +85,16 @@ After the first complete draft, review it once from six perspectives:
 4. Are comic or thematic payoffs visibly planted?
 5. Does every technical tag correspond to something the audience can perceive?
 6. Does the last beat land through action, image, or callback instead of explanation?
+7. Does the reveal (if any) recontextualize an already-shown detail,
+   rather than repeat or merely confirm it?
+8. Where is the empty beat, and does the causal chain survive its removal?
+9. Is the emotional wound stated, and does the climax force a choice
+   about it rather than just solving the plot?
+10. Does the intensity curve alternate peaks and rests, with the
+    quietest beat immediately before the turn?
+11. Is the target aftertaste named in one word, and does the final
+    image serve it?
 
-Rewrite the weakest beat and its setup together. Then rerun structural and registry validation.
+Any dimension below `3` or a failed directing check rejects the draft.
+Rewrite the weakest beat and its setup together — never polish isolated
+words. Then rerun structural and registry validation.

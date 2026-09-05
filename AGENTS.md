@@ -13,7 +13,8 @@
 
 ```
 dula-skills/
-├── story-writer/        # 剧本创作规范
+├── story-writer/        # 剧本创作规范（含导演工艺 directing-craft 与对抗式批评 pass）
+├── series-architect/    # 系列长线架构（伏笔生命周期、信息不对称台账、季度节奏）
 ├── performance-director/# 表情/动作表演优化
 ├── scene-designer/      # 场景设计与实现规范
 ├── character-modeler/   # 程序化角色建模（Three.js 手绘 + sketch 描边）
@@ -38,17 +39,19 @@ AI 在开发时应直接阅读对应目录下的 `SKILL.md` 和 `references/` �
 
 ### 创作新剧集
 
-1. 阅读 `dula-skills/story-writer/SKILL.md`
-2. 在 `dula-story/episodes/` 下创建新目录
-3. 编写 `script.story` 和 `bootstrap.js`
-4. （可选）用 `performance-director` 优化表情和动作：
+1. （连载系列）先阅读 `dula-skills/series-architect/SKILL.md`，检查系列圣经中的
+   伏笔登记表与信息不对称台账，确定本集是质感集还是推进集、推进哪条线
+2. 阅读 `dula-skills/story-writer/SKILL.md`
+3. 在 `dula-story/episodes/` 下创建新目录
+4. 编写 `script.story` 和 `bootstrap.js`
+5. （可选）用 `performance-director` 优化表情和动作：
    ```bash
    cd dula-story
    python ../dula-skills/performance-director/scripts/run_director.py \
      ./episodes/<episode> \
      --output ./episodes/<episode>/script.story.perf
    ```
-5. 运行验证：
+6. 运行验证：
    ```bash
    cd dula-story
    python ../dula-skills/story-writer/scripts/story_tool.py validate \

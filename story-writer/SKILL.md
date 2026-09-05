@@ -21,6 +21,7 @@ Read only the references needed for the task:
 
 - Read [references/story-format.md](references/story-format.md) before authoring or changing `.story` syntax.
 - Read [references/writing-quality.md](references/writing-quality.md) before outlining, writing comedy, adapting research, or running the critic pass.
+- Read [references/directing-craft.md](references/directing-craft.md) before outlining. It defines the structural disciplines (structure as meaning, information asymmetry, the empty beat, emotional rhythm, balance endings) that the outline and critic pass are checked against.
 
 Discover the current engine vocabulary instead of copying a stale list:
 
@@ -36,10 +37,10 @@ The catalog includes official registrations, animation source groups, reachable 
 2. **Inspect the target.** Read its existing `script.story`, `bootstrap.js`, relevant config keys, and nearby episode conventions. Run `catalog` before selecting visual tags.
 3. **Research when useful.** Use available web search/fetch tools when the user requests internet research, facts may be current, or canon/cultural context affects the premise. Prefer primary or authoritative sources. Record a compact fact list and source URLs in working context; do not paste citations into dialogue. If web tools are unavailable, say so and avoid invented facts.
 4. **Build story candidates.** Form at least two compact beat approaches with different comic or thematic engines. Select the stronger one using the rubric in `writing-quality.md`; do not merely combine both.
-5. **Outline causally.** Define protagonist want, obstacle, escalating attempts, irreversible turn, payoff, and optional emotional aftertaste. Every beat must cause the next. Plant any callback before paying it off.
+5. **Outline causally.** Define protagonist want, obstacle, escalating attempts, irreversible turn, payoff, and optional emotional aftertaste. Every beat must cause the next. Plant any callback before paying it off. Also state the one-sentence emotional wound, the target aftertaste word, the empty-beat position, and the per-beat intensity curve required by `directing-craft.md`.
 6. **Draft for performance.** Give each speaker a distinct objective and rhythm. Prefer playable subtext, interruption, reaction, and visual action over explanation. Keep one speaking character per entry.
 7. **Map to Dula.** Use only cataloged assets. Establish a scene before dialogue, keep positions stable unless movement is intentional, use safe camera distances, and allocate dialogue time from estimated speech rather than fixed-size slots.
-8. **Validate and revise.** Run the strict validator, fix every error, then perform one critic pass for premise, causality, character voice, humor/meaning, visual storytelling, and ending. Rewrite weak beats rather than polishing isolated words.
+8. **Validate and revise.** Run the strict validator, fix every error, then run the adversarial critic pass from `writing-quality.md`: a separate reading against the rubric and the directing-craft checks, with intent hidden from the critic. Rewrite weak beats rather than polishing isolated words.
 9. **(Optional) Performance pass.** If the user wants richer acting, hand the draft to `performance-director` to optimize facial expressions and body actions based on semantics. See `dula-skills/performance-director/SKILL.md`.
 10. **Hand off cleanly.** Report the story path, research sources when used, validator result, and any remaining audio/render work. Do not claim render readiness until the engine verification stages have run.
 
