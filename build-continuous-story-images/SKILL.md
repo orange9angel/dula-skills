@@ -101,7 +101,16 @@ python scripts/gen_image_codex.py --out <episode>/assets/keyframes/frame_00.png 
 Read [codex-cli-imagegen.md](references/codex-cli-imagegen.md) first — prompt-before-`-i`
 ordering, never let codex save into the project, serial foreground runs only.
 
-**Default chain: `scripts/gen_image_auto.py` — Codex first, DashScope fallback.**
+**Provider 决议更新（2026-09-05 晚，导演）**：火山账户已充值，**整帧生成
+（母版/关键帧/I2V）优先走火山付费**（Seedream 5.0 Pro 出图 + Seedance 2.0
+满血 I2V，都在方舟，ARK_API_KEY 一把 key），codex 降级为备胎/配额补充。
+**例外——编辑类变体（A/B 微动、中间帧、局部修改）仍走 codex**：Seedream
+编辑会整帧重渲染（E07 实测改光斑 38% 像素变化；E04 贴回已判死），flipbook
+变体要求框外逐像素一致，只有 codex 的编辑模式达标。codex 配额耗尽时的
+变体兜底：用时间线 crossfade（≤0.25s）替代中间帧（E07 V4 结尾光斑实测）。
+
+**（历史）Default chain: `scripts/gen_image_auto.py` — Codex first, DashScope
+fallback（已被上方 2026-09-05 决议取代为主路，此段保留作备胎参考）.**
 Codex bills against the ChatGPT subscription quota (zero marginal cost, 2026-08
 用户决策：优先用 codex，配额耗尽自动切百炼）. The wrapper runs
 `gen_image_codex.py` first and, only when the output matches a usage/quota/rate
