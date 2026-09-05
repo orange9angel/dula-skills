@@ -113,6 +113,9 @@ npx dula-render ./episodes/<episode>
 - `script.story` 是唯一的时序数据源，所有配置标签的优先级：`.story` DSL > `config/choreography.json` > 硬编码默认值。
 - 新增动画、场景、角色时，必须同时在 `bootstrap.js` 中注册，并通过 `story_tool.py catalog` 确认可用性。
 - 验证通过前不要 claim 渲染就绪。
+- **原创表述纪律**：所有文档、skill、prompt 中不出现第三方作品/作者名——
+  参考与灵感只存在于讨论层，落盘必须用自己的表述（2026-09-05 已全库清理
+  一轮；历史遗留 demo 目录名与资产标识符除外）。
 
 ## 历史说明
 
