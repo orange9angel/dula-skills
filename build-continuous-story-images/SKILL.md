@@ -145,9 +145,10 @@ from a shell loop.
 - **mini（720p，~¥0.5/s）降级为打样/试镜档**：prompt 调参阶段用 mini 快速
   验证动作量，定稿后用满血版重跑同 prompt 同首帧。
 - 次级动态（裙摆/发丝/草浪/尾巴）写法与风力分级见
-  [references/i2v-motion-details.md](references/i2v-motion-details.md)——
-  E05 验证：L1 晨风词表（发梢滞后、裙摆从下摆涟漪、草叶相位差）全部可见
-  且轮廓主体零漂移。
+  [references/i2v-motion-details.md](references/i2v-motion-details.md)。
+  **注意该文「I2V 语法边界」一节（E05 导演复片后立）**：布料/发丝特写、
+  表情变化镜头不要用 I2V（布条形变感），回关键帧姿势变体语法；I2V 只用于
+  全身位移、运镜、大环境运动三类。
 
 **图生视频 Seedance 变体（`scripts/gen_i2v_seedance.py`, 火山方舟）** — 当
 wan2.6 系在快速动作中出现角色漂移或动作量不足时的对照/升级通路。CLI 与
