@@ -40,6 +40,14 @@ description: Make a subject image (cat, blobfish, mascot, product character) per
   价格 ¥14/M vs ¥31/M tokens，出片快 5 倍。精细内容再上标准版。
 - **合规**：别人视频当动作源只迁移运动学数据（成品里没有人），自己玩可以；
   要发布/商用就自己拍动作源。不要进火山真人素材库（要扫脸认证）。
+- **匿名"发现"全被墙**（2026-08-30 实测）：`/search/<kw>` 弹「登录后即可搜索」
+  无关闭按钮、0 搜索 XHR；`challenge/search` 返 2483「请先登录」；
+  `challenge/aweme` 匿名 200 但空 body；话题页渲染出的视频链接是随机推荐。
+  匿名唯一可用的是 `/htmlmap/hotchallenge_<0-19>_1` SEO 话题榜（每页 200 条，
+  只覆盖头部话题）。**拿素材只能靠分享链接**：手机 App 分享 →
+  `download_douyin.py`；或先退出 Chrome 扫码登录网页抖音再自动搜。
+  外部搜索引擎（Bing/百度/搜狗/360/头条API）均不收录或反爬，补不了。
+  下载链路本身（视频详情页 + cookies jar）匿名可用，jar 隔天仍有效。
 
 ## 成本参考
 

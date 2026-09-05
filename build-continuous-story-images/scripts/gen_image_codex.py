@@ -60,6 +60,18 @@ def parse_args() -> argparse.Namespace:
 
 def build_prompt(args: argparse.Namespace) -> str:
     prompt = args.prompt or args.prompt_file.read_text(encoding="utf-8")
+    if args.ref:
+        # Hard-won (2026-08-23, codex 0.148.0 / gpt-5.6-sol): if the agent runs ANY
+        # tool call before image_gen (e.g. reading the imagegen SKILL.md), the router
+        # loses the attached images: "requested the last 1 conversation images, but
+        # only 0 were available". Force image_gen as the very first action.
+        prompt = (
+            "CRITICAL FIRST STEP: call your image generation tool IMMEDIATELY as your "
+            "very first action, using the attached reference image(s). Do NOT read any "
+            "files, do NOT run any shell commands, do NOT inspect anything before "
+            "generating — the attached images become unavailable to the image tool "
+            "after any other tool call.\n\n"
+        ) + prompt
     roles = []
     for i, _ in enumerate(args.ref, start=1):
         roles.append(f"image {i}" if i == 1 else f"image {i}")
@@ -81,6 +93,10 @@ def main() -> None:
         sys.exit(f"refusing to overwrite existing {args.out} (pass --overwrite)")
 
     prompt = build_prompt(args)
+    # Hard-won (codex-cli-imagegen.md): multi-line prompts lose the -i attachments —
+    # cmd /c splits the command line at embedded newlines, so everything after the
+    # first newline (including the -i flags) never reaches codex. Flatten to one line.
+    prompt = re.sub(r"\s+", " ", prompt).strip()
     codex_exe = shutil.which("codex") or "codex"
     cmd = [
         codex_exe, "exec", prompt,

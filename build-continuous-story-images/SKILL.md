@@ -135,10 +135,19 @@ from a shell loop.
 **I2V 选型结论（2026-08-29，cat_leads_e03_dusk_homecoming 实测）**：
 - flash 档（¥0.15/s）：动作生动但快速动作会轻微 off-model
 - 标准档（¥0.6/s）：一致性够但**动作量保守**（人物并腿滑行，E03 V1 翻车点）
-- **seedance-2-0-mini（~¥0.5/s，限时 4 折更低）：动作量+一致性兼得，
-  当前首选**。mini 最短 4s，比镜头槽长时取前段抽帧填槽
 - seedance 2.0 的 `--ref` 多图参考可锁身份，但与 `--first-frame` 互斥，
   首帧连续性优先的场景仍用首帧模式
+
+**I2V 选型更新（2026-09-05，cat_leads_e05_morning_sketch 实测）**：
+- **正片用满血版 `doubao-seedance-2-0-260128` @1080p**（~¥0.99/s，4s ≈¥1.6/条）：
+  输出 1920×1080 ≥ 关键帧 1672×941，剪辑点零放大；E04 用 mini 720p 被放大
+  1.5× 产生的虚边在 E05 消失。3 段一次通过，身份/风格保持好。
+- **mini（720p，~¥0.5/s）降级为打样/试镜档**：prompt 调参阶段用 mini 快速
+  验证动作量，定稿后用满血版重跑同 prompt 同首帧。
+- 次级动态（裙摆/发丝/草浪/尾巴）写法与风力分级见
+  [references/i2v-motion-details.md](references/i2v-motion-details.md)——
+  E05 验证：L1 晨风词表（发梢滞后、裙摆从下摆涟漪、草叶相位差）全部可见
+  且轮廓主体零漂移。
 
 **图生视频 Seedance 变体（`scripts/gen_i2v_seedance.py`, 火山方舟）** — 当
 wan2.6 系在快速动作中出现角色漂移或动作量不足时的对照/升级通路。CLI 与
@@ -146,7 +155,9 @@ wan2.6 系在快速动作中出现角色漂移或动作量不足时的对照/升
 ¥200 余额门槛，后付费按量计费，开通本身免费）。默认
 `doubao-seedance-2-0-260128`（~¥0.99/s 720p，4-15s，支持 `--ref` 多图参考锁
 身份，与 `--first-frame` 互斥；2.x 记得无声要显式 `generate_audio=false`，
-脚本已处理）；便宜档 `doubao-seedance-2-0-mini`（~¥0.50/s）；1.0 pro
+脚本已处理）；便宜档 `doubao-seedance-2-0-mini-260615`（~¥0.50/s；**必须带
+日期后缀**，裸写 `doubao-seedance-2-0-mini` 方舟报 404 NotFound——E04
+（2026-08-29）实测踩坑）；1.0 pro
 （~¥0.32/s，最短 5s，支持 `--camera-fixed`）。注意：E03（2026-08-29）实测百炼两档都不够（flash 漂移、标准档滑行），
 **seedance 2.0 mini 4 段一次通过成为正片采用方案**；`.env.ark` 放
 dula-story 根目录（已 gitignore），`set -a && source .env.ark` 后用。
@@ -229,3 +240,14 @@ python scripts/validate_sequence.py <sequence-plan.json> --final --strict
 - Action phases advance causally and preserve screen direction.
 - Prop positions form a plausible trajectory.
 - Provider limitations and any unresolved low-confidence details are stated plainly.
+
+**E04 V1.1 追加教训（2026-08-30）**：Seedream 变体若用整脸框贴回，rig 矩形会被
+框内重渲染噪点撑大，导致 cel 切换时整块脸抖动。**贴回框必须收紧到特征本身**
+（嘴/眼小矩形）；自动致密 diff（t=60 + 3x3 腐蚀）对少女脸有效，猫毛纹理和大
+特写仍需手工标定。参照 `cat_leads_e04_firefly_night/tools/relock_tight.py`。
+
+**E04 终局（2026-08-30）：贴回型 cel 口型工艺整体退役**。说话镜头改用
+OmniHuman 1.5 对口型视频（音频驱动、口型天然同步、免费试用）——接入与纪律见
+`../build-character-voice/references/volcano-omnihuman.md`。codex 局部编辑仍保留
+为眨眼/非说话微调的首选通路；qwen/wanx/seedream 贴回全部判死（几何漂移 2-6px
+实测，E04 tools/diagnose_align.py）。

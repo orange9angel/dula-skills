@@ -34,6 +34,8 @@ Create acting first and audio processing second. Preserve a believable native vo
    - CosyVoice（百炼）是 cat_leads 系列的定型主角声线；需要情感参数
      （emotion/emotion_scale）或更多角色声音时，第二通路走火山豆包
      seed-tts-2.0——接入与排坑见 [references/volcano-seedtts.md](references/volcano-seedtts.md)。
+   - **说话镜头的画面侧**：对口型视频走 OmniHuman 1.5（即梦），取代贴回型口型
+     cel——接入与生产纪律见 [references/volcano-omnihuman.md](references/volcano-omnihuman.md)。
    - Use the sibling `f5-tts-voice` workflow only when a genuinely custom timbre is required and a clean reference exists.
    - Do not enable F5 merely to change age or gender. Select a better native voice.
    - Regenerate only affected characters or lines when the backend supports it.

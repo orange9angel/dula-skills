@@ -26,6 +26,7 @@ dula-skills/
 ├── fighting-sfx/        # 格斗音效生成
 ├── walk-director/       # 走路/移动镜头：cel 选择、跟随运镜、时间线展开与验收
 ├── motion-transfer-video/# 动作迁移短视频（抖音素材下载 + seedance 多模态参考）
+├── beatcut-edit/        # 音乐卡点剪辑（节奏检测 + 特效栈 + 表情卡点 + 变速）
 └── pixabay-downloader/  # 音频素材下载
 ```
 

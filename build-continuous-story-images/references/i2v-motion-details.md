@@ -1,0 +1,81 @@
+# I2V 次级动态细节词表（i2v-motion-details）
+
+> 适用：Seedance / 任何 image-to-video 模型的动作 prompt。
+> 定位：**正面**指导"怎么让布料、发丝、环境自然地动"，与
+> `walk-director/references/keyframe-walk-shots.md` 的"A/B cel 锁死纪律"
+> 互补——cel 换帧仍锁死，I2V 连续段则必须主动写出次级动态。
+> 首用：cat_leads_e05_morning_sketch（2026-08-31）。
+
+## 核心原则
+
+1. **一镜一个主风向**。同一镜头内所有次级动态（裙、发、草、尾）必须同向，
+   写明方向（"from the LEFT" / "from behind the camera"），禁止只写 "wind"。
+2. **动幅度分级，不动轮廓主体**。次级动态只许动"末端"（发梢、裙摆、草叶尖、
+   尾尖），发根/肩线/躯干轮廓必须稳定，否则 I2V 会整体漂移。
+3. **动词具体到材质**。不写 "clothes move"，写清什么材质怎么动（见下表）。
+4. **镜头运动单独写死**。次级动态与运镜分两行写：运镜行用
+   "The camera is completely fixed" 或明确 dolly/pan；动态行只管画面内的动。
+
+## 风力分级（与叙事绑定，不是越大越好）
+
+| 级别 | 名称 | 叙事场景 | 可见表现 |
+|------|------|----------|----------|
+| L0 | 无风 | 室内、紧张对峙、特写情绪 | 只有重力垂坠；布料完全静止 |
+| L1 | 微风 | 清晨、傍晚、治愈系日常 | 发梢 2-5cm 摆动；裙摆边缘涟漪；草叶尖颤 |
+| L2 | 和风 | 行走户外、情绪转亮 | 裙摆明显起落；长发成束飘动；草浪成片 |
+| L3 | 阵风 | 转折、惊喜、抒情高点 | 裙摆压向一侧；头发遮面级别；只用于单点强调 |
+
+**纪律**：静态情绪镜头（对视、沉思）用 L0-L1；L3 一集最多一处。
+
+## 材质动词库（英文 prompt 用）
+
+### 衣物
+- 百褶裙（cotton pleated skirt）：`the pleats ripple gently from the hem` /
+  `the skirt hem lifts and settles softly`（L1-L2）
+- 衬衫/袖口：`the shirt sleeves flutter lightly at the cuffs`
+- 长裤：`the trouser legs sway faintly at the ankles`（L2 以下只动裤脚）
+
+### 头发
+- 长直发：`the tips of her long hair sway and lag slightly behind her head
+  movement`（跟随延迟 ≈0.3s，这是"头发有重量感"的关键写法）
+- 短发/刘海：`his fringe trembles slightly at the tips`（L1；短发只动梢）
+
+### 动物
+- 猫尾：`the tail sways gently with a slow S-curve, the tip leading the motion`
+- 猫毛：`the fur at the tail base and cheeks ruffles faintly`（L2 以上才写）
+
+### 环境
+- 草：`the grass tips tremble in a slow wave from LEFT to RIGHT with a slight
+  phase offset between tufts`（相位差是"自然感"关键，防整齐划一的假感）
+- 树叶：`the leaf clusters shiver lightly, a few leaves detach and drift down`
+  （落叶仅在 L2+）
+- 水面：`the water surface carries slow flat ripples drifting downstream`
+
+## 禁止项（翻车预防）
+
+- 禁止 `wind blowing everything` / `dynamic scene` 这类全画面激励词——会触发
+  轮廓漂移和背景形变。
+- 禁止让布料穿过身体：写 `the skirt moves around her legs without overlapping
+  them` 可预防裙摆穿腿。
+- 布料动但**人数、肢体数、构图不变**：每条动态 prompt 结尾带
+  `Character count, poses and framing stay exactly as in the first frame.`
+- 逆光/夜景中 L1 动态几乎不可见，别浪费钱——把动态镜头安排在受光场景。
+
+## 验收（抽帧）
+
+1. 从 I2V 成品均匀抽 6 帧叠放：轮廓主体（头/躯干/四肢位置）偏移 ≤ 2%。
+2. 布料/发丝/草在帧间有可见但连续的运动（无跳变、无瞬移）。
+3. 布料不穿腿、不遮脸；头发不遮眼（除非叙事要求）。
+4. 风向在镜头内一致；与相邻静态 cel 的风向不冲突。
+
+## 附：E05 实测段（2026-09-05，cat_leads_e05_morning_sketch）
+
+- 模型：满血版 doubao-seedance-2-0-260128 @1080p，4s 取前段抽 12fps cel。
+- seg2 过桥（L1 晨风 + 百褶裙 + 长发）：prompt 终稿见
+  `episodes/cat_leads_e05_morning_sketch/tools/gen_i2v.sh`。发梢滞后摆动、
+  裙摆下摆涟漪、草叶相位差全部可见；逐帧叠放轮廓主体零漂移；无穿腿。
+- seg1 猫带路 / seg3 跑下草坡：尾巴 S-curve + 耳尖/颊毛微颤生效；
+  "background scrolls slowly left"（行走段）与 "background stays still"
+  （跑段）的区分写对了，两种背景处理都没漂移。
+- 结论：L1 词表对晨光场景有效；风向与行进方向（背风 at their backs）
+  一致时布料动态最自然。
