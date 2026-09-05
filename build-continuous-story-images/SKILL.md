@@ -252,3 +252,10 @@ OmniHuman 1.5 对口型视频（音频驱动、口型天然同步、免费试用
 `../build-character-voice/references/volcano-omnihuman.md`。codex 局部编辑仍保留
 为眨眼/非说话微调的首选通路；qwen/wanx/seedream 贴回全部判死（几何漂移 2-6px
 实测，E04 tools/diagnose_align.py）。
+
+**路线决议（2026-09-05）：不做风格/角色 LoRA**。评估过把晴印风格烙进模型权重
+（云 4090 训 Flux LoRA，单次 ¥10-30，本机无 GPU），导演决定搁置：一致性走
+"参考图锁定 + prompt 纪律 + 关键帧质量验收"路线，赌基础模型持续变强。
+LoRA 的固有问题：gpt-image 闭源不可微调，换 Flux 底模构图/指令遵循可能降档；
+且 Flux.1-dev 非商用许可。若未来集数上量、一致性返工成本明显，可重开此评估
+（训练集现成：E04-E06 精选 30-50 张）。
