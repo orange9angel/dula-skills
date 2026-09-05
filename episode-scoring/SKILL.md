@@ -28,11 +28,13 @@ Score the story rather than every line. Make music support the emotional arc whi
 
 4. Prepare assets.
    - Prefer a curated episode asset in `assets/audio/music/` or `materials/bgm/`.
-   - **正式集 BGM 首选 Pixabay 真人曲目**（走 pixabay-downloader，保留许可
-     元数据）。程序化合成只作占位/兜底：2026-08-15 snow_fox_shrine 实证，
-     numpy 合成的八音盒旋律（`tools/build_bgm.py` 路线）可用但作曲水准
-     明显低于真人曲目，用户评审要求正式集配乐一律网上选曲。
-   - Use download or procedural generation only as a fallback.
+   - **正式集 BGM 首选 Seed-Audio 1.0 大模型作曲**（2026-09-05 决议，取代
+     此前"首选 Pixabay 真人曲目"的策略）：prompt 工艺见
+     `references/composition-prompt-craft.md`——必须写曲式分段、配器分层、
+     动态对比和留白，禁止"结构平稳"类保守词和"激烈/动感"类平词。
+     Pixabay 真人曲目降为对照/兜底；numpy 程序化合成只允许做占位。
+     （历史注：2026-08-15 snow_fox_shrine 判死的是 numpy 合成，不是大模型
+     作曲；E04-E06 已全部走 Seed-Audio。）
    - Preserve licensing metadata for external music.
    - Treat procedural loops as placeholders unless their quality is intentionally accepted.
 
