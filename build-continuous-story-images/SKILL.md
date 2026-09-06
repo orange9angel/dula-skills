@@ -17,6 +17,7 @@ Create a provider-neutral sequence plan, then use the strongest continuity mecha
 6. **Approve before inheriting.** Never use a rejected or unreviewed frame as the reference for later shots.
 7. **Repair locally.** Regenerate the smallest failed group or edit the faulty region. Do not replace a coherent sequence because of one recoverable hand, ball, face, or background defect.
 8. **Do not use interpolation as an identity fix.** Frame interpolation can smooth timing after keyframes are correct; it cannot restore a drifting face, costume, pose path, or object trajectory.
+9. **Unify the generation resolution tier.** Still images and I2V clips must be generated at the same resolution tier; a sharpness mismatch reads as a defect at every still↔video cut (uniform softness reads as style, a sudden drop reads as an error). Make the tier a switchable config, not a per-script hardcode — reference implementation: `dula-story/episodes/cat_leads_e07_river_willow/config/render_spec.json` + `tools/render_spec.sh` (exports image size + I2V resolution from one `generation_tier` value, `normalize_img()` pulls every freshly generated image to the tier size). When mixing resolutions is unavoidable, normalize all sources to the lower tier before timeline assembly and upscale once at final output.
 
 ## Workflow
 
