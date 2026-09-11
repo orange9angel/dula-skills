@@ -11,7 +11,8 @@ Read together with core rules 9–14 in `../SKILL.md`.
 | 人说话（质量档） | Seedance 2.5 视频参考链 | ¥10.42/4s（173,700 tok，2×） | 锁脸/锁景/自然度全 5 分 |
 | 人说话（预算档） | OmniHuman 1.5 | ~¥2–3/镜（刊例待核） | 身体僵、背景=底图、环境音需后补 |
 | 人说话（中档，照片驱动） | DreamActor 2.0 人版 | ~¥5–7/镜（试用） | 照片+自然模板；模板正脸保口型 |
-| 动物说话 | DreamActor 2.0 | ~¥2–4/镜（试用） | 人模板→动物；长句同步 4/5 |
+| 动物说话 | **Seedance 2.0 图+音频组合参考**（首选） | ¥4.02/4s 实测（参考未加倍） | **已验证 2026-09-12**（E09-W2）：口型窗口对齐、身份/背景全保持、无数字人质感、与 I2V 同引擎；无 2.5 门槛。声音=音色克隆，需换回 TTS 轨 |
+| 动物说话 | DreamActor 2.0（备选） | ~¥2–4/镜（试用） | 人模板→动物；长句同步 4/5 |
 | 动物叫单音回应 | 猫原生模板→DA | ~¥7–9/镜 | 仅限单音节台词（节奏密度上限） |
 | 长镜/编辑/非人脸全模态 | Seedance 2.5 | ~¥5.24/4s T2V | 30s 能力、音视频参考、编辑 |
 
@@ -56,7 +57,7 @@ Read together with core rules 9–14 in `../SKILL.md`.
 
 | 路径 | 做法 | 脸的保真 | 成本 | 状态 |
 |---|---|---|---|---|
-| **平台主体库** | 文生图定稿 → 主体识别 API 登记（`jimeng_realman_avatar_picture_create_role_omni_v15`）→ 生成时引用 role_id | 像素级（静帧定稿） | 登记一次 ~¥1 | **待验证**（avatar 家族吃人脸图片，AI 脸大概率放行；未知：可引用于哪些生成接口） |
+| **平台主体库** | 文生图定稿 → 主体识别 API 登记（`jimeng_realman_avatar_picture_create_role_omni_v15`）→ 生成时引用 role_id | 像素级（静帧定稿） | 登记一次 ~¥1 | **收窄（2026-09-11 文档调研）**：req_key 后缀 omni_v15 = 即梦 avatar 家族配套；Seedance 2.5 官方文档（docs 82379/2607688）全模态参考仅 image/video/audio 三种 role，**无 role_id 入口**——主体库进不了 Seedance，绕不了人脸墙；价值仅剩 OmniHuman 系身份长期持有（omni 本就不拦脸图）。引用验证（~¥1）待做 |
 | **内部定稿 + 视频参考链** | 文生图海选方向（¥0–2）→ T2V 决赛（¥5–10）→ 监制挑脸 → 建立视频作 `reference_video` 锁全片 | 模型给什么挑什么（方向可控、单脸随机） | ~¥7–12/角色，一次性 | **已验证**（锁脸/锁景 5/5） |
 | **DA 特种通道** | 指定静帧 → DreamActor 驱动成建立视频 → 进参考链 | 精确（指定那张脸） | ~¥5–7/镜 | 已验证（DA 视频作 reference_video 待验证） |
 
@@ -71,3 +72,38 @@ Read together with core rules 9–14 in `../SKILL.md`.
   提交先落盘 taskId、轮询超时只续查不重复付费。
 - 交接文档范本：`dula-story/episodes/cat_leads_e06_cat_model_live/V2_HANDOFF.md`
   （零新增花费核对存量、明确标注"未验收项"、成本分项、重建命令）。
+
+## Same-Shot Speech Sandwich（同镜头说话三明治，E09-W2 已验证 2026-09-11）
+
+问题：说话段（数字人）背景与 I2V 实拍背景不一致。根因 = OmniHuman 背景
+完全由底图决定，底图与相邻 I2V 镜头不是同一帧。
+
+**最终配方（v3）**：同机位"静默-说话-静默"三段全走 OmniHuman——
+
+1. **同源底图**（不要用帧链）：三段都从同一张原始底图生成。帧链
+   （后段底图=前段末帧）有代际损失，实测脸部锐度（Laplacian var）
+   A=41 → B=23 → C=21，逐代腰斩；同源底图三段都是一代锐度（41/34/42，
+   说话段的余量是嘴唇动态模糊），背景一致性仍由构造保证。
+2. 静默段喂 2s 静音音轨（嘴唇不动、仅呼吸/发丝微动）。
+3. **说话段 prompt 锁视线锁头位**："gaze fixed toward <方向> throughout,
+   head stays in the exact same position, no turning toward the camera"——
+   否则说话中头部漂移、末帧姿态与底图差大，接缝淡变会出现双重曝光
+   鬼影。**prompt 不得提及底图中不存在的生物**（提"对猫说话"会让一只
+   猫中途闯入画面，颜色还错）。
+4. 拼接保持原生 **25fps**（fps=30 强转 = 每 5 帧重复 1 帧的周期 judder），
+   接缝 0.16s xfade/acrossfade（语音起点离接缝 ≥0.28s 时碰不到语音）。
+
+成品 E09 `output/w2_seamless_6s_v3.mp4`（5.6s，脚本
+`tools/gen_w2_seamless.sh`，`BASE_MODE=master`）；全片无黑帧、无鬼影、
+无 judder、接缝不可见。成本：7 段 omni（含 2 次废 roll）≈¥14–21。
+
+**不可行的混排**：I2V 首帧含正脸必被 Ark 审核拦（W2 复验，同 V1 结论），
+所以"I2V 风景 + omni 说话插入"在同机位下无法帧链。要在 I2V 世界里插
+说话镜，只能走 Seedance 2.5 视频参考链（reference_video 过审）。
+
+工具坑：
+- OmniHuman 输出 mp4 用 `ffmpeg -sseof` 取末帧会空输出，改 `-ss <dur-0.1>`。
+- bash `$(tos_url ...)` 命令替换内的 `exit` 只退出子 shell，URL 必须判空，
+  否则空 URL 会提交一个必失败的 omni 任务。
+- 锐度/抖动量化方法：帧间差分曲线（judder 呈周期归零）、脸部裁剪区
+  Laplacian 方差（代际损失对比）——先量化再决定是否重 roll。

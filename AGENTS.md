@@ -29,6 +29,7 @@ dula-skills/
 ├── motion-transfer-video/# 动作迁移短视频（抖音素材下载 + seedance 多模态参考）
 ├── beatcut-edit/        # 音乐卡点剪辑（节奏检测 + 特效栈 + 表情卡点 + 变速）
 ├── promo-cut/           # 正片 → 15-30s 卡点广告片（选段 + 定格语法 + 字卡，直出 mp4）
+├── map-transition-ad/   # 地图转场创意广告（陶阿狗君式：地图 UI + 巡城变装 + swipe 卡点 + 音频驱动开口）
 ├── pixabay-downloader/  # 音频素材下载
 └── volc-balance/        # 火山引擎账户工具（余额查询 QueryBalanceAcct + seed-tts 音色列表 ListSpeakers）
 ```

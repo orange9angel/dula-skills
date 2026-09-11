@@ -48,6 +48,15 @@ description: Make a subject image (cat, blobfish, mascot, product character) per
   `download_douyin.py`；或先退出 Chrome 扫码登录网页抖音再自动搜。
   外部搜索引擎（Bing/百度/搜狗/360/头条API）均不收录或反爬，补不了。
   下载链路本身（视频详情页 + cookies jar）匿名可用，jar 隔天仍有效。
+- **免 profile 复制的匿名 jar**（2026-09-12 实测）：Chrome 正在运行时
+  profile 复制链路（Cookies 文件锁）会拿到不新鲜 cookie，yt-dlp 报
+  "Fresh cookies needed"。更轻的替代：playwright 全新 chromium 上下文
+  （不用用户 profile）直接 `goto` 视频详情页，页面加载即下发反爬 cookie，
+  `ctx.cookies()` 存 MozillaCookieJar 喂 yt-dlp 即过——无需退出 Chrome、
+  无需登录。B 站 412 风控同理但匿名 jar 不够（要登录态 cookie）。
+- **B 站/新片场参考片抓取**（2026-09-12 实测）：yt-dlp 裸抓 B 站 412、
+  新片场 403；playwright 真浏览器 + 响应嗅探也拿不到新片场视频流。
+  参考片首选抖音分享链接。
 
 ## 成本参考
 
