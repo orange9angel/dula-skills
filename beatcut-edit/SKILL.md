@@ -5,6 +5,26 @@ description: Produce douyin-style music-driven rhythm-edit videos (卡点/节奏
 
 # Beatcut Edit（音乐卡点剪辑）
 
+## 本地 3D 角色广告（无需生成模型）
+
+用户要求不用生成模型时，复用已注册的 3D 角色、程序动作与库存/程序合成音乐。
+参考 `dula-story/episodes/yuki_beat_ad/`：StoryBoard 驱动 12.8s 竖屏 IP 广告，
+Canvas 字卡 + ffmpeg 编码。`script.story` 保持唯一镜头时序；字卡按动作名绑定。
+
+- 无对白演出使用 `{Event:Animate|character=Yuki|action=AdPose|duration=...}`。
+  当前 Storyboard 只凭 Position/Animation 标签不会实例化角色；不要填假对白。
+- 眨眼必须找到模型实际眼组并保存原始缩放。Yuki 现有资产只有瞳孔/眼皮句柄，
+  整眼组可从 `leftPupil.parent` / `rightPupil.parent` 获取。
+- 卡点动作应区分“离地峰值”和“落地拍点”。用每拍循环完成动作，避免裁掉
+  正弦负半周后无意变成两拍一次。末尾停格还需停止场景和表情更新。
+- 纯配乐广告的旧 CharacterInspector 可能误报“没有角色”，固定相机名单也可能
+  不识别注册插件。保留报告，使用严格 story/scene 检查与实际渲染核实，不声称全绿。
+- 竖屏必须单独验构图；横屏 dula-verify 无法证明最终字卡、头发和肢体没有遮挡。
+- 音频必须解码最终 AAC 再查浮点峰值。本次程序鼓点的 44.1kHz 单声道 AAC 出现
+  单采样越界，降低源峰值仍复现；改为 48kHz 双声道编码后消失。不能只验 WAV。
+- 场景工具现使用 `dula-skills/` 工作区布局；历史 `docs/skills/` 探测路径会导致
+  找不到项目根目录，已在 scene-designer 的 scene_tool.py 修正。
+
 The edit is driven by the MUSIC, not by a story timeline. Detect the beat grid
 and per-onset energy first, then hang the visual grammar on it.
 

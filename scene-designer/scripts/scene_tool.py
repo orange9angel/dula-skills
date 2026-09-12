@@ -94,7 +94,7 @@ class SceneToolInputError(RuntimeError):
 
 
 def _load_story_tool(project_root: Path):
-    tool_path = project_root / "docs" / "skills" / "story-writer" / "scripts" / "story_tool.py"
+    tool_path = project_root / "dula-skills" / "story-writer" / "scripts" / "story_tool.py"
     if not tool_path.is_file():
         raise SceneToolInputError(f"Story tool not found: {tool_path}")
     module_name = "_dula_story_tool_for_scene_designer"
@@ -110,7 +110,7 @@ def _load_story_tool(project_root: Path):
 def _find_project_root(episode_dir: Path) -> Path:
     current = episode_dir.resolve()
     for candidate in (current, *current.parents):
-        if (candidate / "dula-story").is_dir() and (candidate / "docs" / "skills").is_dir():
+        if (candidate / "dula-story").is_dir() and (candidate / "dula-skills").is_dir():
             return candidate
     raise SceneToolInputError(f"Could not find project root from {episode_dir}")
 
