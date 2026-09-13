@@ -25,6 +25,20 @@ Canvas 字卡 + ffmpeg 编码。`script.story` 保持唯一镜头时序；字卡
 - 场景工具现使用 `dula-skills/` 工作区布局；历史 `docs/skills/` 探测路径会导致
   找不到项目根目录，已在 scene-designer 的 scene_tool.py 修正。
 
+### 音乐、表情与镜头共用重音（本地 3D 试剪补充）
+
+- 固定 BPM 和每四拍切镜只能证明网格一致。先区分铺垫、短暂停顿和主重音，
+  在主重音安排一个明确的表情结果；onset 数量和 RMS 起伏只能辅助初筛，不能
+  证明旋律抓耳或已完成听审。
+- 眨眼/惊讶/笑脸的**最明显状态**应落在重音，而不只是从重音才开始缓慢变化。
+  可提前 2–4 帧闭眼蓄势，在攻击帧切到反应，再留时间让观众读脸。
+- 整眼压扁会留下细缝中的虹膜。程序模型可隐藏整眼组并换闭眼弧线，同时联动
+  嘴和眉毛；在引擎自动表情更新之后应用确定性演出，避免随机眨眼覆盖卡点。
+- 角色转身与画面旋转是两种效果。画面滚转可在重音前短促启动，重音回正并切
+  表情；竖屏滚转期间检查头发和四肢，旋转幅度大时调整视野以保持角色完整。
+- 检测器的 FFT 窗起点不一定是声音攻击时刻。校正窗偏移或使用短窗包络，并
+  记录最终帧率量化后的误差。试剪保留旧输出和独立音乐来源记录。
+
 The edit is driven by the MUSIC, not by a story timeline. Detect the beat grid
 and per-onset energy first, then hang the visual grammar on it.
 
@@ -66,6 +80,7 @@ and per-onset energy first, then hang the visual grammar on it.
 | 反应帧插入 | 每 flash-every 拍整拍 | expressions 轮播 |
 | 变速段 | drop 前后各 2 拍 | 前慢放 0.5×、后倍速 2×（cel 源有效） |
 | drop 爆发 | 最强 onset 处 0.1s | 色相脉冲 + 强色差 |
+| 镜头滚转回正 | 选定主重音前约 0.4s | 画面转一圈，重音回正接表情；本地 3D 路径先实现于 Yuki V2，非 beatcut.py CLI 通用参数 |
 
 ## 验收
 
