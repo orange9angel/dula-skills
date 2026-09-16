@@ -30,8 +30,12 @@ description: Zero-cost procedural flat-vector animatic (平面预演) for any ep
 ## 用法（新 episode 接入）
 
 1. 正常写 `script.story` 并生成音频（TTS + SFX + BGM，`mixed.wav`）。
-2. 复制 E08 的渲染管线：`tools/render_painted.mjs`（静态服务器 +
-   puppeteer 逐帧 + ffmpeg 混流，改输出名即可）、`viewer_painted.html/js`。
+2. 复制 E08 的渲染管线：`painted/render.mjs`（静态服务器 +
+   puppeteer 逐帧 + ffmpeg 混流，改输出名即可）、`painted/viewer.html/js`。
+   目录约定：自绘版全部放 `painted/`（painter/viewer/render/检查帧/成片），
+   火山生成版全部放 `volcano/`（自包含可独立重建），共享的
+   `script.story`、`config/`（voice_config/audio_mix/lipsync_cues）、
+   `assets/audio/` 留在 episode 根目录。
 3. 写本集的 `painted/painter.js`：
    - 用 design 对象声明角色（肤色/发色/衣服/发型 bob|spikeV/dress/iris/clip）
    - 用 env.js 积木搭场景，用 figures 摆人物
