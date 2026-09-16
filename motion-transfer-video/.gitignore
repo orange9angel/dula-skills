@@ -1,0 +1,3 @@
+# search_douyin.py work profile + login state (local only, never commit)
+.chrome-profile/
+.storage_state.json

@@ -9,6 +9,13 @@ description: Make a subject image (cat, blobfish, mascot, product character) per
 
 ## 管线
 
+0. **找素材（可选，需登录）**：`scripts/search_douyin.py "<关键词>" --limit 20 --sort likes --out result.json`
+   抖音 UI 搜索（匿名搜索全被墙，见翻车记录）。首次运行 headed 起真 Chrome
+   停在登录页，**需手机扫码登录**（5 分钟超时）；登录态存到独立工作 profile
+   `motion-transfer-video/.chrome-profile/`（不碰用户真实 Chrome profile，
+   已 gitignore），后续运行 headless 直接搜。加 `--download <目录>` 可对结果
+   逐条走 download_douyin.py 的 cookie jar + yt-dlp 链路下载。
+   冒烟自检：`search_douyin.py --smoke`（headed 开首页报登录态，窗口停 30s）。
 1. **素材下载**：`scripts/download_douyin.py "<分享链接>" -o out.mp4`
    （抖音网页无登录态不下发视频流；脚本自动复制 Chrome 最小 profile +
    无头真 Chrome 取 cookie + MozillaCookieJar 喂 yt-dlp。详见下方翻车记录。）
@@ -48,6 +55,18 @@ description: Make a subject image (cat, blobfish, mascot, product character) per
   `download_douyin.py`；或先退出 Chrome 扫码登录网页抖音再自动搜。
   外部搜索引擎（Bing/百度/搜狗/360/头条API）均不收录或反爬，补不了。
   下载链路本身（视频详情页 + cookies jar）匿名可用，jar 隔天仍有效。
+- **登录态 UI 搜索**（2026-09-15 实装）：`scripts/search_douyin.py` 用
+  playwright `launch_persistent_context(channel="chrome")` 起真 Chrome，
+  user_data_dir 用仓库内独立工作 profile `.chrome-profile/`（已 gitignore；
+  **不复制也不碰用户真实 Chrome profile**，避开 Cookies 文件锁和 CDP 拒
+  default 目录两个坑）。登录判定 = cookie 里有 `sessionid`/`sessionid_ss`，
+  DOM 兜底（头像容器在 / 顶栏无"登录"按钮）。首次运行 headed 开首页 → 点
+  "登录"出二维码 → 轮询 5 分钟等扫码 → 存 storage_state；之后 headless 优
+  先、取到 0 条或撞登录墙再回落 headed。搜索页 `www.douyin.com/search/<kw>
+  ?type=video`，`--sort likes` 点"最多点赞"筛选；结果从 `/video/<id>` 锚点
+  卡片 DOM 提 aweme id/标题/作者/点赞/时长，滚动分批 + 1.5–4s 随机 sleep
+  防风控。`--download` 复用 `download_douyin.build_cookie_jar`（拿工作
+  profile 直接出 jar）+ yt-dlp 逐条下载。
 - **免 profile 复制的匿名 jar**（2026-09-12 实测）：Chrome 正在运行时
   profile 复制链路（Cookies 文件锁）会拿到不新鲜 cookie，yt-dlp 报
   "Fresh cookies needed"。更轻的替代：playwright 全新 chromium 上下文
