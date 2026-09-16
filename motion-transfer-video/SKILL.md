@@ -65,8 +65,29 @@ description: Make a subject image (cat, blobfish, mascot, product character) per
   先、取到 0 条或撞登录墙再回落 headed。搜索页 `www.douyin.com/search/<kw>
   ?type=video`，`--sort likes` 点"最多点赞"筛选；结果从 `/video/<id>` 锚点
   卡片 DOM 提 aweme id/标题/作者/点赞/时长，滚动分批 + 1.5–4s 随机 sleep
-  防风控。`--download` 复用 `download_douyin.build_cookie_jar`（拿工作
-  profile 直接出 jar）+ yt-dlp 逐条下载。
+  防风控。`--download` 先试 yt-dlp（cookie jar 来自工作 profile），
+  提取器 403 时整批转详情页 `<video>` src 嗅探下载（见下条修正）。
+- **搜索实跑修正**（2026-09-16 实测）：①结果卡片的 class 名全是混淆短名
+  且会轮换，**不能按 class 抓字段**——卡片 `innerText` 行序固定为
+  `[合集]/时长(00:07)/点赞(1.1万，无"赞"字)/标题(带#话题)/@作者/N月前`，
+  按行正则分类最稳（时长 `^\d+:\d{2}$`、点赞 `^\d+(\.\d+)?万?$`、作者 `@`
+  开头），之前按 class+首个文本行抓把时长当成了标题。②排序筛选是
+  **hover "筛选" 才展开的面板**（排序依据：综合排序/最新发布/最多点赞，
+  另有发布时间/视频时长/搜索范围行），点"筛选"本身无效；headless 模式
+  下该面板不渲染（0 卡片、无"筛选"文本），headed 下 hover+click 生效，
+  结果确实按点赞降序。选择器再烂就用 `debug_search_dom.py` dump 真实 DOM。
+- **yt-dlp 抖音提取器已完全失效**（2026-09-16 实测，v2026.08.19）：web
+  detail JSON 端点对 jar 一律 403 "Fresh cookies needed"——工作 profile
+  登录态 jar、匿名全新上下文 jar、详情页现取 jar、UA 对齐全部无效
+  （抖音服务端收紧，2026-09-12 的匿名 jar 笔记已过时）。**替代链路
+  （sniff）**：浏览器开详情页等 `<video>` 的 `currentSrc`/`<source>`
+  出现（签名 CDN 地址，zjcdn.com 206 直出），按 `br=` 码率取最高档，
+  `ctx.request.get()` 经浏览器上下文下载即得 mp4。`search_douyin.py
+  --download` 已改为先试 yt-dlp 一次、失败整批转 sniff。
+- **底鼓/BPM 分析**：`scripts/analyze_beats.py`（沿用 beatcut.py 的 FFT
+  谱通量 onset，限定 <150Hz 低频带抓底鼓），输出时长/BPM/底鼓点数/
+  最佳 14s 窗口可用重音数；wav 用 `ffmpeg -vn -ac 1 -ar 44100` 抽。
+  注意 yuki_beat_ad 不在本工作区，低频检测逻辑参考 beatcut-edit。
 - **免 profile 复制的匿名 jar**（2026-09-12 实测）：Chrome 正在运行时
   profile 复制链路（Cookies 文件锁）会拿到不新鲜 cookie，yt-dlp 报
   "Fresh cookies needed"。更轻的替代：playwright 全新 chromium 上下文

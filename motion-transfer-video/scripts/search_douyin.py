@@ -139,40 +139,61 @@ def ensure_login(p, smoke: bool = False) -> bool:
 
 CARD_JS = r"""
 () => {
+  // Card innerText line order (2026-09-16 real DOM, class names are
+  // obfuscated and rotate — parse LINES, not classes):
+  //   [合集] / 00:07 (duration) / 1.1万 (likes, bare, no 赞 suffix) /
+  //   title (has hashtags) / @author / 1月前 (date)
+  const RE_DUR = /^\d{1,2}:\d{2}(:\d{2})?$/;
+  const RE_LIKES = /^\d+(\.\d+)?万?$/;
+  const RE_DATE = /^\d+\s*(小时|天|周|月|年)前$|^\d{4}-\d{2}-\d{2}$|^\d{2}-\d{2}$/;
   const seen = new Set();
   const out = [];
   for (const a of document.querySelectorAll('a[href*="/video/"]')) {
     const m = a.getAttribute('href').match(/\/video\/(\d+)/);
     if (!m || seen.has(m[1])) continue;
-    const card = a.closest('li') || a.closest('div[class*="card"]')
-              || a.parentElement.parentElement;
-    if (!card) continue;
+    const li = a.closest('li');
+    if (!li) continue;
     seen.add(m[1]);
-    const text = card.innerText || '';
-    const img = card.querySelector('img');
-    const title = (card.querySelector('span[class*="title"], p[class*="title"]')
-                   || {}).innerText
-               || (img ? img.alt : '')
-               || (text.split('\n')[0] || '');
-    let likes = null;
-    const lm = text.match(/(\d+(?:\.\d+)?\s*(?:万|w)?)\s*(?:赞|likes?)/i);
-    if (lm) likes = lm[1].trim();
-    const dur = card.querySelector('span[class*="duration"], span[class*="time"]');
-    let author = null;
-    const au = card.querySelector('span[class*="name"], a[href*="/user/"]');
-    if (au) author = au.innerText || null;
+    const lines = (li.innerText || '').split('\n')
+      .map(s => s.trim()).filter(Boolean);
+    let duration = null, likes = null, author = null, date = null;
+    const rest = [];
+    for (const ln of lines) {
+      if (ln === '合集' || ln === '图文') continue;
+      if (!duration && RE_DUR.test(ln)) { duration = ln; continue; }
+      if (!likes && RE_LIKES.test(ln)) { likes = ln; continue; }
+      if (!author && ln.startsWith('@')) { author = ln.slice(1); continue; }
+      if (!date && RE_DATE.test(ln)) { date = ln; continue; }
+      rest.push(ln);
+    }
     out.push({
       aweme_id: m[1],
       url: 'https://www.douyin.com/video/' + m[1],
-      title: (title || '').trim(),
-      author: (author || '').trim() || null,
-      likes,
-      duration: dur ? dur.innerText.trim() : null,
+      title: rest.join(' ').trim() || null,
+      author, likes, duration, date,
     });
   }
   return out;
 }
 """
+
+
+def enrich(results: list[dict]) -> list[dict]:
+    """Add numeric likes_num / duration_s for downstream ranking."""
+    import re
+    for r in results:
+        lk = r.get("likes")
+        if lk:
+            m = re.match(r"^(\d+(?:\.\d+)?)(万)?$", lk)
+            if m:
+                r["likes_num"] = int(float(m.group(1))
+                                     * (10000 if m.group(2) else 1))
+        du = r.get("duration")
+        if du:
+            parts = [int(x) for x in du.split(":")]
+            r["duration_s"] = (parts[0] * 3600 + parts[1] * 60 + parts[2]
+                               if len(parts) == 3 else parts[0] * 60 + parts[1])
+    return results
 
 EXTRACT_TRIES = 6  # rounds with no growth before giving up
 
@@ -191,10 +212,15 @@ def do_search(p, keyword: str, limit: int, sort: str, headless: bool) -> list[di
 
         if sort == "likes":
             try:
-                page.locator("text=最多点赞").first.click(timeout=8000)
+                # 筛选 is a hover-dropdown (2026-09-16 real UI): hovering opens
+                # a panel with 排序依据: 综合排序|最新发布|最多点赞 (+发布时间/
+                # 视频时长/搜索范围 rows). Clicking 筛选 itself does nothing.
+                page.get_by_text("筛选", exact=True).first.hover(timeout=8000)
+                rsleep(1, 2)
+                page.get_by_text("最多点赞", exact=True).first.click(timeout=8000)
                 rsleep(3, 5)
             except Exception as e:
-                print(f"warn: 最多点赞 filter not found ({e}); using default sort")
+                print(f"warn: sort filter failed ({e}); using default sort")
 
         results: list[dict] = []
         stale = 0
@@ -211,7 +237,7 @@ def do_search(p, keyword: str, limit: int, sort: str, headless: bool) -> list[di
                 rsleep(1.5, 4)
         print(f"extracted {len(results)} cards "
               f"({'headless' if headless else 'headed'})")
-        return results[:limit]
+        return enrich(results[:limit])
     finally:
         ctx.close()
 
@@ -229,24 +255,98 @@ def search(p, keyword: str, limit: int, sort: str) -> list[dict]:
 
 # --- optional download fan-out ----------------------------------------------
 
-def download_all(results: list[dict], out_dir: Path) -> None:
-    # reuse download_douyin.py's jar->yt-dlp chain; the jar is built from OUR
-    # work profile (build_cookie_jar just needs a profile dir + jar path)
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from download_douyin import build_cookie_jar
+VIDEO_SRC_JS = r"""
+() => {
+  const v = document.querySelector('video');
+  if (!v) return null;
+  const cands = [v.currentSrc, v.src,
+                 ...[...v.querySelectorAll('source')].map(s => s.src)]
+    .filter(u => u && u.startsWith('http'));
+  // prefer the highest-bitrate variant (br= param), else the one playing
+  const br = u => parseInt((u.match(/[?&]br=(\d+)/) || [0, 0])[1]);
+  cands.sort((a, b) => br(b) - br(a));
+  return cands[0] || null;
+}
+"""
 
+
+def sniff_download_one(page, url: str, dest: Path) -> bool:
+    """Plan B: read the signed CDN URL off the detail page's <video> element
+    and GET it through the browser context. yt-dlp's Douyin extractor 403s
+    on the web-detail JSON endpoint (2026-09-16, v2026.08.19, both logged-in
+    and anonymous jars) — the signed CDN link in <video src> still works."""
+    page.goto(url, wait_until="domcontentloaded", timeout=90000)
+    try:
+        page.wait_for_function(
+            "() => { const v = document.querySelector('video'); "
+            "return v && (v.currentSrc || v.src); }", timeout=30000)
+    except Exception:
+        return False
+    rsleep(2, 4)  # let the player settle / sources populate
+    src = page.evaluate(VIDEO_SRC_JS)
+    if not src:
+        return False
+    resp = page.context.request.get(src, timeout=120000)
+    if not resp.ok:
+        print(f"warn: CDN GET {resp.status} for {url}")
+        return False
+    dest.write_bytes(resp.body())
+    return True
+
+
+def download_all(results: list[dict], out_dir: Path) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
-    jar_path = out_dir / "cookies.txt"
-    build_cookie_jar(PROFILE_DIR, jar_path)
-    for r in results:
+    todo = [r for r in results
+            if not (out_dir / f"{r['aweme_id']}.mp4").exists()]
+
+    # plan A: yt-dlp with a cookie jar from OUR work profile (reuses
+    # download_douyin.build_cookie_jar — currently 403s, kept for when the
+    # extractor recovers; cheap to try once and disable for the batch)
+    ytdlp_ok = False
+    if todo:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from download_douyin import build_cookie_jar
+        jar_path = out_dir / "cookies.txt"
+        build_cookie_jar(PROFILE_DIR, jar_path)
+        r = todo[0]
         dest = out_dir / f"{r['aweme_id']}.mp4"
-        if dest.exists():
-            print(f"skip (exists): {dest}")
-            continue
-        print(f"download: {r['url']} -> {dest}")
-        subprocess.run(["yt-dlp", "--no-update", "--cookies", str(jar_path),
-                        r["url"], "-o", str(dest), "--no-playlist"], check=True)
-        rsleep()
+        print(f"download (yt-dlp): {r['url']} -> {dest}")
+        rc = subprocess.run(["yt-dlp", "--no-update", "--cookies",
+                             str(jar_path), r["url"], "-o", str(dest),
+                             "--no-playlist"]).returncode
+        if rc == 0:
+            ytdlp_ok = True
+            todo.pop(0)
+            rsleep()
+        else:
+            print("yt-dlp failed — switching to browser-sniff for the batch")
+
+    if todo and ytdlp_ok:
+        for r in list(todo):
+            dest = out_dir / f"{r['aweme_id']}.mp4"
+            print(f"download (yt-dlp): {r['url']} -> {dest}")
+            subprocess.run(["yt-dlp", "--no-update", "--cookies",
+                            str(jar_path), r["url"], "-o", str(dest),
+                            "--no-playlist"], check=True)
+            todo.remove(r)
+            rsleep()
+
+    if todo:
+        from playwright.sync_api import sync_playwright
+        with sync_playwright() as p:
+            ctx = launch(p, headless=True)
+            page = ctx.new_page()
+            try:
+                for r in todo:
+                    dest = out_dir / f"{r['aweme_id']}.mp4"
+                    print(f"download (sniff): {r['url']} -> {dest}")
+                    if sniff_download_one(page, r["url"], dest):
+                        print(f"  ok ({dest.stat().st_size // 1024} KiB)")
+                    else:
+                        print(f"  FAILED: {r['url']}")
+                    rsleep()
+            finally:
+                ctx.close()
 
 
 def main() -> int:
