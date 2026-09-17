@@ -127,3 +127,23 @@ class WalkFollowSmooth extends CameraMoveBase {
 - `doraemon_air_cannon/script.story:108`：Event:Move + FollowCharacter。
 - `yuki_cat_diet/script.story:179`：同上。
 - `hurdles_championship/script.story:170`：RaceSideTrack 侧跟多名跑者。
+
+## Q 版角色的跑步/走路陷阱（yuki_morning_battle 翻车史，2026-09）
+
+- **短腿角色必须参数化 Run/Walk**：默认摆幅（Run stride 0.72 / legLift 0.78）是给
+  正常体型的，三头身直接像断腿。`.story` 里可传参：
+  `{Animation:Run|character=Yuki|legLift=low|stride=0.42|armSwing=0.6|frequency=4.6|lean=0.10}`
+  ——高频小碎步反而更有慌张喜剧感。
+- **多段腿部网格会错位**：腿/袜/鞋若是轴心不一致的独立网格（如扁圆球鞋），摆腿时
+  各转各的。修法是同轴化——鞋换成与腿同轴的靴子胶囊，且在 sketchify 之前完成替换。
+- **走位 lookAt + 矩阵姿势叠加会翻转到 rz=±π**（人倒立进地板只剩鞋露在外面）：
+  verify 的跳帧 scrub 抓不到，必须渲染后抽帧。护栏：非特殊姿态下 |rz|>0.6 归零。
+- **Position 瞬移会把当前 rx 捕获进动画基线**（teleportBaselineToCurrent）：角色若在
+  特殊姿态（如躺平）时瞬移，之后所有 mesh.rx 姿势都叠在歪基线上（"躺着跑步"）。
+  姿态窗口结束时修 `am._baselinePose.mesh.rx`。
+- **场景配置条目（@Scene 那条）里的动画 cue 不会被调度**，长持续的姿态动画要放在
+  后面的普通条目里。
+- **mesh.rx 被 JointLimits 硬夹 ±30°**：躺平等极限姿态走不通姿势矩阵。参考实现
+  （yuki_morning_battle/bootstrap.js ShoeFixedYuki）：矩阵动画占时间窗 → 角色子类
+  update 里关掉自己的 enableJointLimits/enableVelocitySmooth → 直接写 rotation，
+  并在子 Mesh 的 onBeforeRender 里兜底重写一次。
