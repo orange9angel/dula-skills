@@ -147,3 +147,7 @@ class WalkFollowSmooth extends CameraMoveBase {
   （yuki_morning_battle/bootstrap.js ShoeFixedYuki）：矩阵动画占时间窗 → 角色子类
   update 里关掉自己的 enableJointLimits/enableVelocitySmooth → 直接写 rotation，
   并在子 Mesh 的 onBeforeRender 里兜底重写一次。
+
+- **Jump 不在 ONE_SHOT 列表里**：`{Animation:Jump}` 会被拉伸到整个条目时长，且姿势
+  基线取角色当前 y——角色在高处（窗台）起跳时，整个条目都悬在画框外。高空入场/
+  跳窗直接用带 y 的 `Event:Move`，别叠 Jump。（yuki_bento_battle 闪电破窗翻车）
