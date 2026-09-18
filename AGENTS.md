@@ -30,8 +30,10 @@ dula-skills/
 ├── beatcut-edit/        # 音乐卡点剪辑（节奏检测 + 特效栈 + 表情卡点 + 变速）
 ├── promo-cut/           # 正片 → 15-30s 卡点广告片（选段 + 定格语法 + 字卡，直出 mp4）
 ├── map-transition-ad/   # 地图转场创意广告（陶阿狗君式：地图 UI + 巡城变装 + swipe 卡点 + 音频驱动开口）
+├── previz-animatic/     # 零成本平面预演（flatpreviz 库用法 + 镜头表/口型/视差纪律）
 ├── pixabay-downloader/  # 音频素材下载
-└── volc-balance/        # 火山引擎账户工具（余额查询 QueryBalanceAcct + seed-tts 音色列表 ListSpeakers）
+├── volc-balance/        # 火山引擎账户工具（余额查询 QueryBalanceAcct + seed-tts 音色列表 ListSpeakers）
+└── volc-song-gen/       # 豆包音乐模型人声歌曲生成（GenSongForTime + 海外 IP 的 veFaaS 中转）
 ```
 
 AI 在开发时应直接阅读对应目录下的 `SKILL.md` 和 `references/` 资料。
