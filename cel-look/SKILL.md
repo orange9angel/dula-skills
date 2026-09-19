@@ -44,3 +44,8 @@ description: 让 3D 程序渲染看起来像商业 2D 动画的完整纪律 —�
 - 描边宽度是局部单位，小部件要自动收缩（sketchify 已处理）；猫背面
   尾巴线条在 0.014 下略粗，特写场景降到 0.012。
 - 一拍二不要全局套：BG 平移、摄影机、口型都要保持原帧率。
+- **描边有两种合法风格，先问监制**：sketchify（顶点抖动 + boil + 碎线）是
+  "手绘速写"风格；标准 TV 动画要的是**均匀等宽无抖动的干净轮廓**——
+  sketchify 没有开关能调成干净模式（抖动/overshoot 是硬编码），需要自研
+  cleanOutline（逆向壳固定外推量，不做 EdgesGeometry 碎线）。
+  参考实现：`yuki_fish_musical/bootstrap.js` 的 `cleanOutline()`。
