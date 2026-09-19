@@ -33,6 +33,7 @@ dula-skills/
 ├── map-transition-ad/   # 地图转场创意广告（陶阿狗君式：地图 UI + 巡城变装 + swipe 卡点 + 音频驱动开口）
 ├── previz-animatic/     # 零成本平面预演（flatpreviz 库用法 + 镜头表/口型/视差纪律）
 ├── pixabay-downloader/  # 音频素材下载
+├── suno-driver/         # Suno 网页版自动化（无公开 API 时的 Playwright 持久会话驱动，灰色地带仅限自用）
 ├── volc-balance/        # 火山引擎账户工具（余额查询 QueryBalanceAcct + seed-tts 音色列表 ListSpeakers）
 ├── volc-song-gen/       # 豆包音乐模型人声歌曲生成（GenSongForTime + 海外 IP 的 veFaaS 中转）
 └── song-lipsync/        # 程序角色歌唱口型全链路（人声分离 + DTW 逐字对齐 + 起音锚定 + 拼音视素 + 防颤音包络）
