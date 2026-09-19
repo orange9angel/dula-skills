@@ -40,6 +40,13 @@ description: 让 3D 程序渲染看起来像商业 2D 动画的完整纪律 —�
 
 ## 翻车记录
 
+- **细化阶段必须配视觉护栏**：机械断言（闭嘴/穿模/帧数）全绿也可能观感回退。
+  用黄金帧回归：监制认可版渲染关键帧存 `storyboard/golden/baseline/`（入库），
+  之后每次改动自动重渲染同批帧做像素对比，超阈值出并排 diff 图。
+  参考实现：`yuki_fish_musical/tools/golden_frames.mjs`（2026-09 立。
+  首次实战就证明了价值：手型集被误判"改坏"，harness 对比证明它是无辜的，
+  真正的发梢毛边是上一版存量问题）。
+- 一次只改一个维度（描边/手/口型分开批），每批出对比帧，监制点头再合入。
 - sketchify 的 boil 必须由渲染时间驱动（`BoilSystem.update(time)`），
   用 wall clock 会破坏离线渲染的确定性（V17 已验证同帧逐字节一致）。
 - 描边宽度是局部单位，小部件要自动收缩（sketchify 已处理）；猫背面
@@ -50,3 +57,5 @@ description: 让 3D 程序渲染看起来像商业 2D 动画的完整纪律 —�
   sketchify 没有开关能调成干净模式（抖动/overshoot 是硬编码），需要自研
   cleanOutline（逆向壳固定外推量，不做 EdgesGeometry 碎线）。
   参考实现：`yuki_fish_musical/bootstrap.js` 的 `cleanOutline()`。
+- 锥体尖端（双马尾末端 ConeGeometry）顶点法线分散，逆向壳会在尖端炸成
+  平行细线：先把中轴顶点法线统一收到轴向（smoothConeApex）再描边。
