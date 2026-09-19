@@ -85,3 +85,23 @@ cd dula-story
 3. 盲听/评审模型只做 advisory，最终留一版可复跑的客观记录
 4. 选定后再进锁拍/母带链（参考 `prepare_v5.py` 的 <150Hz 底鼓锁拍 +
    压缩/低搁架/限制器母带）
+
+## 能力边界（2026-09-19 实测）
+
+- **没有真民乐音色**：埙/竹笛/尺八等不存在于乐器枚举（Flute/Strings/Keys 等
+  西洋乐器），Lyrics/Prompt/纯音乐三条路线实测均产出流行/合成音色。
+  自由文本 Prompt 写"埙独奏开场"也无效。需要真民乐味就走混合制作：
+  真采样（Freesound 预览可免登录抓取）定调 + AI 垫底。
+- **纯音乐后付费接口名是 `GenBGMForTime`**（文档只写了预付 GenBGM，
+  预付接口会报 APINoSource 200028）。
+- 参数枚举都要英文：Mood（Happy/Cute\Playful...）、Timbre（Gentle/Delicate...）、
+  Tempo 用意大利速度术语（Adagio/Andante/Vivace...）、Instrument 英文枚举
+  （Acoustic_Piano/Synthesizers/Drums...）。传中文报 100010，错误信息附完整枚举表。
+- 音频 CDN（douyinvod.com）**不受地域限制**——只有 API 调用受 ServerIpLimit，
+  拿到 URL 后海外直接下载即可，无需 base64 回传。
+
+## 盲听评审（qwen3-omni）的可信度上限
+
+`theme_listen_review.py`（E08）把音频送 qwen3-omni-flash 盲听。实测：它能正确
+识别乐器真假、调性冲突、断裂点，但**音色品味判断不可靠**——它评价"哀而不伤
+成立"的埙采样被监制判为"像哀乐"。只用它做粗筛（排除明显错误），不做定稿依据。
