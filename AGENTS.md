@@ -33,7 +33,8 @@ dula-skills/
 ├── previz-animatic/     # 零成本平面预演（flatpreviz 库用法 + 镜头表/口型/视差纪律）
 ├── pixabay-downloader/  # 音频素材下载
 ├── volc-balance/        # 火山引擎账户工具（余额查询 QueryBalanceAcct + seed-tts 音色列表 ListSpeakers）
-└── volc-song-gen/       # 豆包音乐模型人声歌曲生成（GenSongForTime + 海外 IP 的 veFaaS 中转）
+├── volc-song-gen/       # 豆包音乐模型人声歌曲生成（GenSongForTime + 海外 IP 的 veFaaS 中转）
+└── song-lipsync/        # 程序角色歌唱口型全链路（人声分离 + DTW 逐字对齐 + 起音锚定 + 拼音视素 + 防颤音包络）
 ```
 
 AI 在开发时应直接阅读对应目录下的 `SKILL.md` 和 `references/` 资料。
