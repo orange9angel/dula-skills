@@ -38,6 +38,18 @@ The engine supports two looks. Decide with the user before building:
 4. **Wire every contract field** listed in the contract reference: `headGroup`, `mouth` (+ `mouthBase*` backup values), `leftPupil/rightPupil` (+ `userData.baseX/baseY`), `leftEyelid/rightEyelid`, `leftEyebrow/rightEyebrow`, `leftArm/rightArm` (+ `*BaseZ`), `leftLeg/rightLeg`, `archetypes`, `boundingRadius`.
 5. **Register** in `dula-assets/index.js`: import the class, add `registerCharacter('<Name>', <Name>)` inside `registerAll()`, and export it if the file exports other characters.
 6. **(Sketch mode only)** Apply `sketchify()` + `BoilSystem` per handdrawn-style.md, and set `userData.noSketch = true` on pupils/eyelids/catchlights/hidden parts in `build()`.
+
+## Hands — Never Ball Hands
+
+球端手臂是廉价 CG 的最大破绽（2026-09 监制明确点名的硬伤）。默认造型：
+
+- **连指手套手（默认）**：压扁的胶囊体（手掌，scale z 约 0.45）+ 一个楔形/小胶囊拇指，
+  与手臂用关节球衔接。 silhouettes 读出"手"而不是"球"。
+- **四指卡通手（特写/手势重点镜头）**：手掌 + 4 根锥形短指（无小指分开的 realism，
+  商业卡通惯例）。只在会出现在特写里的主角手上用。
+- 手部形状挂在前臂组末端，继承 `leftArm/rightArm` 契约，不要替换枢轴组本身。
+
+若剧集追求商业动画观感，配合 `cel-look` skill 的完整纪律（描边/一拍二/赛璐璐阴影）。
 7. **Verify visually** (see below). Iterate on proportions/positions from screenshots, not from imagination. In sketch mode, check at one close-up and one full-body distance: outlines must not swallow small features, and dark parts must not carry invisible ink.
 
 ## Visual Verification

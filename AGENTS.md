@@ -17,7 +17,8 @@ dula-skills/
 ├── series-architect/    # 系列长线架构（伏笔生命周期、信息不对称台账、季度节奏）
 ├── performance-director/# 表情/动作表演优化
 ├── scene-designer/      # 场景设计与实现规范
-├── character-modeler/   # 程序化角色建模（Three.js 手绘 + sketch 描边）
+├── character-modeler/   # 程序化角色建模（Three.js 手绘 + sketch 描边 + 手部造型纪律）
+├── cel-look/            # 三维做二维感：描边/boil/一拍二抽帧/赛璐璐阴影/脸部平面化
 ├── build-continuous-story-images/# 跨模型的连续分镜生图与角色锁定
 ├── direct-episode-audio/# 配音、环境音、音效、配乐的声音总导演
 ├── build-character-voice/# 语境化角色配音与逐句后期
