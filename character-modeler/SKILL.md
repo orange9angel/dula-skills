@@ -49,6 +49,20 @@ The engine supports two looks. Decide with the user before building:
   商业卡通惯例）。只在会出现在特写里的主角手上用。
 - 手部形状挂在前臂组末端，继承 `leftArm/rightArm` 契约，不要替换枢轴组本身。
 
+### 手型集（hand pose set）纪律
+
+商业 2D 动画的手是作画监督画的**固定手型**，不是连续运动的关节手指——
+我们也照此办理（2026-09 监制反馈"手指细节"后的定案）：
+
+1. 为主角预雕 4-6 个固定手型：`fist`（握拳）/ `open`（张开）/ `point`（指）/
+   `hold`（持物）/ `wave`（挥手张开），全部不可见切换（visible 切换或
+   位置互换），不做手指关节动画。
+2. 手型随动作语义切换：wave 动作用 open、拿道具用 hold、强调台词用 point。
+   切换时机在姿态切换的同一帧（一拍二网格上），不要在中间帧渐变。
+3. 关节手指不要做：Q 版比例读不出、建模绑定成本高、还会引入新的穿模面。
+4. 脸部细节（睫毛/腮红/嘴内/高光）走 2D 贴片方向（脸基本朝相机），
+   不要为此加 3D 几何。
+
 若剧集追求商业动画观感，配合 `cel-look` skill 的完整纪律（描边/一拍二/赛璐璐阴影）。
 7. **Verify visually** (see below). Iterate on proportions/positions from screenshots, not from imagination. In sketch mode, check at one close-up and one full-body distance: outlines must not swallow small features, and dark parts must not carry invisible ink.
 
