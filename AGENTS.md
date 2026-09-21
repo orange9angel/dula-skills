@@ -18,7 +18,8 @@ dula-skills/
 ├── performance-director/# 表情/动作表演优化
 ├── scene-designer/      # 场景设计与实现规范
 ├── character-modeler/   # 程序化角色建模（Three.js 手绘 + sketch 描边 + 手部造型纪律）
-├── cel-look/            # 三维做二维感：描边/boil/一拍二抽帧/赛璐璐阴影/脸部平面化
+├── direct-animation-craft/# 动画作画监督：手脚造型、四肢曲线、关键姿势、变形与逐镜修型
+├── cel-look/            # 二维画面整理：稳定轮廓/可选速写、色块阴影、脸部图形、曝光节奏
 ├── build-continuous-story-images/# 跨模型的连续分镜生图与角色锁定
 ├── direct-episode-audio/# 配音、环境音、音效、配乐的声音总导演
 ├── build-character-voice/# 语境化角色配音与逐句后期
