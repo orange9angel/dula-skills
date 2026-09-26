@@ -41,7 +41,8 @@ dula-skills/
 ├── credits-sequence/    # 漫威式片尾（Ken Burns 概念美术蒙太奇 + 滚动演职员表 + 彩蛋工艺）
 ├── title-card/          # 程序化转场字卡（墨韵侵蚀标题 + 光效，底图可配，零生成费）
 ├── subtitle-burn/       # 字幕组风格双语字幕（事件 JSON → 角色分色 ASS + 片头字幕组卡 + 烧入）
-└── song-lipsync/        # 程序角色歌唱口型全链路（人声分离 + DTW 逐字对齐 + 起音锚定 + 拼音视素 + 防颤音包络）
+├── song-lipsync/        # 程序角色歌唱口型全链路（人声分离 + DTW 逐字对齐 + 起音锚定 + 拼音视素 + 防颤音包络）
+└── image-lipsync/       # 图像系局部 rig 正本工具链（位图关键帧的眨眼/短句口型/局部微调：diff 羽化锁回 + 三态口型时序 + 质检）
 ```
 
 AI 在开发时应直接阅读对应目录下的 `SKILL.md` 和 `references/` 资料。
