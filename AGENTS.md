@@ -38,6 +38,8 @@ dula-skills/
 ├── volc-balance/        # 火山引擎账户工具（余额查询 QueryBalanceAcct + seed-tts 音色列表 ListSpeakers）
 ├── volc-voice-casting/  # 火山 seed-tts-2.0 角色选声（音色目录 + 演绎型筛选 + 批量试听 + 待解锁清单）
 ├── volc-song-gen/       # 豆包音乐模型人声歌曲生成（GenSongForTime + 海外 IP 的 veFaaS 中转）
+├── credits-sequence/    # 漫威式片尾（Ken Burns 概念美术蒙太奇 + 滚动演职员表 + 彩蛋工艺）
+├── title-card/          # 程序化转场字卡（墨韵侵蚀标题 + 光效，底图可配，零生成费）
 └── song-lipsync/        # 程序角色歌唱口型全链路（人声分离 + DTW 逐字对齐 + 起音锚定 + 拼音视素 + 防颤音包络）
 ```
 
