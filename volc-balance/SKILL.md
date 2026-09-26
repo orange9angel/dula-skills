@@ -98,6 +98,30 @@ cd dula-story
 | `ICL_uranus_zh_male_ruyacaijun_tob` | 儒雅才俊 2.0 | 稳重儒雅大叔，温润平和 |
 | `zh_male_tangseng_uranus_bigtts` | 唐僧 2.0 | 语调平缓慈悲（角色感太强，慎用） |
 
+## 附：账单明细工具（scripts/query_bill_detail.py）
+
+查某次按量任务实际扣费（费用中心 `ListBillDetail`，Version=2022-01-01，GET）。
+关键参数：`BillPeriod=YYYY-MM`、`GroupTerm`（0计费项/1实例/2产品/3账号）、
+`GroupPeriod`（0账期/1按天/2明细）、`IgnoreZero`（0 才能看到免费额度内
+0 元结算的条目）。金额字段是 `DiscountBillAmount`/`PayableAmount`。
+
+```bash
+dula-story/.venv/Scripts/python.exe dula-skills/volc-balance/scripts/query_bill_detail.py
+.../query_bill_detail.py --period 2026-09 --json   # 原始明细
+```
+
+注意：账单按小时出账，刚跑完的任务延迟 1~2 小时才出现；不要用 SDK 默认的
+BillingService（读超时 5 秒，明细查询会超时），脚本用自建 Service 子类
+（read timeout 60s）。限流单账号 5 QPS。
+
+### 实测定价与免费额度（2026-09-15）
+
+- **豆包音频生成模型1.0（Seed-Audio）**：刊例价 **¥1.00/分钟**（创作版-API
+  分钟小时结），14 秒一首 ≈¥0.23；本账号所有条目折后 **¥0.00**——目前在
+  免费额度内，作曲迭代基本不花钱。
+- **语音合成 seed-tts-2.0**：¥0.0003/字符，同样在免费额度内实扣 0。
+- 本月实际开销大头是**豆包大模型 tokens**（ark，¥295/月级）和图像创作。
+
 ## 翻车记录
 
 - 2026-09-06 ListSpeakers 实测：偶发 `CodeN 100016` 瞬时错误（疑似限流/
