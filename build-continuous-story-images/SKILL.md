@@ -23,6 +23,7 @@ Create a provider-neutral sequence plan, then use the strongest continuity mecha
 12. **Animal lip-sync routes to DreamActor 2.0 (action imitation).** OmniHuman rejects non-human faces; for talking animals the proven chain is: TTS line → human template video speaking the line (OmniHuman) → DreamActor 2.0 drives the animal photo with the template (`req_key=jimeng_dreamactor_m20_gen_video`, `image_urls` array + `video_url`, CVSync2Async endpoints). Traps learned from the E06-live pilot: the activated service tier must match the req_key generation — an M2 trial does not cover the M1 req_key (fails with a generic 50400 Access Denied at the auth layer, ~200µs, indistinguishable from an IAM problem); `cut_result_first_second_switch` defaults to true and crops the first second — pass false when the line starts at 0s or the opening syllables' lip-sync is lost; output is 1230×694@25fps, normalize before the assembly pipeline. Reference implementation: `dula-story/episodes/cat_leads_e06_cat_model_live/tools/dream_actor_gen.py`. Acceptance bar for healing-tone use: mouth motion at real-animal amplitude (no rubber-mouth), identity preserved, no background drift.
 13. **Human dialogue: Seedance video-reference chain is the quality channel, OmniHuman the budget one.** Moderation reality (E06-live shootouts, 2026-09-06): uploaded photorealistic face IMAGES are rejected on both Seedance input channels (`InputImageSensitiveContentDetected.PrivacyInformation` — I2V first-frame and 2.5 multimodal image reference alike), but **generated VIDEO carrying the same face passes as `reference_video`**. The verified unified chain: (a) T2V-establish the character (face synthesized in-model, no upload); (b) that clip as `reference_video` + the line's TTS as `reference_audio` (≥1.8s, pad if needed) → talking shot with face lock 5/5, scene lock 5/5 (background consistent by construction), body naturalness 5/5, lip-sync 4/5 — works for humans and animals alike. Caveats: reference tasks cost ~2x plain-T2V tokens; output audio is a re-synthesized voice clone, not a waveform copy of the TTS — if the series voice must match exactly, replace the track in post and verify alignment; output-side moderation occasionally false-positives on prompt wording (specific ages, style names) — rephrase and retry. **Scope discipline: the chain locks only the character and scene IN ITS OWN establishing video.** Chain-internal 5/5 consistency says nothing about matching pre-existing footage — to continue an existing cast, feed the EXISTING footage as `reference_video`; re-establishing via T2V produces a new cast (E06-live V2 lesson: seven talking shots rendered unusable as V1 replacements because the chain was anchored on a fresh T2V face and scene instead of V1's). Also unverified: Seedance 2.0's official page lists audio reference too — "2.0 lacks audio reference" was an over-generalization from one script's parameters; test per account before claiming. Keep OmniHuman (lip-sync 4/5, identity 5/5, ~¥2–3/shot, but stiff body and replaced backgrounds) as the budget fallback for low-stakes lines, and DreamActor 2.0 human-mode (photo + natural template) as the mid-tier when a locked photo must be animated. Tooling: `gen_seedance25.py --video-url/--audio-url` in the E06-live episode tools.
 14. **World anchor discipline (live-action pipelines).** Consistency never comes from any model; it comes from single-source derivation. Before generating ANY shot of a live-action episode, establish ONE world anchor — a master scene video (or scene master image for illustrated pipelines) — and derive every shot from it: environment/non-talking shots via I2V from frames of the anchor lineage, talking shots via the video-reference chain whose establishing videos are shot inside the anchor world, human and animal subjects alike. Three independent world-building events produce three irreconcilable worlds that no color grade can weld (E06-live: codex first-frames + separate omni portrait bases + T2V establishing video = grass-bank world, portrait-backdrop world, and stone-slope world in one 60s film). Test conclusions must be scoped to what was tested: "the chain is internally consistent" is not "the chain matches our existing footage" — verify identity/scene against the actual episode footage before spending on a full batch. For the consolidated live-action channel map, moderation map, anchor workflow, audio discipline, and cost baselines, see [references/live-action.md](references/live-action.md).
+15. **Zero-generation fallback: paint the cels.** When generation budget is off the table, a fully procedural flat-vector painter can replace every generated image while reusing the episode's audio and lip-sync infrastructure unchanged (E08 V2: `painted/painter.js` + `tools/render_painted.mjs`, ¥0 picture cost). Discipline that transfers: drive procedural mouths from the existing `lipsync_cues.json` (keyed by character name, not shot-bound image rigs); keep foreshadow symbols as procedural primitives drawn only in their reveal shot (the quarantine rule applies to painted assets too); limited-animation honesty — no walk/turn acting, emotion carried by expression and pose cuts.
 
 ## Workflow
 
@@ -267,6 +268,26 @@ OmniHuman 1.5 对口型视频（音频驱动、口型天然同步、免费试用
 `../build-character-voice/references/volcano-omnihuman.md`。codex 局部编辑仍保留
 为眨眼/非说话微调的首选通路；qwen/wanx/seedream 贴回全部判死（几何漂移 2-6px
 实测，E04 tools/diagnose_align.py）。
+
+**《9章》教训（2026-09-26）：I2V 批量前必须先做"对白镜分类"闸口**。第一遍
+10 镜一刀切全走无声 I2V + 后期配音，被监制指出对白镜没口型，返工重跑。
+规则：凡时间窗与 `script.story` 对白条目重叠的镜头，**必须走图+音频组合
+（Seedance `--ref 图 --audio-url 台词音频`，模型同pass生成口型）**，不得先
+出无声版再补；纯动作/空镜才走无声 I2V。装配脚本应对对白镜缺 `*_speech`
+版本发出警告。验收方法：抽 4 个时间点裁脸部区域对比嘴部开合状态是否有变化。
+
+**《9章》教训二（2026-09-26）：多镜运动连续性用"首尾帧双钉"，不用续拍链**。
+为让镜头 N→N+1 运动连贯，三条路实测排序：
+1. **首尾帧双钉（首选）**：`gen_i2v_seedance.py --first-frame 关键帧N --last-frame
+   关键帧N+1`（role=last_frame，本次已在脚本补上该参数）。每段两端都是验收过
+   的关键帧，切点像素级对齐，全程 gen-1 画质无衰减，节拍窗口可控。
+2. 续拍链（次选，仅限无关键帧时）：上镜尾帧=下镜首帧。连续性成立但**逐环
+   累积设计漂移+画质衰减**（e09 实测锐度 41→23→21；本集第 3 环白岚被模型
+   自由发挥成背生巨翅的超级英雄），链长 ≤2 环为限。
+3. 独立 I2V 硬切（仅限无身体接力的镜头）：对峙覆盖、空镜、攻击发起等
+   蒙太奇语法合法的切点。
+分镜纪律：关键帧阶段就要核对相邻格的姿态连续性（上格结尾的身体状态=
+下格开头），别只画单格张力。
 
 **路线决议（2026-09-05）：不做风格/角色 LoRA**。评估过把晴印风格烙进模型权重
 （云 4090 训 Flux LoRA，单次 ¥10-30，本机无 GPU），导演决定搁置：一致性走

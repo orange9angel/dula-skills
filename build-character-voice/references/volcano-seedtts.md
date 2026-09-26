@@ -65,6 +65,10 @@ Body:
   别当错误）。
 - **定位**：单要素模式出纯环境音/纯 BGM stem（保护分轨混音与口型管线）；
   它的招牌"一条 prompt 出对白+音效+配乐成品"模式与我们的管线冲突，别用。
+  **例外（2026-09-26 验证）**：纯人声"演绎化台词"stem 可用——prompt 声明
+  "无音乐无音效无背景声"，直接描述角色状态/嗓音/念法生成表演化对白
+  （战损嘶哑、嘶吼等 TTS 达不到的表演强度），仍是单要素 stem，不进混音冲突。
+  局限是音色不可复现，详见 volc-voice-casting/SKILL.md「表演化台词」一节。
 - 接入脚本：dula-story/episodes/cat_leads_e04_firefly_night/tools/seedaudio_gen.py。
 - E04 实测：虫鸣/夜风/BGM 三个 60s stem 均一次成功（详见该集 V1_NOTES）。
 

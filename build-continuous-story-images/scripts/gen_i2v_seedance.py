@@ -153,6 +153,7 @@ def main() -> int:
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--out", required=True, help="output .mp4 path")
     parser.add_argument("--first-frame", help="first-frame image (PNG/JPG); required unless --ref is used")
+    parser.add_argument("--last-frame", help="last-frame image (PNG/JPG) for bookend (首尾帧) generation")
     parser.add_argument("--ref", action="append", default=[],
                         help="Seedance 2.x only: reference image (repeatable, up to 9). "
                              "Switches to multi-modal reference mode — mutually exclusive "
@@ -189,6 +190,7 @@ def main() -> int:
         parser.error("empty prompt (use --prompt or --prompt-file)")
 
     first_frame = Path(args.first_frame) if args.first_frame else None
+    last_frame = Path(args.last_frame) if args.last_frame else None
     if first_frame and not first_frame.is_file():
         parser.error(f"first frame does not exist: {first_frame}")
     refs = [Path(r) for r in args.ref]
@@ -214,6 +216,10 @@ def main() -> int:
             content.append({"type": "image_url",
                             "image_url": {"url": encode_image(first_frame)},
                             "role": "first_frame"})
+        if last_frame:
+            content.append({"type": "image_url",
+                            "image_url": {"url": encode_image(last_frame)},
+                            "role": "last_frame"})
         for ref in refs:
             content.append({"type": "image_url",
                             "image_url": {"url": encode_image(ref)},
