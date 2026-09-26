@@ -121,7 +121,11 @@ def click_first(page, selectors, what):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--login', action='store_true', help='headed 登录后退出')
+    ap.add_argument('--headed', action='store_true', help='显示浏览器窗口（默认无头后台运行）')
     ap.add_argument('--probe', action='store_true', help='探测页面结构')
+    ap.add_argument('--create-voice', help='建档声音克隆：<名称>（配合 --voice-file）')
+    ap.add_argument('--voice-file', type=Path, help='声音克隆参考音频（wav/mp3）')
+    ap.add_argument('--voice', help='生成时使用的已建档 Voice 名称')
     ap.add_argument('--style', default='')
     ap.add_argument('--style-file')
     ap.add_argument('--lyrics-file')
@@ -136,8 +140,11 @@ def main():
 
     PROFILE.mkdir(exist_ok=True)
     with sync_playwright() as p:
+        # 默认无头后台运行；--login/--headed 才开窗口。
+        # Cloudflare 拦无头时下方 goto 后会检测挑战文本并给出指引。
+        headless = not args.login and not args.headed
         ctx = p.chromium.launch_persistent_context(
-            str(PROFILE), headless=False,  # Suno 有 Cloudflare 挑战，headless 会被拦
+            str(PROFILE), headless=headless,
             viewport={'width': 1440, 'height': 900},
             args=['--disable-blink-features=AutomationControlled'])
         # cookie 双保险：profile 损坏/被 kill 时用导出的 cookies 恢复
@@ -150,6 +157,13 @@ def main():
                 log(f'cookies 注入失败（忽略）：{exc}')
         page = ctx.new_page()
         page.goto('https://suno.com/create', wait_until='domcontentloaded')
+        # Cloudflare 挑战检测（无头模式易被拦）：命中则提示改用 --headed
+        page.wait_for_timeout(2500)
+        if page.locator('text=/verify you are human|just a moment|checking your browser/i').count():
+            ctx.close()
+            sys.exit('Cloudflare 挑战拦截了无头模式：先用 --headed 跑一次通过挑战（会话会记住），'
+                     '或改 --headed 运行本次。')
+        log(f'浏览器模式: {"headless" if headless else "headed"}')
 
         if args.login:
             log('浏览器已打开。请手动登录 Suno 并进入 /create 页面。')
@@ -178,6 +192,38 @@ def main():
         page.wait_for_timeout(4000)
         click_first(page, COOKIE_SELECTORS, 'cookie-consent')
         dismiss_overlays(page)
+
+        if args.create_voice:
+            if not args.voice_file or not args.voice_file.exists():
+                log('--create-voice 需要 --voice-file 指向存在的音频')
+                ctx.close()
+                return 2
+            page.keyboard.press('Escape')
+            click_first(page, ['button:has-text("Voice")'], 'voice-dialog')
+            page.wait_for_timeout(1200)
+            click_first(page, ['text=Create Voice'], 'create-voice')
+            page.wait_for_timeout(1200)
+            click_first(page, ['button:has-text("Upload Audio")'], 'upload-audio')
+            page.wait_for_timeout(800)
+            fi = page.locator('input[type=file]').first
+            fi.set_input_files(str(args.voice_file))
+            log('音频已上传，等待处理...')
+            page.wait_for_timeout(6000)
+            named = fill_first(page, ['input[placeholder*="name" i]', 'input[placeholder*="Name"]',
+                                      'input[type="text"]:visible'], args.create_voice, 'voice-name')
+            if not named:
+                log('未找到命名框，尝试直接找保存按钮')
+            for sel in ('button:has-text("Save")', 'button:has-text("Create")',
+                        'button:has-text("Done")', 'button:has-text("Confirm")'):
+                loc = page.locator(sel).last
+                if loc.count() and loc.is_visible():
+                    loc.click()
+                    log(f'保存 voice: {sel}')
+                    break
+            page.wait_for_timeout(4000)
+            page.screenshot(path=str(args.out / f'voice_{args.create_voice}.png'))
+            ctx.close()
+            return 0
 
         if args.probe:
             dump = {
@@ -232,6 +278,21 @@ def main():
         elif lyrics:
             if not fill_first(page, LYRICS_SELECTORS, lyrics, 'lyrics'):
                 page.screenshot(path=str(args.out / 'suno_fail_lyrics.png'))
+                ctx.close()
+                return 1
+
+        if args.voice:
+            page.keyboard.press('Escape')
+            click_first(page, ['button:has-text("Voice")'], 'voice-dialog')
+            page.wait_for_timeout(1200)
+            v = page.locator(f'text={args.voice}').first
+            if v.count():
+                v.click()
+                log(f'voice 已选: {args.voice}')
+                page.keyboard.press('Escape')
+                page.wait_for_timeout(500)
+            else:
+                log(f'voice "{args.voice}" 未找到（需先 --create-voice 建档）')
                 ctx.close()
                 return 1
 
@@ -325,21 +386,26 @@ def main():
                 wav = page.locator('button:has-text("WAV"), [role="menuitem"]:has-text("WAV"), div[role="button"]:has-text("WAV")').first
                 wav.click()
                 page.wait_for_timeout(800)
-                # 选完格式后可能需要确认（"Unlock & Download" 或主按钮）
+                # 选完格式后可能需要确认（"Unlock & Download" 或主按钮）。
+                # 注意：expect_download 必须包住"触发下载的那次点击"，
+                # 先点后等会错过事件（原 AttributeError 的根因）。
+                confirm_sel = None
                 for csel in ('button:has-text("Unlock & Download")',
                              'button:has-text("Unlock and Download")',
                              'div.fixed.inset-0 button:has-text("Download")',
                              '[role="dialog"] button:has-text("Download")'):
                     cl = page.locator(csel).last
                     if cl.count() and cl.is_visible():
-                        cl.click()
-                        log(f'确认下载: {csel}')
+                        confirm_sel = csel
                         break
-                # 等浏览器下载事件
-                di = page.expect_download(timeout=30000)
-                with di:
-                    pass
-                d = di.value
+                with page.expect_download(timeout=30000) as dl_info:
+                    if confirm_sel:
+                        page.locator(confirm_sel).last.click()
+                        log(f'确认下载: {confirm_sel}')
+                    else:
+                        # 无确认对话框：WAV 项本身就是触发，补点一次
+                        page.locator('button:has-text("WAV"), [role="menuitem"]:has-text("WAV"), div[role="button"]:has-text("WAV")').first.click()
+                d = dl_info.value
                 target = args.out / f'{title}.wav'
                 d.save_as(str(target))
                 log(f'downloaded: {target}')

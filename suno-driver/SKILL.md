@@ -46,3 +46,15 @@ cd dula-story
 （Unlock→Download 对话框流程）已被页面改版破坏。需要跑 `--probe` 重新
 校准下载选择器链；校准前片尾曲等需求走 `volc-song-gen`（GenSong v4.3
 纯音乐 prompt 可用）兜底。失败截图：`suno_fail_download.png`。
+
+## 无头模式与下载修复（2026-09-27，已验证）
+
+- **默认无头后台运行**（`headless=True`），`--login`/`--headed` 才开窗口。
+  持久会话 + cookies.json 下 Cloudflare 未拦截；脚本 goto 后检测挑战文本，
+  命中会提示先 `--headed` 跑一次。
+- **下载 AttributeError 根因**：`expect_download` 用法错误——先点了确认按钮
+  才进入等待上下文，事件早已错过。修复为 `with page.expect_download()` 包住
+  触发下载的那次点击（无确认对话框时补点 WAV 项）。无头实测下载成功（183s
+  完整 WAV）。
+- 待修：`instrumental` 开关选择器失效（NOT FOUND），器乐需求暂时写在
+  style 文本里；title 输入框选择器同样失效（不影响生成）。
