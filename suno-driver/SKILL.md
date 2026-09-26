@@ -38,3 +38,11 @@ cd dula-story
 - 全自动正式 API：`volc-song-gen`（火山 GenSong，经 veFaaS 中转）——优先用
 - 本驱动：火山产出不符合要求（如民乐音色）时的质量上限通道
 - 下载的 WAV 接入既有链路：Demucs 分离 → 对齐 → 口型（见 song-lipsync）
+
+## 翻车记录（2026-09-26，下载链路断裂）
+
+生成成功（clip 落库）但**下载全部失败**：`Unlock & Download` 确认后
+`AttributeError` 无限重试。生成侧选择器（style/create）仍有效，下载侧
+（Unlock→Download 对话框流程）已被页面改版破坏。需要跑 `--probe` 重新
+校准下载选择器链；校准前片尾曲等需求走 `volc-song-gen`（GenSong v4.3
+纯音乐 prompt 可用）兜底。失败截图：`suno_fail_download.png`。
