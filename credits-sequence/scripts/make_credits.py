@@ -74,10 +74,12 @@ def main() -> int:
     xfade_frames = int(0.6 * FPS)  # 交叉淡化 0.6s
 
     # 1. 生成蒙太奇帧序列（Ken Burns + 交叉淡化拼接 + 中段一次光闪）
+    # 注意：xfade 重叠会消耗帧数（N-1 段过渡各吃掉 xfade 帧），
+    # 所以每段多生成 xfade 帧补偿，末尾裁回 total_frames。
     seq: list[Image.Image] = []
     for i, img in enumerate(images):
         n = per if i < len(images) - 1 else total_frames - per * (len(images) - 1)
-        zb = ken_burns(img, n, 1 if i % 2 == 0 else -1)
+        zb = ken_burns(img, n + xfade_frames, 1 if i % 2 == 0 else -1)
         if i == 0:
             seq.extend(zb)
         else:
@@ -89,6 +91,7 @@ def main() -> int:
             ]
             seq[-xfade_frames:] = blend
             seq.extend(zb[xfade_frames:])
+    seq = seq[:total_frames]
     # 中段光闪转场（第 1/2 处，2 帧白闪）
     mid = len(seq) // 2
     seq[mid] = Image.blend(seq[mid], Image.new("RGB", (W, H), (255, 255, 255)), 0.85)
