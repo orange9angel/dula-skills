@@ -64,3 +64,9 @@ Create acting first and audio processing second. Preserve a believable native vo
 - Preserve text and character matching so stale manifests are rejected.
 - The default engine consumes `postEffect.ffmpeg`; the F5/SOX backend consumes `postEffect.semantic`.
 - Keep generated clips and `mixed.wav` out of source control according to the episode repository rules.
+
+## 正本脚本
+
+`scripts/omnihuman_gen.py`：OmniHuman 对口型视频生成正本（六份集内拷贝字节
+级一致，2026-09-27 收编自 cat_leads_e09）。接入纪律见
+`references/volcano-omnihuman.md`。
