@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """批量试听 seed-tts-2.0 音色（角色选声用）。
 
-复用 episodes/yuki_bento_battle/tools/seedtts_say.py 的 synthesize()（V3 HTTP
+复用 skill 内正本 seedtts_say.py 的 synthesize()（V3 HTTP
 单向流式合成，VOLC_SPEECH_API_KEY 来自 dula-story/.env.speech）。
 
 音色来源二选一：
@@ -39,7 +39,7 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 WORKSPACE_ROOT = SCRIPT_DIR.parents[2]  # scripts -> volc-voice-casting -> dula-skills -> root
-SEEDTTS_TOOLS = WORKSPACE_ROOT / "dula-story" / "episodes" / "yuki_bento_battle" / "tools"
+SEEDTTS_TOOLS = WORKSPACE_ROOT / "dula-skills" / "volc-voice-casting" / "scripts"
 sys.path.insert(0, str(SEEDTTS_TOOLS))
 
 from seedtts_say import SeedTTSError, get_api_key, synthesize  # noqa: E402

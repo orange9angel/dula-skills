@@ -289,3 +289,9 @@ F0 中位数与 P10-P90 只报告不判定（气声/嘶吼的 F0 跟踪不稳定
 遵循 `dula-skills/AGENTS.md`：试听/合成过程中发现的新坑（新的错误码、
 音色行为异常、解锁流程变化等），任务收尾时写回本 SKILL.md 的"已知坑"
 或新增"翻车记录"一节并提交。
+
+## 正本脚本（scripts/）
+
+`seedtts_say.py`（V3 HTTP 合成）与 `seedaudio_gen.py`（Seed-Audio 生成）
+的**正本在本 skill 内**。历史上它们散落在各 episode tools/（9 份/7 份
+私有拷贝互相漂移），新工作一律引用本目录版本；旧拷贝不删，逐集替换。

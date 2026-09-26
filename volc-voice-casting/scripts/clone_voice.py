@@ -42,7 +42,7 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 WORKSPACE_ROOT = SCRIPT_DIR.parents[2]
-SEEDTTS_TOOLS = WORKSPACE_ROOT / "dula-story" / "episodes" / "yuki_bento_battle" / "tools"
+SEEDTTS_TOOLS = WORKSPACE_ROOT / "dula-skills" / "volc-voice-casting" / "scripts"
 sys.path.insert(0, str(SEEDTTS_TOOLS))
 
 from seedtts_say import SeedTTSError, get_api_key, synthesize  # noqa: E402

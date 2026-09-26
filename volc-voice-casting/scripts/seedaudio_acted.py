@@ -37,7 +37,7 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 WORKSPACE_ROOT = SCRIPT_DIR.parents[2]
-SEEDAUDIO_TOOLS = WORKSPACE_ROOT / "dula-story" / "episodes" / "yuki_bento_battle" / "tools"
+SEEDAUDIO_TOOLS = WORKSPACE_ROOT / "dula-skills" / "volc-voice-casting" / "scripts"
 sys.path.insert(0, str(SEEDAUDIO_TOOLS))
 
 from seedaudio_gen import API_KEY_ENV, API_URL, MODEL, SeedAudioError  # noqa: E402
