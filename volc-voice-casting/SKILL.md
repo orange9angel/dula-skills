@@ -110,6 +110,11 @@ dula-story/.venv/Scripts/python.exe dula-skills/volc-voice-casting/scripts/audit
   控制台 API Key（`.env.speech` 的 `VOLC_SPEECH_API_KEY`），与 ARK key
   不通用。两个 .env 都是裸 `KEY=value`，bash 里要 `set -a; source; set +a`。
 - **绝不在输出/日志/报告中打印任何密钥内容。**
+- **ICL 音色 resource 配对有个案例外（2026-09-26 fish musical 实测）**：
+  `ICL_uranus_zh_male_youmodaye_tob` 在 `seed-tts-2.0` resource 下直接合成成功
+  （该账号克隆入库时的配对）；换 `seed-icl-2.0` 反而 55000000 mismatch，
+  `seed-icl-1.0` 则 403 not granted。克隆音色入新剧集前先小样本试
+  seed-tts-2.0，再按报错换 resource。
 - **气声字会被念成本音（2026-09-26 战损声实测）**：想让角色"带喘息"时，
   文本里写「嗬/呃/咳」会被 TTS 字正腔圆地读成 hē/è/ké（像笑场），不是
   气声。喘息只能来自两条路：① 纯标点断句（「白……岚……部……长……」）
