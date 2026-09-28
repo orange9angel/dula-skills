@@ -58,3 +58,10 @@ cd dula-story
   完整 WAV）。
 - 待修：`instrumental` 开关选择器失效（NOT FOUND），器乐需求暂时写在
   style 文本里；title 输入框选择器同样失效（不影响生成）。
+
+## 2026-09-28：先辨别会话失效，再诊断选择器
+
+- `cookies.json 已注入` 只表示载入成功，不证明会话有效。实际页面若是
+  `Welcome to Suno` 登录页，后续 Custom/style/title 全部 NOT FOUND 是登录问题。
+- 驱动在填写之前检测登录页，保存 `suno_login_required.png`，以退出码 3 结束；
+  明确未提交生成，等待用户手动 `--login`。不要反复点击或误改创作选择器。

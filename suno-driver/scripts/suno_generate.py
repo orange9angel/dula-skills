@@ -190,6 +190,13 @@ def main():
             return 0
 
         page.wait_for_timeout(4000)
+        if ('sign-in' in page.url or 'login' in page.url
+                or page.get_by_text('Welcome to Suno', exact=True).count()):
+            args.out.mkdir(parents=True, exist_ok=True)
+            page.screenshot(path=str(args.out / 'suno_login_required.png'))
+            log('登录态已失效：请运行 --login 手动登录；未提交歌曲生成。')
+            ctx.close()
+            return 3
         click_first(page, COOKIE_SELECTORS, 'cookie-consent')
         dismiss_overlays(page)
 
