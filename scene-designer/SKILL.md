@@ -88,3 +88,16 @@ Visually inspect every generated shot. For critical shots, verify the exact cont
 - Anchors and zones are contract conventions, not current `SceneBase` APIs. Materialize required blocking in `Position`/`Move` tags or scene code.
 - Only `sphere`, `capsule`, and `box` camera obstacles are supported. Cameras without collision guarding need critical shot checks.
 - `build()` runs before characters are added. Async assets must expose a scene `readyPromise` consumed by the renderer.
+
+## 踩坑记录
+
+- **实景改造方法论（2026-10-07 yuki_airport_t2 长乐机场 T2）**：先拿实景照片提取
+  "签名特征"（本集：木色条板波浪吊顶 + 白色喇叭口天窗阵列 + 白色几字形马鞍脊梁 +
+  灰底橙红叶纹地毯），Q 版积木抓住签名特征即"像"；特征间冲突时按实景分区
+  （喇叭口在出发大厅、马鞍脊梁在指廊，同轴冲突就分区摆放）。
+- **NoToneMapping 下纯白无层次**：白色雕塑壳/膜结构要压灰一号（如 #ece7dc），
+  否则糊成无细节的亮块；发光片半径须略小于其膜口沿（本集 1.42 vs 1.55）防露边。
+- **竖屏横向视野极窄**：720×1280 下 fov40 的横场角只有约 ±12°——双角色同框要么
+  同深度靠近站，要么相机沿纵深退远；侧向拉开的双人构图必然裁人。
+- **白色/浅色物体在亮背景前的轮廓陷阱**：白色机身侧对亮天空时只剩彩色尾翼可读，
+  会读成悬浮异物；剪影类配景要么压深色、要么给全轮廓角度。

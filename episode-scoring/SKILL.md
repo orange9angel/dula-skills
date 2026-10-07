@@ -65,3 +65,14 @@ python ../dula-skills/episode-scoring/scripts/run_scoring.py `
 - `scripts/music_director.py`: semantic automatic scoring fallback.
 - `scripts/generate_music.py`: resolve curated/downloaded music or procedural placeholders.
 - `scripts/run_scoring.py`: direction-aware orchestration and cue manifest generation.
+
+## 踩坑记录
+
+- **火山 Seed-Audio 器乐 BGM 链路可用（2026-10-07 yuki_airport_t2）**：
+  `volc-voice-casting/scripts/seedaudio_gen.py`（`.env.speech` 的 SPEECH key）
+  一次生成 112s 纯器乐成功，适合 vlog 铺底；长度不足时 1.5s 交叉淡化接环。
+- **器乐"无歌声验证"的幻觉串**：faster-whisper 转写纯音乐会产出「字幕by索兰娅」
+  式固定幻觉串——这是无语音内容的假阳性，不能据此误判有歌词。
+- **铺底电平口径（本集实测）**：BGM 基准 RMS = 人声 RMS −12dB；对白段按口型
+  gate 包络 duck 再 −7dB（150ms 平滑）；旁白/彩蛋段整体 ×0.7；成片峰值留
+  ≥1dB 余量（本集 -4.96 dBFS）。

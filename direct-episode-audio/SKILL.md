@@ -59,3 +59,12 @@ Own the episode's sound intent and integration contract. Keep voice, ambience/Fo
 - Picture or action timing change: re-resolve shot/event anchors, ambience/Foley, music, and mix.
 - Music-only change: regenerate music and mix; do not regenerate dialogue or lip sync.
 - Ambience/Foley-only change: regenerate that stem and mix; do not regenerate dialogue or lip sync.
+
+## 踩坑记录
+
+- **混音放置零点必须与逐字对齐零点一致（2026-10-07 yuki_airport_t2）**：台词音频
+  放进 mix 的 t0 和逐字对齐的 seg.start 若差哪怕 50ms，口型就会系统性偏。放置
+  点、视素轨、字幕轨共用同一个零点常量，别各自加减"呼吸量"。
+- **旁路 bus 是"额外再写一份"（同上翻车）**：给 place/mix 函数加侧 bus（如单独
+  测人声电平的 voice bus）时，主 mix 必须照样写入；第一版只写侧 bus，主 mix
+  丢了全部人声，靠成片峰值从 -5dBFS 掉到 -19dBFS 才暴露。

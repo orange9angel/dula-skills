@@ -128,6 +128,12 @@ dula-story/.venv/Scripts/python.exe dula-skills/volc-voice-casting/scripts/audit
   会得到同音字（「白岚部长」→「白蓝不长」），发音其实正确——转写核对
   **必须做拼音级比对**（去声调拼音序列相似度），比汉字会把合格演绎误判
   成失败。qc_lines.py 已内置，阈值见「自动化验收纪律」。
+- **qc_lines manifest 的 expect_text 不能为 null（2026-10-07 yuki_airport_t2 实测）**：
+  `expect_text=null` 配 `kind=dialogue` 会让全部条目判 ❌；只想测时长/电平
+  也要填上期望文本（或改用 kind=nonverbal）。
+- **QC 时长窗口要按当前实测重建（同上）**：换词重合成后，manifest 里写死的
+  旧实测窗口会把新音频误判超窗 ❌。批量 QC 前用 ffprobe 重测各文件时长重建
+  manifest（窗口=实测+0.5s 时只验内容与电平）。
 
 ## 表演化台词：Seed-Audio 演绎路径（2026-09-26 验证定案）
 
