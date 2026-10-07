@@ -92,3 +92,13 @@ Open the screenshots in `episodes/<name>_showcase/storyboard/` (or the path the 
 - Nested part's sketch hull pokes through the enclosing mesh (sock hull jags out of the shoe = "fracture line") → strip the inner part's strokes (remove its `userData.stroke`/`userData.sketchLine` children) or let the outer part fully cover the junction.
 - Mirrored pair angles written as `value * side` → one side fans/flips wrong (Mochi's left whiskers fanned upward): sanity-check the `-1` side by hand; sign errors survive every screenshot until someone looks at a close-up.
 - Spikes/tufts sized to sit exactly flush with a hair/shell surface get swallowed by it (Dodo's hair spikes: tip == cap top → invisible): size signature protrusions so tips clear the enclosing shell by a visible margin, then confirm from a front close-up.
+
+## 踩坑记录
+
+- **脸贴片翻车三连（2026-10-07 bio_armor_academy_s1e2）**：①脸贴覆盖角必须匹配
+  角色 yaw 朝向与机位扇区——贴片只盖正面 ±36° 而角色面朝 +x、机位在 +z 时
+  看到的全是侧后脑（"看不到脸"≠"脸没画"，先查朝向再查贴图）；②球段坐标贴片
+  半径要比颅骨大一圈才不露馅；③逆光/黄昏场景脸贴用 MeshBasicMaterial
+  （Toon 正面全黑）。本集把脸贴加宽到 ±65° 解决。
+- **挂在肢体上的甲片/配件尺寸不得超出肢体实际长度（同上）**：前臂肘→腕仅
+  ~0.18m，分段甲排到 0.2 就溢出手腕悬空——按 twoBone 骨长排布配件。

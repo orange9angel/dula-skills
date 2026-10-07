@@ -76,3 +76,9 @@ python ../dula-skills/episode-scoring/scripts/run_scoring.py `
 - **铺底电平口径（本集实测）**：BGM 基准 RMS = 人声 RMS −12dB；对白段按口型
   gate 包络 duck 再 −7dB（150ms 平滑）；旁白/彩蛋段整体 ×0.7；成片峰值留
   ≥1dB 余量（本集 -4.96 dBFS）。
+
+（S1E2 补充，2026-10-07 bio_armor_academy_s1e2）
+- **双 BGM 切换**：主题曲全程铺底 + 打斗曲只压打斗段（入点=变身宣告、出点=反击落地），
+  先各自入侧 bus、统一 duck 后再入 mix——侧 bus 必须 skip_mix，避免混入两次。
+- **既有音效库事件总线复用**：前集 SFX 拷贝到本集 assets（NOTES 注明来源），
+  按条目内相对时间放置（落地 55%、命中 65%/72% 等），环境床低 dB 循环垫全程。

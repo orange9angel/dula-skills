@@ -101,3 +101,7 @@ Visually inspect every generated shot. For critical shots, verify the exact cont
   同深度靠近站，要么相机沿纵深退远；侧向拉开的双人构图必然裁人。
 - **白色/浅色物体在亮背景前的轮廓陷阱**：白色机身侧对亮天空时只剩彩色尾翼可读，
   会读成悬浮异物；剪影类配景要么压深色、要么给全轮廓角度。
+
+- **浏览器 probe 脚本的 /tmp 路径坑（2026-10-07 bio_armor_academy_s1e2）**：Git Bash
+  的 /tmp 与原生 Windows Python 的 /tmp 解析不同——probe 脚本放 episode tmp/ 或
+  仓库根，别用 /tmp 中转，否则 bash 建的文件 Python 找不到。
