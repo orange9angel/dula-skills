@@ -20,7 +20,9 @@ Playwright 持久化会话驱动网页版，完成 生成→下载 自动化。
 
 ```bash
 cd dula-story
-# 1. 首次：headed 登录（手动登录后回车关闭，会话存 .suno_profile）
+# 1. 首次/会话过期：自动登录（headed，凭据走环境变量；或 --login 全手动）
+SUNO_EMAIL='you@gmail.com' SUNO_PASSWORD='***' \
+  .venv/Scripts/python.exe ../dula-skills/suno-driver/scripts/suno_login.py
 .venv/Scripts/python.exe ../dula-skills/suno-driver/scripts/suno_generate.py --login
 # 2. 页面结构变了就跑探测，把 suno_probe.json 交给代理校准选择器
 .venv/Scripts/python.exe ../dula-skills/suno-driver/scripts/suno_generate.py --probe --out tmp/
@@ -81,3 +83,19 @@ cd dula-story
   日常已登录的浏览器手动生成/下载（如本机常驻浏览器 + WebBridge），事后补
   `.source.json` 记录 song_id 与 sha256。S1E2 R2 配乐即走此通道
   （`config/suno_score_request.json` status=downloaded）。
+
+## 2026-10-08 晚：自动登录脚本（suno_login.py）与 Google OAuth 坑
+
+- **Suno 没有邮箱+密码登录**：登录弹层只有 Google/Apple/Phone + Discord/
+  Facebook/Microsoft。"输入邮箱密码"实际走对应 OAuth 提供方。
+- **`scripts/suno_login.py`**：headed 打开 Suno → JS 按文本点 "Log in" →
+  Continue with Google → 自动填邮箱/密码 → 写回持久 profile + cookies.json。
+  凭据只走 `SUNO_EMAIL`/`SUNO_PASSWORD` 环境变量，不落盘。实测一次通过。
+- **Google 会拒绝无头登录**：无头跑到密码步后落在
+  `accounts.google.com/v3/signin/rejected`（自动化检测）；同一 profile 换
+  headed（带 `--disable-blink-features=AutomationControlled`）即通过。
+  登录必须 headed；登录后的生成/下载仍可无头。
+- Google 表单选择器：邮箱框是 `#identifierId`（**type=text** 不是 email），
+  密码框是 `input[name="Passwd"]`；导航慢，要 `wait_for_selector` 等到可见再填。
+- Suno 头部 "Log in" 按钮对 `wait_for_selector`/`locator.click` 不稳定（明明
+  可见却超时），直接 `page.evaluate` 按 innerText 找元素 `.click()` 可靠。
