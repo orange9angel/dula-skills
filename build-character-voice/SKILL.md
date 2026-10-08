@@ -70,3 +70,12 @@ Create acting first and audio processing second. Preserve a believable native vo
 `scripts/omnihuman_gen.py`：OmniHuman 对口型视频生成正本（六份集内拷贝字节
 级一致，2026-09-27 收编自 cat_leads_e09）。接入纪律见
 `references/volcano-omnihuman.md`。
+
+## 踩坑写回（2026-10-08 9章 S1E2 R10）
+
+- **TTS 输入必须保留标点**：剥离标点的纯字文本喂给 seed-tts 会整句连读，
+  断句全丢。数据模型建议三分离：`text`（纯字，供 ASR 对齐/QC）/ `display`
+  （字幕，可带标点）/ `tts_text`（TTS 输入，标点=停顿）。
+- **笑声象声词 ASR 转写不稳**："哈哈"容易被转写成"呵呵"（拼音重合率 87%
+  判红）或干脆不进转写。拟声笑声用单字"哈！"最稳；QC 对笑声项的转写
+  失败不算内容错误，以内容字覆盖率为准。
