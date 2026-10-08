@@ -101,6 +101,14 @@ Visually inspect every generated shot. For critical shots, verify the exact cont
   同深度靠近站，要么相机沿纵深退远；侧向拉开的双人构图必然裁人。
 - **白色/浅色物体在亮背景前的轮廓陷阱**：白色机身侧对亮天空时只剩彩色尾翼可读，
   会读成悬浮异物；剪影类配景要么压深色、要么给全轮廓角度。
+- **机械剪影要拿"特征轮廓三件套"（2026-10-08 S1E2 R3 塔吊）**：单个实心柱+
+  几片旋转横板堆出来的塔吊读成"带刺柱子"；可读塔吊=格构塔身（四角柱+交叉
+  斜撑）+ 臂架伸进画面上空 + 塔尖斜拉索三角 + 吊绳吊钩。剪影物体的验收标准
+  是"一眼能叫出名字"。
+- **贴地半透明片（积水/水洼）防"发光飞碟"**：线性渐变+硬边圆+高不透明度会
+  读成悬浮发光盘；用径向羽化 alpha 边缘 + 整体压暗（opacity≤.5）+
+  depthWrite:false。注意 update() 里的呼吸动效别覆盖 build 的低调设计
+  （本集 update 把 opacity 写成 .78，把羽化片又变回亮碟）。
 
 - **浏览器 probe 脚本的 /tmp 路径坑（2026-10-07 bio_armor_academy_s1e2）**：Git Bash
   的 /tmp 与原生 Windows Python 的 /tmp 解析不同——probe 脚本放 episode tmp/ 或
