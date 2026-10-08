@@ -7,6 +7,15 @@ description: Optimize facial expressions and body actions in a Dula script.story
 
 `performance-director` 是 `story-writer` 之后的表演优化层。它读取已有剧本，根据台词语义、潜台词、角色性格和上下文，优化表情 (`Animation:FaceXxx`) 和动作 (`{Action}`) 标签，让动画表演更生动、有层次。
 
+## 先确认表演由哪一层执行
+
+本技能的规则脚本修改 DSL 标签。若 episode 使用自包含 viewer、姿态求解或面部纹理
+驱动，先确认这些标签是否被实际消费；不要把添加标签当成运行时表演已经改变。
+用户指出成片僵硬、格斗无力或与商业动画有差距时，结合最终视频检查实际表演代码，
+转用 [动画作画监督](../direct-animation-craft/SKILL.md)。双人格斗及试片接正片的
+具体做法见 [格斗表演与正片接入](../direct-animation-craft/references/fight-performance.md)。
+下文角色和动作仅作标签流程示例；应用时沿用用户当前剧集、人物与既有资产。
+
 ## 定位
 
 ```
