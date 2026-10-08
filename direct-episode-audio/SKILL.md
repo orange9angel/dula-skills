@@ -68,3 +68,9 @@ Own the episode's sound intent and integration contract. Keep voice, ambience/Fo
 - **旁路 bus 是"额外再写一份"（同上翻车）**：给 place/mix 函数加侧 bus（如单独
   测人声电平的 voice bus）时，主 mix 必须照样写入；第一版只写侧 bus，主 mix
   丢了全部人声，靠成片峰值从 -5dBFS 掉到 -19dBFS 才暴露。
+- **复用音频必须逐文件追溯（2026-10-08 bio_armor_academy_s1e2）**：标注“前集
+  音效库”或片尾写某平台，不代表所有文件来自该平台。此次核查发现全片 BGM 是
+  旧下载曲，16 支 SFX 中 5 支是程序合成；火山生成脚本的 skip-if-exists 保留了
+  同名旧素材。核对混音实际读入路径、文件 metadata、源文件哈希及成功生成记录，
+  必要时对齐解码音频确认成片来源。无证据的 provider 明确记为未核实；更新来源
+  清单后再决定替换，不能把“脚本支持某平台”写成“当前成片已使用该平台”。
