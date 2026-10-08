@@ -65,3 +65,19 @@ cd dula-story
   `Welcome to Suno` 登录页，后续 Custom/style/title 全部 NOT FOUND 是登录问题。
 - 驱动在填写之前检测登录页，保存 `suno_login_required.png`，以退出码 3 结束；
   明确未提交生成，等待用户手动 `--login`。不要反复点击或误改创作选择器。
+
+## 2026-10-08：cookie 备份改为显式恢复（默认不注入）
+
+- **cookie 双保险改为 opt-in**：`cookies.json` 注入现在需要显式传
+  `--restore-cookies`。旧备份可能过期（实测 9 月 29 日的备份到 10 月 8 日已失效），
+  自动注入会让"备份恢复"静默覆盖持久 profile 里更新的登录态，且注入成功不代表
+  会话有效。默认只信持久 profile；确认 profile 损坏时才用 `--restore-cookies` 回滚。
+- **每次成功进入创作页后刷新 `cookies.json`**（登录页守卫通过之后才写），
+  让备份跟随最新会话滚动更新，而不是越放越旧。
+- **--login 检测改为扫全部 Suno 标签页**：用户可能在脚本开的页之外的标签里完成
+  登录；现在对所有 `suno.com` 标签页查创作界面元素（歌词编辑框/style 输入框/
+  `My Workspace`），命中即视为已登录。
+- **应急通道**：持久 profile 登录态整体过期、来不及走 `--login` 时，可改用用户
+  日常已登录的浏览器手动生成/下载（如本机常驻浏览器 + WebBridge），事后补
+  `.source.json` 记录 song_id 与 sha256。S1E2 R2 配乐即走此通道
+  （`config/suno_score_request.json` status=downloaded）。

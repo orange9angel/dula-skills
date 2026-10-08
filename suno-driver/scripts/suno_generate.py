@@ -122,6 +122,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--login', action='store_true', help='headed 登录后退出')
     ap.add_argument('--headed', action='store_true', help='显示浏览器窗口（默认无头后台运行）')
+    ap.add_argument('--restore-cookies', action='store_true', help='显式从备份恢复 cookie；正常使用持久 profile，避免旧备份覆盖新登录')
     ap.add_argument('--probe', action='store_true', help='探测页面结构')
     ap.add_argument('--create-voice', help='建档声音克隆：<名称>（配合 --voice-file）')
     ap.add_argument('--voice-file', type=Path, help='声音克隆参考音频（wav/mp3）')
@@ -149,7 +150,7 @@ def main():
             args=['--disable-blink-features=AutomationControlled'])
         # cookie 双保险：profile 损坏/被 kill 时用导出的 cookies 恢复
         cookies_file = PROFILE / 'cookies.json'
-        if cookies_file.exists() and not args.login:
+        if cookies_file.exists() and args.restore_cookies and not args.login:
             try:
                 ctx.add_cookies(json.loads(cookies_file.read_text(encoding='utf-8')))
                 log('cookies.json 已注入')
@@ -167,14 +168,17 @@ def main():
 
         if args.login:
             log('浏览器已打开。请手动登录 Suno 并进入 /create 页面。')
-            log('（脚本每 5 秒自动检测登录态（找 "My Workspace"），最长等 10 分钟）')
+            log('（脚本每 5 秒检查全部 Suno 标签页的创作界面，最长等 10 分钟）')
             deadline = time.time() + 600
             ok = False
             while time.time() < deadline:
                 page.wait_for_timeout(5000)
-                if page.locator('text=My Workspace').count() > 0:
+                candidates=[tab for tab in ctx.pages if not tab.is_closed() and 'suno.com' in tab.url]
+                active=next((tab for tab in candidates if tab.locator('div.lyrics-editor-content[contenteditable="true"], textarea[placeholder*="song" i], textarea[placeholder*="style" i]').count() or tab.get_by_text('My Workspace',exact=True).count()),None)
+                if active is not None:
+                    page=active
                     ok = True
-                    log('检测到已登录（My Workspace 可见）')
+                    log('检测到已登录（创作界面可见）')
                     break
                 log('等待登录...')
             if not ok:
@@ -199,6 +203,9 @@ def main():
             return 3
         click_first(page, COOKIE_SELECTORS, 'cookie-consent')
         dismiss_overlays(page)
+
+        # Persist refreshed state only after the login-page guard has passed.
+        cookies_file.write_text(json.dumps(ctx.cookies('https://suno.com')), encoding='utf-8')
 
         if args.create_voice:
             if not args.voice_file or not args.voice_file.exists():
