@@ -1,4 +1,4 @@
 interface:
   display_name: "动画作画监督"
-  short_description: "改善动画角色手脚、四肢曲线、关键姿势、变形与逐镜修型的完整工作流"
-  default_prompt: "使用 $direct-animation-craft 检查本集成片，定位手脚与四肢造型问题，先完成代表镜头的造型和动作修正，再按实际画面验收。"
+  short_description: "改善动画人物脸发、身体比例、表情、关键姿势与逐镜修型的完整工作流"
+  default_prompt: "使用 $direct-animation-craft 检查本集成片，定位人物造型与表演问题，先完成代表镜头的角色样板，再用同机位对照和连续片段验收。"

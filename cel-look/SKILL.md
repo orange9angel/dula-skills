@@ -51,4 +51,8 @@ description: 整理动画的二维画面风格，包括稳定轮廓或速写描�
   参考实现：`yuki_fish_musical/bootstrap.js` 的 `cleanOutline()`。
 - 锥体尖端（双马尾末端 ConeGeometry）顶点法线分散，逆向壳会在尖端炸成
   平行细线：先把中轴顶点法线统一收到轴向（smoothConeApex）再描边。
+- **凹陷脸面上的描边壳内漏（2026-10-10）**：增加鼻部体积后，法线膨胀的背面壳
+  可能在鼻梁/脸颊交界形成并非外轮廓的黑折线。检查实际斜侧面，按目标移除面部壳
+  或用轮廓遮罩；不能靠增加脸图分辨率修复。人物造型流程见
+  [人物造型精修与动画样板](../direct-animation-craft/references/character-look-development.md)。
 - **小雪造型复核（2026-09-21）**：球手、单段四肢和胶囊靴在描边后仍然缺少手脚结构。优先重做可读轮廓、弯曲控制和接触；不要把接缝毛边一律归为“手绘质感”。见 [案例诊断](../direct-animation-craft/references/yuki-morning-battle.md)。
