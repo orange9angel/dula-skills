@@ -41,6 +41,9 @@ description: 走路/移动镜头的创作与验收规范。Use when an episode n
   [build-continuous-story-images/references/walk-cycles.md](../build-continuous-story-images/references/walk-cycles.md)。
 - 3D 管线（`Event:Move`、跟走运镜选型、步速匹配公式、平滑 Follow 模板）：读
   [references/story-dsl-walk.md](references/story-dsl-walk.md)。
+- 剧集自有程序角色、IK 或独立 viewer：读
+  [references/procedural-footsteps.md](references/procedural-footsteps.md)，检查左右脚轨道、
+  朝向、有限步数、起停与转身。不要假定该管线会执行 `Event:Move` 或共享 Walk。
 - 验收方法（短渲抽帧、dula-verify 盲区）：读
   [references/verify-walk-shots.md](references/verify-walk-shots.md)。
 - 先看剧集现状：`config/keyframe_timeline.json` 里带 `motionGroup` 的帧就是
@@ -111,6 +114,9 @@ description: 走路/移动镜头的创作与验收规范。Use when an episode n
 `bootstrap.js`。
 
 ## Validation
+
+自有 3D/IK 管线先按 `procedural-footsteps.md` 导出实际世界脚位、鞋朝向与接触段，
+做局部顺序渲染和同机位对比；下面的 cel 验收项只适用于 2D 关键帧管线。
 
 ```bash
 # 时间线结构 + 走路组验收（从 dula-story 根目录）
