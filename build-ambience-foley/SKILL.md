@@ -31,6 +31,14 @@ Make the world audible without narrating every visible motion. Use picture, dial
    - Align impact transients to visible contact, not motion onset.
    - Start ambience before or at scene entry and crossfade beds across location changes.
    - Materialize Dula decisions as explicit `{SFX:...}` tags or the engine's established cue inputs so `script.story` remains the timing authority.
+   - **事件音效必须登记画面事件点位并做对位验证**（S1E3 实录）：每个事件音效在混音脚本里
+     注明对应的画面事件秒点/帧；混音后用 onset 检测验证——目标点 ±0.15s 内必须存在
+     onset（注意：对白/BGM 的 onset 可能比事件音更强，"窗口内最强 onset=事件"的假设
+     在台词段不成立，应断言"目标点附近存在 onset"并另记最强 onset）。
+     参考实现 `bio_armor_academy_s1e3/tools/check_audio_sync.py`。
+   - **动画时间轴变更必须回归音效点位**：门提前、动作重排、镜头改时后，事件音效点位
+     全部重核（S1E3 实录：撞门提前后 slam 对上了，但关门声早 0.3s、开门与二次关门
+     无声——三轮画面验收都没覆盖音频对位）。
 
 5. Choose sources.
    - **环境音/氛围底床默认走火山 Seed-Audio 1.0**（2026-08-30 导演决策：成本可忽略，
