@@ -3,7 +3,8 @@
 物理错误（穿模、悬浮、空手托盘、超臂长目标）不该活到渲染后由用户复看发现。
 本门禁把它前置到写谱面阶段：探针当编译器用，不过不渲染。工艺沉淀自
 bio_armor_academy_s1e3（《9章》S1E3，P10 十四段断言全绿后用户零物理类反馈；
-P12 扩到 17 段：gait 步态域 / limb_attach 肩臂衔接 / worn_prop 穿戴件净空）。
+P12 扩 gait/limb_attach/worn_prop；P13 扩 grip/palm_semantic 共 19 段——
+但 P13 同时证明断言全绿≠看起来对，必须配末尾的逐拍近景审片协议）。
 
 ## 三层防线
 
@@ -34,6 +35,8 @@ viewer 的 draw state 按帧输出以下键，contact_probe.py 按 contract 消�
 | `locomotion[actor]` | `{kind,root,yaw,bob,step,steps,feet,legs}`（行走段逐帧） | gait |
 | `contact.arms` / `contact.torsoAxis` | 手臂三点（肩/肘/腕，mesh 局部→世界）+ 躯干轴两点（含 bob/lean） | limb_attach |
 | `worn` | 穿戴件盒 vs 穿戴者网格（负 margin=深穿才报；穿戴件自身打 `userData.probeExclude` 跳过） | worn_prop |
+| `contact.grip` | 托盘接触：盒底投影内顶点-底面 min\|y\|（touchMin）+ 指节-盒体最近距离 | grip |
+| `contact.palmIn` | 送嘴掌向：掌心·（手→躯干）点积（约束激活帧才记录） | palm_semantic |
 
 新段执行顺序追加在 SECTION_ORDER 末尾（gait/limb_attach/worn_prop 在 continuity 之后）——
 插中间会改变 failures 帧内段序，破坏跨版本报告可比性。
@@ -60,6 +63,34 @@ import（不进正片渲染路径）。15Hz 姿势帧（一拍二）下的道具
 ## 参考实现
 
 - 通用探针：`dula-skills/direct-animation-craft/scripts/contact_probe.py`
-- 参考 contract：`bio_armor_academy_s1e3/config/contact_contract.json`（17 段全参数化）
+- 参考 contract：`bio_armor_academy_s1e3/config/contact_contract.json`（19 段全参数化）
 - 等效验证：S1E3 薄包装 tools/check_contact.py 与旧硬编码版报告逐字段一致
   （仅 nug_frames 573→663——旧版把无 bento 段的帧静默跳过，新版覆盖 68–71s 卡段）。
+
+## 逐拍近景审片协议（P13 实录：断言全绿≠看起来对）
+
+数值探针是编译器，但"盒浮在掌上 5cm"这种错误可以一路绿灯（距离阈值内的悬浮）。
+**每个道具交互事件必须出 2–3 机位近景帧**（特写+侧写各一），逐张过五点清单：
+
+1. **掌向**：送嘴=掌心向内（不是向外反掌）；挥手=掌心朝外；托举=掌面朝上。
+2. **接触**：盒底贴掌面（无缝）；手指扣在盒底前缘/侧壁；放置帧手贴盒。
+3. **支撑**：每个可见盒/道具都有支撑者（手/台面/摞在下层盒上）。
+4. **连接**：穿戴件的带/绳两端都连得上；签的两端=捏合区与食物。
+5. **穿戴件**：包/带/扣不穿腿不穿躯干，摆动跟得上身体。
+
+工具：`render.mjs --check --shots config/review_shots.json --board <dir>`——
+shots JSON 逐镜点名 `[{name,t,camera:[px,py,pz,lx,ly,lz,fov?]}]`，不走 checkTimes，
+4s 出 22 帧（S1E3 P13 基建）。审片发现的任何问题顺手修掉再复跑探针。
+抽样审片的教训（P13 一轮四例）：掌心语义错误、俯身肩缝、托盘浮盒、递签指向，
+全部是 17 段断言全绿时近景才暴露的——**断言覆盖不了"语义对不对"，协议兜底**。
+
+## 穿戴件做工纪律（P13 实录）
+
+- 包类=**背带+包体+包盖三件套**，两端都要连得上（背带尾→包顶挂点用连接件桥接，
+  随包摆动）；只有一条绳不算完成。提亮包体色别撞裤子色（深棕撞深蓝远景读不出）。
+- 挂点净空用**扫描定稿**：一次渲染里逐候选改挂点变换→探针→还原（纯函数不进画面），
+  选中零命中且留 ≥2cm 余量的最小偏移；别逐候选整渲染瞎试。
+- 坐姿大腿外侧鼓出比站姿宽 ~4cm：站姿净空的挂点，坐下可能复穿——扫描窗口必须
+  覆盖坐姿段；前摆到腿前侧的方案在探针下不成立（实测复穿），可读性靠配色/连接件。
+- 次级摆动沿用挂载件机制（枢轴移到包顶：重力外倾角+风摆+逆 lean 回摆），包盖挂成
+  包体子件随摆。

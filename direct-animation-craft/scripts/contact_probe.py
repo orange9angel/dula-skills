@@ -25,6 +25,10 @@
   limb_attach    肩臂衔接：上臂轴（肩→肘）与躯干垂线夹角上限（抬臂过肩线=袖根脱嵌风险）
                  + 肩点到躯干轴线距离上限；需要 state.contact.arms / torsoAxis
   worn_prop      穿戴件净空：state.worn（穿戴者网格 vs 穿戴件盒，负 margin=深穿才报）零命中
+  grip           托盘接触成立：掌面-盒底缝 ≤palm_max 且掌在盒底投影内（contact.grip[key].palmGap/
+                 inFoot）+ 扣边成立（至少一指节距盒体 ≤finger_max，contact.grip[key].fingerMin）
+  palm_semantic  动作语义掌向：bring-to-mouth 类帧掌心-躯干点积 ≥min_dot（掌心朝向躯干半球；
+                 viewer 只在约束激活帧记录 contact.palmIn[key]）
 
 Usage:
   python contact_probe.py <trace.json> --contract <episode>/config/contact_contract.json [--door-only]
@@ -41,7 +45,7 @@ DEFAULT_SCOPE = ('Visible solid meshes vs rendered obstacle boxes, triangle inte
 # 新段只准追加在末尾，插入中间会改变 failures 帧内序、破坏跨版本报告可比性
 SECTION_ORDER = ['seated', 'bite', 'carry', 'whitelist', 'env', 'food', 'wrist', 'tray',
                  'supporter', 'lid', 'pinch', 'dual', 'place', 'continuity',
-                 'gait', 'limb_attach', 'worn_prop']
+                 'gait', 'limb_attach', 'worn_prop', 'grip', 'palm_semantic']
 
 
 def dist(a, b):
@@ -361,6 +365,29 @@ def main():
                     for hit in w['hits']:
                         stats['worn_bad'] = stats.get('worn_bad', 0) + 1
                         failures.append(f"worn prop clip @t={t}: {hit['subject']} {hit['mesh']} vs {hit['obstacle']}")
+            elif section == 'grip':
+                for e in S['entries']:
+                    g = (c.get('grip') or {}).get(e['key'])
+                    if not g or not (e['window'][0] <= t <= e['window'][1]):
+                        continue
+                    stats['grip_frames'] = stats.get('grip_frames', 0) + 1
+                    stats['grip_palm_gap_max'] = max(stats.get('grip_palm_gap_max', 0), abs(g['palmGap']))
+                    stats['grip_finger_worst'] = max(stats.get('grip_finger_worst', 0), g['fingerMin'])
+                    if not g['inFoot'] or abs(g['palmGap']) > e['palm_max']:
+                        failures.append(f"tray palm off box bottom: {e['key']} gap={g['palmGap']:.4f} "
+                                        f"inFoot={g['inFoot']} @t={t:.2f}")
+                    if g['fingerMin'] > e['finger_max']:
+                        failures.append(f"no finger on box wall: {e['key']} {g['fingerMin']:.3f}m @t={t:.2f}")
+            elif section == 'palm_semantic':
+                for e in S['entries']:
+                    p = (c.get('palmIn') or {}).get(e['key'])
+                    if not p or p.get('k', 0) < S.get('k_min', .5):
+                        continue
+                    stats['palm_frames'] = stats.get('palm_frames', 0) + 1
+                    stats['palm_dot_min'] = min(stats.get('palm_dot_min', 99), p['dot'])
+                    if p['dot'] < e['min_dot']:
+                        failures.append(f"palm not facing torso on bring-to-mouth: {e['key']} "
+                                        f"dot={p['dot']:.2f} @t={t:.2f}")
 
     if not args.door_only:
         if C.get('whitelist') and stats.get('bento_frames', 0) < C['whitelist'].get('frame_min', 100):
@@ -373,6 +400,10 @@ def main():
             failures.append(f"skewer never reaches mouth: min {stats['bite_min']:.3f}m")
         if C.get('worn_prop') and stats.get('worn_frames', 0) < C['worn_prop'].get('frame_min', 100):
             failures.append('worn probe missing or too sparse: run render with the mesh-probe query flag')
+        if C.get('grip') and stats.get('grip_frames', 0) < C['grip'].get('frame_min', 50):
+            failures.append('grip probe missing or too sparse: tray windows not sampled')
+        if C.get('palm_semantic') and stats.get('palm_frames', 0) < C['palm_semantic'].get('frame_min', 20):
+            failures.append('palm-semantic probe missing: no bring-to-mouth frames logged')
         if C.get('gait'):
             for actor, G in C['gait']['actors'].items():
                 bouts = list(gait_bouts.get(actor, []))

@@ -73,6 +73,16 @@ AI 在开发时应直接阅读对应目录下的 `SKILL.md` 和 `references/` �
      --episode-dir ./episodes/<episode>
    ```
 
+**viewer 链新集**（自包含渲染链，不走 dula-render，如 bio_armor_academy_s1e3）：
+```bash
+# 脚手架（viewer 链骨架 + contract/审片模板；--smoke 自查语法与 JSON）
+python ../dula-skills/direct-animation-craft/scripts/init_viewer_episode.py \
+  ./episodes/<new_episode> --smoke
+# 按 physical-completeness.md 矩阵铺 contract 断言与 review_shots.json 镜表后：
+# 总验收（check 渲染→接触探针→步态→声画→逐拍近景组，汇总 gate_report.json）
+python ../dula-skills/direct-animation-craft/scripts/episode_gate.py ./episodes/<new_episode>
+```
+
 ### 设计场景
 
 1. 阅读 `dula-skills/scene-designer/SKILL.md`
