@@ -87,6 +87,7 @@ Visually inspect every generated shot. For critical shots, verify the exact cont
 - Hiding a character is a story state: record `offstage`, `onstage`, or `concealed`, the concealing prop, and the later reveal/exit.
 - Anchors and zones are contract conventions, not current `SceneBase` APIs. Materialize required blocking in `Position`/`Move` tags or scene code.
 - Only `sphere`, `capsule`, and `box` camera obstacles are supported. Cameras without collision guarding need critical shot checks.
+- 可交互物（门、桌、道具、矮沿）必须定义碰撞代理与交互净空区；角色-场景接触的数值断言与最小距离表见 [direct-animation-craft/references/contact-and-hands.md](../direct-animation-craft/references/contact-and-hands.md)。
 - `build()` runs before characters are added. Async assets must expose a scene `readyPromise` consumed by the renderer.
 
 ## 踩坑记录
