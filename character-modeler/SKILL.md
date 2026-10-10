@@ -22,7 +22,7 @@ This workflow has two existing looks. Follow the user's established choice; clar
 
 - For the primitive-only task this skill describes, use Three.js primitives (Sphere/Capsule/Cylinder/Box/Cone/Torus/Tube/Lathe) composed in code. If that representation cannot meet the requested silhouette or deformation, explain the limitation and follow the production route above instead of treating this constraint as universal.
 - Match the look of existing characters: `MeshToonMaterial` + 4-step canvas gradient. Do not introduce new shading styles (PBR, custom shaders) unless the user asks.
-- Follow the `CharacterBase` contract exactly — the animation, lip-sync, expression, and combat systems read specific fields. Read `dula-engine/characters/CharacterBase.js` and a reference character (`dula-assets/characters/Doraemon.js` is the canonical cute-style example) before writing code.
+- Follow the `CharacterBase` contract exactly — the animation, lip-sync, expression, and combat systems read specific fields. Read `dula-engine/characters/CharacterBase.js` and a reference character (仓库内的 Q 版角色范例 `dula-assets/characters/Doraemon.js`) before writing code.
 - Never claim the character looks right until you have rendered screenshots via `dula-verify` and inspected them.
 
 ## Load Context
@@ -30,6 +30,7 @@ This workflow has two existing looks. Follow the user's established choice; clar
 - Read [references/modeling-techniques.md](references/modeling-techniques.md) for the collected Three.js hand-modeling techniques (primitive sculpting, toon shading, outline, pivots, face construction, proportions).
 - Read [references/handdrawn-style.md](references/handdrawn-style.md) for sketch mode (ink strokes, sketchify, boiling) when the user wants a hand-drawn look.
 - Read [references/characterbase-contract.md](references/characterbase-contract.md) for the exact fields the engine expects.
+- Read [references/anime-expression-symbols.md](references/anime-expression-symbols.md) 动漫表情符号化：汗滴/爆筋/豆豆眼/黑线脸等符号的语义表、绘制配方、触发纪律与夸张表情拓扑。
 - Read `dula-assets/characters/Doraemon.js` (round cute) and one humanoid (e.g. `Zorak.js`) as working code references.
 
 ## Workflow
@@ -40,6 +41,7 @@ This workflow has two existing looks. Follow the user's established choice; clar
 4. **Wire every contract field** listed in the contract reference: `headGroup`, `mouth` (+ `mouthBase*` backup values), `leftPupil/rightPupil` (+ `userData.baseX/baseY`), `leftEyelid/rightEyelid`, `leftEyebrow/rightEyebrow`, `leftArm/rightArm` (+ `*BaseZ`), `leftLeg/rightLeg`, `archetypes`, `boundingRadius`.
 5. **Register** in `dula-assets/index.js`: import the class, add `registerCharacter('<Name>', <Name>)` inside `registerAll()`, and export it if the file exports other characters.
 6. **(Sketch mode only)** Apply `sketchify()` + `BoilSystem` per handdrawn-style.md, and set `userData.noSketch = true` on pupils/eyelids/catchlights/hidden parts in `build()`.
+7. **Verify visually** (see below). Iterate on proportions/positions from screenshots, not from imagination. In sketch mode, check at one close-up and one full-body distance: outlines must not swallow small features, and dark parts must not carry invisible ink.
 
 ## Hands — Never Ball Hands
 
@@ -61,7 +63,24 @@ This workflow has two existing looks. Follow the user's established choice; clar
 4. 脸部细节可用 2D 贴片控制图形；侧脸、转头与遮挡另行检查，避免始终朝相机而露馅。
 
 若剧集需要提升最终镜头质量，先按 `direct-animation-craft` 检查造型和动作，再用 `cel-look` 整理线条、色块与曝光节奏。
-7. **Verify visually** (see below). Iterate on proportions/positions from screenshots, not from imagination. In sketch mode, check at one close-up and one full-body distance: outlines must not swallow small features, and dark parts must not carry invisible ink.
+
+## 动漫化形象清单
+
+形象"不像动画片"时按此清单逐项核对（bio_armor_academy_s1e2 R21 复看确认的形象层缺口）：
+
+1. **表情符号化** —— 汗滴/爆筋/眼白/豆豆眼/黑线脸/脸红斜线等动漫符号的语义表、
+   canvas/billboard 绘制配方与弹入-停留-退场时序，见
+   [references/anime-expression-symbols.md](references/anime-expression-symbols.md)。
+   纪律：符号由情绪事件驱动、不常驻，同屏同角色不超过 2 种。
+2. **夸张表情拓扑** —— 嘴占半脸、掉下巴、整眼替换为符号形的分支画法
+   （canvas 工艺换绘制分支，3D mesh 眼工艺切换预建模形），见同上文件末节。
+3. **统一赛璐璐材质** —— 全角色共享 toon ramp（阴影阶偏冷偏紫、不用纯灰），
+   不混搭 Basic/Lambert/Phong 三种光照模型；高光件限同色系小面积或改假高光贴图。
+   配方见 [references/modeling-techniques.md](references/modeling-techniques.md) 第 9 节。
+4. **全身描边分级** —— 法线外扩壳从头发推广到躯干/四肢/装备，
+   线宽分级：轮廓主干 > 四肢 > 细节；凹面内漏风险见
+   [references/handdrawn-style.md](references/handdrawn-style.md)。
+5. **阴影统一** —— 硬切 cel 阴影优先；日落逆光场景保留软阴影时压淡到 0.4–0.6。
 
 ## Visual Verification
 

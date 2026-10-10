@@ -1,6 +1,6 @@
 # Three.js Procedural Character Modeling Techniques
 
-Techniques collected from public tutorials (sources at the bottom) plus patterns reverse-engineered from the Dula asset library. This is the "hand-drawing" toolbox: every technique shapes geometry in code the way a sculptor adds clay.
+Techniques distilled from public tutorials plus patterns reverse-engineered from the Dula asset library (`Doraemon.js`, `Zorak.js`, `DiscoWorm.js` are the working in-repo examples). This is the "hand-drawing" toolbox: every technique shapes geometry in code the way a sculptor adds clay.
 
 ## 1. Primitives as Clay
 
@@ -61,7 +61,7 @@ Known caveats: outline width varies with local curvature; it doubles draw calls;
 
 ## 4. Group Pivots (the joint system)
 
-Primitives rotate around their own center — wrong for limbs. The fix is the core rigging idiom (from the Codrops tutorial, used by every Dula character):
+Primitives rotate around their own center — wrong for limbs. The fix is the core rigging idiom used by every Dula character:
 
 1. Create a `Group` and position it at the **joint** (shoulder, hip, neck).
 2. Add the mesh as a child, offset so the joint end is at the group origin (e.g. arm capsule at `position.y = -len/2`, hand at `-len`).
@@ -125,11 +125,42 @@ Mirror rotations by multiplying by `side`. Never write the same code twice with 
 
 Override `update(time, delta)` — always call `super.update(time, delta)` first — for cheap ambient motion: antenna wobble (`rotation.z = Math.sin(time * 3) * 0.1`), prop spin, breathing (`body.scale.y = base + Math.sin(time * 2) * 0.01`). Keep it subtle; the animation system drives the big motion.
 
-## Sources
+## 9. 赛璐璐材质统一（动漫化形象）
 
-- [Creating 3D Characters in Three.js — Codrops](https://tympanus.net/codrops/2021/10/04/creating-3d-characters-in-three-js/) — group pivots, primitive figures, generative color
-- [Custom Toon Shader in Three.js — maya-ndljk](https://www.maya-ndljk.com/blog/threejs-basic-toon-shader) — cel shading theory
-- [threejs-materials skill (CloudAI-X)](https://skillmd.com/skills/cloudai-x/threejs-materials) — MeshToonMaterial + DataTexture step-gradient recipe
-- [Inverted Hull Toon Outline — Blender Secrets](https://www.3dsecrets.com/secrets/inverted-hull-toon-outline-bnpr-blender-tutorial) — outline technique (concept; Three.js port in §3)
-- [How To Make Cartoon 3D Character Models — Threedium](https://threedium.io/create/3d-models/character/cartoon) — shape language and readability
-- `dula-assets/characters/Doraemon.js`, `Zorak.js`, `DiscoWorm.js` — working in-repo examples of every pattern above
+材质混搭是"不像动画片"的第一来源：皮肤/头发 Basic 平涂、衣服 Lambert、装甲 Phong 写实高光、场景 Toon 无 gradientMap 同框时，各部件对光的反应不在一个体系里（bio_armor_academy_s1e2 R21 前的状态）。
+
+### toon ramp 配方
+
+- gradientMap 用 canvas 做 3–4 阶（§2 的做法），每阶一个**纯色块**，不用渐变——渐变就是软明暗，违背赛璐璐阶梯。`NearestFilter` 双滤镜缺一不可。
+- 各阶明度：3 阶取 0.45 / 0.72 / 1.0，4 阶取 0.38 / 0.6 / 0.82 / 1.0。
+- 阴影阶不要纯灰：色相向蓝紫偏 10–20°、饱和度提高约 10%；受光阶向暖偏约 5°。赛璐璐的"上色感"来自色相随明暗阶梯走，纯灰阶梯读成石膏。
+
+```js
+// 4 阶冷阴影 ramp：阴影阶偏蓝紫，受光阶偏暖
+const c = document.createElement('canvas'); c.width = 4; c.height = 1;
+const x = c.getContext('2d');
+['#6b6b8a', '#a39eb0', '#e8e2da', '#fffaf2'].forEach((v, i) => {
+  x.fillStyle = v; x.fillRect(i, 0, 1, 1);
+});
+const ramp = new THREE.CanvasTexture(c);
+ramp.magFilter = ramp.minFilter = THREE.NearestFilter;
+// 全角色共享同一个 ramp：new THREE.MeshToonMaterial({ color, gradientMap: ramp })
+```
+
+- 逆光/黄昏场景正面全黑时，脸与小件用 `MeshBasicMaterial` 兜底（见 SKILL.md 踩坑记录：脸贴逆光全黑改 Basic）。Basic 件颜色要手工预调暗（×0.85–0.92），否则平涂比 toon 件亮一档。
+
+### 材质混搭纪律
+
+- 同一角色尽量单一光照模型：全身 `MeshToonMaterial` 共享同一个 gradientMap，皮肤/头发/衣服/装备一视同仁。
+- 写实高光件（如殖装甲的 Phong）若要保留：①与角色主色同色系；②面积控制在全身 10% 以内；③高光强度压低。更稳的替代是 toon + 假高光贴图：在 canvas 纹理上直接画一道硬边白色高光带，零光照依赖，风格天然统一。
+
+### 全身描边（法线外扩壳推广到躯干/四肢/装备）
+
+- 头发壳描边工艺（`onBeforeCompile` 在 `begin_vertex` 后 `transformed += normal * width`、`BackSide`、`customProgramCacheKey` 按宽度分档）原样推广到躯干、四肢、装备；壳网格 add 为原网格子节点，跟随动画与 `visible` 开关。
+- 线宽按部件半径分级（口诀：轮廓主干 > 四肢 > 细节）：躯干/头 0.0014，四肢 0.0010，手指/发束等细节件 0.0006。墨色统一暖近黑（如 `#3a3039`），不用纯黑。
+- 已知风险：壳沿法线外扩会描到凹面内部（鼻/颊交界被描出假褶），凹面内漏的取舍规则见 [handdrawn-style.md](handdrawn-style.md) 的描边纪律；本集对策是皮肤不上壳、只给头发/装备上壳。
+
+### 阴影
+
+- cel 感要硬边阴影：硬切阴影与平涂色块、阶梯明暗是同一语言；`PCFSoftShadowMap` 的软边与色块打架。
+- 日落逆光场景可保留软阴影但压淡（降低阴影不透明度到 0.4–0.6），软阴影只留给地面投影，角色自阴影交给 gradientMap 的阶梯表达。
