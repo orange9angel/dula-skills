@@ -88,6 +88,7 @@ Visually inspect every generated shot. For critical shots, verify the exact cont
 - Anchors and zones are contract conventions, not current `SceneBase` APIs. Materialize required blocking in `Position`/`Move` tags or scene code.
 - Only `sphere`, `capsule`, and `box` camera obstacles are supported. Cameras without collision guarding need critical shot checks.
 - 可交互物（门、桌、道具、矮沿）必须定义碰撞代理与交互净空区；角色-场景接触的数值断言与最小距离表见 [direct-animation-craft/references/contact-and-hands.md](../direct-animation-craft/references/contact-and-hands.md)。
+- 可通行的门必须有真实门洞，不能在实心墙盒表面只贴一扇活动门。出门路径覆盖门槛、门框外全身净空和绕墙角；开门、回弹、关门都检查全身与携物，代理取实际几何和最终变换。S1E3 P6 的漏检与修复见上述接触文档。
 - `build()` runs before characters are added. Async assets must expose a scene `readyPromise` consumed by the renderer.
 
 ## 踩坑记录
