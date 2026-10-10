@@ -111,7 +111,7 @@ Three.js 是执行环境，基础几何体是建模选择；两者不要混为�
 （断言逐段参数化）与 render trace，输出 contact_validation.json。门禁工作流、
 生理域常量表模板与 trace 输出契约见 [编写期物理门禁](references/physics-gate.md)；
 接触/手部数值纪律见 [contact-and-hands.md](references/contact-and-hands.md)。
-参考实现：bio_armor_academy_s1e3（19 段断言，薄包装等效验证通过）。
+参考实现：bio_armor_academy_s1e3（22 段断言，薄包装等效验证通过）。
 
 **新集开工走体系化门禁**（逐点矫正八轮实录后的升级）：类目×节拍覆盖矩阵、
 完整性定义与开工顺序见 [physical-completeness.md](references/physical-completeness.md)；

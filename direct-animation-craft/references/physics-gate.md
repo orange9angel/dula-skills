@@ -3,8 +3,9 @@
 物理错误（穿模、悬浮、空手托盘、超臂长目标）不该活到渲染后由用户复看发现。
 本门禁把它前置到写谱面阶段：探针当编译器用，不过不渲染。工艺沉淀自
 bio_armor_academy_s1e3（《9章》S1E3，P10 十四段断言全绿后用户零物理类反馈；
-P12 扩 gait/limb_attach/worn_prop；P13 扩 grip/palm_semantic 共 19 段——
-但 P13 同时证明断言全绿≠看起来对，必须配末尾的逐拍近景审片协议）。
+P12 扩 gait/limb_attach/worn_prop；P13 扩 grip/palm_semantic；P14 扩
+hand_body_mesh/rest_support/state_consistency 共 22 段——但 P13 同时证明断言
+全绿≠看起来对，必须配末尾的逐拍近景审片协议）。
 
 ## 三层防线
 
@@ -37,6 +38,9 @@ viewer 的 draw state 按帧输出以下键，contact_probe.py 按 contract 消�
 | `worn` | 穿戴件盒 vs 穿戴者网格（负 margin=深穿才报；穿戴件自身打 `userData.probeExclude` 跳过） | worn_prop |
 | `contact.grip` | 托盘接触：盒底投影内顶点-底面 min\|y\|（touchMin）+ 指节-盒体最近距离 | grip |
 | `contact.palmIn` | 送嘴掌向：掌心·（手→躯干）点积（约束激活帧才记录） | palm_semantic |
+| `handBody` | 手 skinned mesh vs 躯干/大腿代理盒（负 margin 深穿才报，代理盒 92% 半径+骨盆侧翼延伸） | hand_body_mesh |
+| `contact.handRest` | 掌点→大腿轴/盒 OBB 距离（support=取小） | rest_support |
+| `contact.doorOpen`/`doorPos`/`lidOpen`/`windGust` | 有状态元素的归一化开度/位置/环境触发量 | state_consistency |
 
 新段执行顺序追加在 SECTION_ORDER 末尾（gait/limb_attach/worn_prop 在 continuity 之后）——
 插中间会改变 failures 帧内段序，破坏跨版本报告可比性。

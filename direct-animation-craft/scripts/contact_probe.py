@@ -29,6 +29,13 @@
                  inFoot）+ 扣边成立（至少一指节距盒体 ≤finger_max，contact.grip[key].fingerMin）
   palm_semantic  动作语义掌向：bring-to-mouth 类帧掌心-躯干点积 ≥min_dot（掌心朝向躯干半球；
                  viewer 只在约束激活帧记录 contact.palmIn[key]）
+  hand_body_mesh 手-躯干/大腿网格级相交：state.handBody（手 skinned mesh vs 代理盒，负 margin
+                 深穿才报）窗口内零命中，allowed 行按 手×代理×窗口 声明合法接触
+  rest_support   静息手必有支撑：坐姿窗口内手速 <max_speed 且手高 <max_y 时，
+                 contact.handRest[actor][side].support（贴腿/贴盒取小）≤gap_max
+  state_consistency 状态一致性（finalize 段做全时间轴分析）：有状态元素（门/盒盖）的
+                 迁移窗口 from/to 态成立 + 触发者在场（角色距离/手近盖把/环境阵风量）+
+                 音效事件落在迁移窗口 ±tol + 行为-状态规则（角色过门平面帧门必须开）
 
 Usage:
   python contact_probe.py <trace.json> --contract <episode>/config/contact_contract.json [--door-only]
@@ -45,11 +52,97 @@ DEFAULT_SCOPE = ('Visible solid meshes vs rendered obstacle boxes, triangle inte
 # 新段只准追加在末尾，插入中间会改变 failures 帧内序、破坏跨版本报告可比性
 SECTION_ORDER = ['seated', 'bite', 'carry', 'whitelist', 'env', 'food', 'wrist', 'tray',
                  'supporter', 'lid', 'pinch', 'dual', 'place', 'continuity',
-                 'gait', 'limb_attach', 'worn_prop', 'grip', 'palm_semantic']
+                 'gait', 'limb_attach', 'worn_prop', 'grip', 'palm_semantic',
+                 'hand_body_mesh', 'rest_support', 'state_consistency']
 
 
 def dist(a, b):
     return math.dist(a, b)
+
+
+def state_consistency_pass(SC, data, stats, failures):
+    """状态一致性（全时间轴分析）：迁移 from/to 态成立 + 触发者在场 + 事件对齐 + 行为符合状态。"""
+    frames = data['frames']
+
+    def cval(f, path):  # contact 键路径 'a.b'，值可以是数值或数组
+        v = f.get('contact') or {}
+        for k in path.split('.'):
+            v = v.get(k) if isinstance(v, dict) else None
+        return v
+
+    for ename, E in SC['elements'].items():
+        vals = [(f['t'], cval(f, E['key'])) for f in frames]
+        vals = [(t, v) for t, v in vals if isinstance(v, (int, float))]
+        if not vals:
+            failures.append(f"state element series missing: {ename} ({E['key']})")
+            continue
+
+        def vat(tt):
+            return min(vals, key=lambda x: abs(x[0] - tt))[1]
+
+        open_min, closed_max = E['open_min'], E['closed_max']
+        for tr in E.get('transitions', []):
+            tid = f"{ename}.{tr['id']}"
+            w0, w1 = tr['window']
+            v0, v1 = vat(w0 - .03), vat(w1 + .03)
+            if tr['from'] == 'closed' and v0 > closed_max:
+                failures.append(f"{tid}: not closed before window (open frac {v0:.2f})")
+            if tr['from'] == 'open' and v0 < open_min:
+                failures.append(f"{tid}: not open before window (open frac {v0:.2f})")
+            if tr['to'] == 'closed' and v1 > closed_max:
+                failures.append(f"{tid}: not closed after window (open frac {v1:.2f})")
+            if tr['to'] == 'open' and v1 < open_min:
+                failures.append(f"{tid}: not open after window (open frac {v1:.2f})")
+            ev = tr.get('event')
+            if ev:
+                stats[f'state_{tid}_event_offset'] = round(max(w0 - ev['t'], ev['t'] - w1, 0), 3)
+                if not (w0 - ev['tol'] <= ev['t'] <= w1 + ev['tol']):
+                    failures.append(f"{tid}: event @{ev['t']} outside transition window±{ev['tol']}")
+            tg = tr.get('trigger') or {}
+            if 'actor' in tg:  # 触发者角色在元素交互距离内（root XZ → 元素 pos XZ）
+                dmin = 99
+                for f in frames:
+                    if not (tg['window'][0] <= f['t'] <= tg['window'][1]):
+                        continue
+                    p, r = cval(f, E.get('pos_key', '')), f.get(tg['actor'] + 'Root')
+                    if isinstance(p, list) and isinstance(r, list):
+                        dmin = min(dmin, math.hypot(r[0] - p[0], r[1] - p[2]))
+                stats[f'state_{tid}_trigger_dist'] = round(dmin, 3)
+                if dmin > tg['max_dist']:
+                    failures.append(f"{tid}: trigger {tg['actor']} never within "
+                                    f"{tg['max_dist']}m of {ename} (min {dmin:.2f}m)")
+            if 'gust_key' in tg:  # 环境触发：窗口内阵风量达标（画面中可见的动因）
+                gmax = max((cval(f, tg['gust_key']) for f in frames
+                            if tg['window'][0] <= f['t'] <= tg['window'][1]
+                            and isinstance(cval(f, tg['gust_key']), (int, float))), default=0)
+                stats[f'state_{tid}_gust_max'] = round(gmax, 3)
+                if gmax < tg['min']:
+                    failures.append(f"{tid}: no gust (max {gmax:.2f}) in trigger window")
+            if 'hand_near' in tg:  # 手在盖把/交互点距离内
+                key = 'lidTabDist.' + tg['hand_near']['tab_key']
+                dmin = min((cval(f, key) for f in frames
+                            if tg['window'][0] <= f['t'] <= tg['window'][1]
+                            and isinstance(cval(f, key), (int, float))), default=99)
+                stats[f'state_{tid}_hand_dist'] = round(dmin, 3)
+                if dmin > tg['hand_near']['max_dist']:
+                    failures.append(f"{tid}: no hand near {tg['hand_near']['tab_key']} "
+                                    f"(min {dmin:.2f}m)")
+        # 行为-状态规则：角色穿过门平面的帧，门必须开（穿越=法向投影变号且在门宽内）
+        B = (E.get('behavior') or {}).get('cross_plane')
+        if B:
+            pt, nm, hw = B['point'], B['normal'], B.get('half_width', .6)
+            for actor in B['actors']:
+                roots = [(f['t'], f.get(actor + 'Root')) for f in frames]
+                roots = [(t, r) for t, r in roots if isinstance(r, list)]
+                for (t0, r0), (t1, r1) in zip(roots, roots[1:]):
+                    d0 = (r0[0] - pt[0]) * nm[0] + (r0[1] - pt[1]) * nm[1]
+                    d1 = (r1[0] - pt[0]) * nm[0] + (r1[1] - pt[1]) * nm[1]
+                    if d0 * d1 < 0 and abs(r0[0] - pt[0]) <= hw:
+                        v = vat((t0 + t1) / 2)
+                        stats[f'state_{ename}_cross_{actor}'] = round(v, 3)
+                        if v < B['open_min']:
+                            failures.append(f"{ename}: {actor} crosses plane with door closed "
+                                            f"(open frac {v:.2f}) @t={t0:.2f}")
 
 
 def torso_dist(hand, root):
@@ -107,6 +200,7 @@ def main():
 
     prev_box = {}  # continuity / lid 段的上一帧状态
     gait_prev, gait_bout, gait_bouts = {}, {}, {}  # gait 段：帧间根位/步序、当前 bout、已闭合 bout
+    rest_prev = {}  # rest_support 段：各手位置历史（~0.1s 窗算手速，防 15Hz 姿势帧间冻结误判静息）
     whitelist_allowed = (C.get('whitelist') or {}).get('allowed', [])
 
     def hit_allowed(hit, t):
@@ -388,6 +482,64 @@ def main():
                     if p['dot'] < e['min_dot']:
                         failures.append(f"palm not facing torso on bring-to-mouth: {e['key']} "
                                         f"dot={p['dot']:.2f} @t={t:.2f}")
+            elif section == 'hand_body_mesh':
+                hb = frame.get(S.get('state_key', 'handBody'))
+                if not hb or not (S['window'][0] <= t <= S['window'][1]):
+                    continue
+                stats['handbody_frames'] = stats.get('handbody_frames', 0) + 1
+                for hit in hb['hits']:
+                    ok = any(r['subject'] == hit['subject'] and r['obstacle'] == hit['obstacle']
+                             and r['window'][0] <= t <= r['window'][1] for r in S.get('allowed', []))
+                    if not ok:
+                        stats['handbody_bad'] = stats.get('handbody_bad', 0) + 1
+                        failures.append(f"hand embedded in body: {hit['subject']} "
+                                        f"vs {hit['obstacle']} @t={t:.2f}")
+            elif section == 'rest_support':
+                if not (S['window'][0] <= t <= S['window'][1]):
+                    continue
+                stats['rest_frames'] = stats.get('rest_frames', 0) + 1
+                hr = c.get('handRest') or {}
+                arms_c = c.get('arms') or {}
+                for actor in S['actors']:
+                    for side, g in (hr.get(actor) or {}).items():
+                        key = f'{actor}:{side}'
+                        hand = c['hands'][actor][side]
+                        hist = rest_prev.setdefault(key, [])
+                        hist.append((t, hand))
+                        while hist and hist[0][0] < t - .12:
+                            hist.pop(0)
+                        if t - hist[0][0] < .06:
+                            continue  # 攒不够观察窗不判
+                        speed = dist(hand, hist[0][1]) / (t - hist[0][0])
+                        still = speed < S['max_speed'] and hand[1] < S['max_y']
+                        # 持续静息判定：攒够 .35s 低速帧才判（条目边界混合/缓动尾不算定格）
+                        if speed < S['max_speed']:
+                            rest_prev[key + ':stillN'] = rest_prev.get(key + ':stillN', 0) + 1
+                        else:
+                            rest_prev[key + ':stillN'] = 0
+                        if rest_prev[key + ':stillN'] < max(2, round(.35 * 30)):
+                            continue
+                        if not still or hand[1] >= S['max_y']:
+                            continue  # 活动中/高举的手不判定静息支撑
+                        if any((r.get('hand') in (None, key)) and r['window'][0] <= t <= r['window'][1]
+                               for r in S.get('exclude', [])):
+                            continue
+                        stats['rest_still_frames'] = stats.get('rest_still_frames', 0) + 1
+                        stats['rest_gap_max'] = max(stats.get('rest_gap_max', 0), g['support'])
+                        if g['support'] <= S['gap_max']:
+                            continue  # 有接触支撑（贴腿/贴盒）
+                        # 垂臂替代判据：前臂近竖直下垂=重力悬挂读数成立（掌心朝腿、无悬空桌）
+                        a = (arms_c.get(actor) or {}).get(side)
+                        if a:
+                            f = [a[2][i] - a[1][i] for i in range(3)]
+                            fl = math.sqrt(sum(x * x for x in f)) or 1
+                            hang_deg = math.degrees(math.acos(max(-1., min(1., -f[1] / fl))))
+                            stats['rest_hang_deg_max'] = max(stats.get('rest_hang_deg_max', 0), hang_deg)
+                            if hang_deg <= S.get('hang_deg', 25):
+                                continue
+                        failures.append(f"resting hand unsupported: {key} gap={g['support']:.3f}m @t={t:.2f}")
+            elif section == 'state_consistency':
+                pass  # 迁移/触发/事件/行为规则需要全时间轴——finalize 段统一做
 
     if not args.door_only:
         if C.get('whitelist') and stats.get('bento_frames', 0) < C['whitelist'].get('frame_min', 100):
@@ -404,6 +556,12 @@ def main():
             failures.append('grip probe missing or too sparse: tray windows not sampled')
         if C.get('palm_semantic') and stats.get('palm_frames', 0) < C['palm_semantic'].get('frame_min', 20):
             failures.append('palm-semantic probe missing: no bring-to-mouth frames logged')
+        if C.get('hand_body_mesh') and stats.get('handbody_frames', 0) < C['hand_body_mesh'].get('frame_min', 100):
+            failures.append('hand-body probe missing or too sparse')
+        if C.get('rest_support') and stats.get('rest_still_frames', 0) < C['rest_support'].get('still_frame_min', 20):
+            failures.append('rest-support probe found no still hands to validate')
+        if C.get('state_consistency'):
+            state_consistency_pass(C['state_consistency'], data, stats, failures)
         if C.get('gait'):
             for actor, G in C['gait']['actors'].items():
                 bouts = list(gait_bouts.get(actor, []))
