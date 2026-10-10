@@ -1,0 +1,322 @@
+"""contact_probe.py — 配置驱动的接触/物理探针（direct-animation-craft skill 通用版）。
+
+吃一份 render trace（viewer 侧探针输出契约见 references/physics-gate.md：
+每帧 state.contact / state.doorway / state.<whitelist_section> / state.env 等键）
++ episode 侧 contact_contract.json，输出与 trace 同目录的 contact_validation.json。
+
+断言库（contract 里逐段参数化；缺帧/缺主体/缺障碍物即失败）：
+  doorway        门/交互物网格段：窗口覆盖完整性、采样率、单调、障碍物与主体覆盖、零命中
+  whitelist      声明式接触清单：托盘/抓握等合法接触按 主体×部件×障碍×窗口 放行，其余即失败
+  env            环境净空段：任何命中即失败
+  seated         手-躯干轴 XZ 距离窗口（不插进躯干、不悬浮）
+  bite           窗口内最小距离断言（如签尖到嘴至少一次 <阈值）
+  carry          端持窗口最近手-物贴合（XZ 与 dy 双阈值）
+  food           食物握持：尖-球心上限 + 指骨-球心下限
+  wrist          手腕生理域：扭转实加上限 + 掌⊥前臂（|dot| 上限）
+  tray           托盘一致性：约束强度>k_min ⇒ 掌-盒距离 < 该托持偏移+余量
+  supporter      支撑者存在性：可见且非静置/过渡段 ⇒ 手或下层盒在支撑距离内
+  lid            盖随手动：盖角速度非零 ⇒ 主人的手在盖把 max_dist 内
+  pinch          捏持锚点：点-线距离窗口域（不戳掌心不脱手）
+  dual           双手搬运：窗口内每只手都在盒旁
+  place          放置段手-盒距离窗口（分段阈值：引导段/落台推滑段）
+  continuity     放置连续性（按姿势帧率比较）+ 放手后静置（逐输出帧）
+
+Usage:
+  python contact_probe.py <trace.json> --contract <episode>/config/contact_contract.json [--door-only]
+"""
+import argparse
+import json
+import math
+from pathlib import Path
+
+DEFAULT_SCOPE = ('Visible solid meshes vs rendered obstacle boxes, triangle intersections; '
+                 'sampled collision audit, not continuous physics or artistic approval.')
+
+# 段执行顺序固定（报告 failures 的帧内段序与既有 episode 实现对齐用）
+SECTION_ORDER = ['seated', 'bite', 'carry', 'whitelist', 'env', 'food', 'wrist', 'tray',
+                 'supporter', 'lid', 'pinch', 'dual', 'place', 'continuity']
+
+
+def dist(a, b):
+    return math.dist(a, b)
+
+
+def torso_dist(hand, root):
+    return math.hypot(hand[0] - root[0], hand[2] - root[1])
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('trace', type=Path)
+    ap.add_argument('--contract', type=Path, required=True)
+    ap.add_argument('--door-only', action='store_true')
+    args = ap.parse_args()
+    C = json.loads(args.contract.read_text(encoding='utf-8'))
+    data = json.loads(args.trace.read_text())
+    tick_hz = C.get('pose_tick_hz', 15)
+    failures = []
+
+    # ── doorway：交互物网格段 ──
+    stats = {}
+    if C.get('doorway'):
+        D = C['doorway']
+        w0, w1 = D['window']
+        fps = data.get('fps', 0)
+        door_frames = [f for f in data['frames'] if w0 <= f['t'] < w1]
+        stats.update({'door_frames': len(door_frames), 'door_collision_frames': 0,
+                      'bite_min': 99., 'carry_max_xz': 0., 'seated_min': 99., 'seated_max': 0.})
+        if fps < C.get('fps_min', 30):
+            failures.append('door coverage: sampling must be at least 30Hz')
+        step = 1 / max(1, fps)
+        if not door_frames or door_frames[0]['t'] > w0 + .001 or door_frames[-1]['t'] < w1 - step - .001:
+            failures.append(f'door coverage: require the complete {w0}–{w1}s window')
+        if any(b['t'] - a['t'] > step + .001 or b['t'] <= a['t'] for a, b in zip(door_frames, door_frames[1:])):
+            failures.append('door coverage: missing or nonmonotonic samples')
+        required = set(D['required_obstacles'])
+        skinned_min = D.get('skinned_min', {})
+        for frame in door_frames:
+            t = frame['t']
+            probe = frame.get(D.get('state_key', 'doorway'))
+            if not probe:
+                failures.append(f'door probe missing @t={t}')
+                continue
+            if not required.issubset(probe['obstacles']) or probe['margin'] < D['margin_min']:
+                failures.append(f'door obstacle coverage/margin incomplete @t={t}')
+            for sub in D['subjects']:
+                if t >= sub['start'] and not probe['counts'].get(sub['name']):
+                    failures.append(f"door subject missing: {sub['name']} @t={t}")
+                if t >= sub['start'] and skinned_min.get(sub['name']) and \
+                        probe.get('skinnedCounts', {}).get(sub['name'], 0) < skinned_min[sub['name']]:
+                    failures.append(f"door skinned-hand coverage missing: {sub['name']} @t={t}")
+            if probe['hits']:
+                stats['door_collision_frames'] += 1
+                failures.append(f"door collision @t={t}: {probe['hits'][:3]}")
+    else:
+        stats.update({'bite_min': 99., 'carry_max_xz': 0., 'seated_min': 99., 'seated_max': 0.})
+
+    prev_box = {}  # continuity / lid 段的上一帧状态
+    whitelist_allowed = (C.get('whitelist') or {}).get('allowed', [])
+
+    def hit_allowed(hit, t):
+        for row in whitelist_allowed:
+            if row['subject'] != hit['subject']:
+                continue
+            parts = row.get('parts') or [row.get('part')]
+            if hit['mesh'] not in parts:
+                continue
+            if row.get('obstacle_prefix'):
+                if not hit['obstacle'].startswith(row['obstacle']):
+                    continue
+            elif hit['obstacle'] != row['obstacle']:
+                continue
+            w = row['window']
+            if w[0] <= t <= w[1]:
+                return True
+        return False
+
+    for frame in data['frames']:
+        if args.door_only:
+            break
+        t = frame['t']
+        c = frame.get('contact')
+        if not c:
+            continue
+        for section in SECTION_ORDER:
+            S = C.get(section)
+            if not S:
+                continue
+            if section == 'seated':
+                if S['window'][0] <= t <= S['window'][1]:
+                    for actor, root_key in S['actors'].items():
+                        root = frame.get(root_key)
+                        if not root:
+                            continue
+                        for hand in c['hands'][actor].values():
+                            d = torso_dist(hand, root)
+                            stats['seated_min'] = min(stats['seated_min'], d)
+                            stats['seated_max'] = max(stats['seated_max'], d)
+                            if d < S['min']:
+                                failures.append(f"hand in torso: {actor} {d:.3f}m @t={t:.2f}")
+                            if d > S['max']:
+                                failures.append(f"hand floating: {actor} {d:.3f}m @t={t:.2f}")
+            elif section == 'bite':
+                if S['window'][0] <= t <= S['window'][1] and c.get(S['a']):
+                    d = dist(c[S['a']], c[S['b']])
+                    stats['bite_min'] = min(stats['bite_min'], d)
+            elif section == 'carry':
+                for e in S['entries']:
+                    box = c.get(e['box'])
+                    if not box or not (e['window'][0] <= t <= e['window'][1]):
+                        continue
+                    xz_max = e.get('xz_max', S['xz_max'])
+                    dy_max = e.get('dy_max', S['dy_max'])
+                    best = min(math.hypot(hand[0] - box[0], hand[2] - box[2])
+                               for hand in c['hands'][e['actor']].values())
+                    stats['carry_max_xz'] = max(stats['carry_max_xz'], best)
+                    hand = min(c['hands'][e['actor']].values(),
+                               key=lambda h: math.hypot(h[0] - box[0], h[2] - box[2]))
+                    dy = hand[1] - box[1]
+                    if best > xz_max or dy > dy_max or dy < -dy_max:
+                        failures.append(f"carry off-box: {e['actor']} xz={best:.3f} dy={dy:.3f} @t={t:.2f}")
+            elif section == 'whitelist':
+                b = frame.get(S.get('state_key', 'bento'))
+                if not b:
+                    continue
+                stats.setdefault('bento_frames', 0)
+                stats['bento_frames'] += 1
+                stats.setdefault('bento_tray_contacts', 0)
+                for hit in b['hits']:
+                    if hit_allowed(hit, t):
+                        stats['bento_tray_contacts'] += 1
+                    else:
+                        stats['bento_bad'] = stats.get('bento_bad', 0) + 1
+                        failures.append(f"bento clip @t={t}: {hit['subject']} {hit['mesh']} vs {hit['obstacle']}")
+            elif section == 'env':
+                env = frame.get(S.get('state_key', 'env'))
+                if env:
+                    stats['env_frames'] = stats.get('env_frames', 0) + 1
+                    for hit in env['hits']:
+                        stats['env_bad'] = stats.get('env_bad', 0) + 1
+                        failures.append(f"fence clip @t={t}: {hit['subject']} {hit['mesh']} vs {hit['obstacle']}")
+            elif section == 'food':
+                if c.get(S.get('present_key', 'nug')):
+                    stats['nug_frames'] = stats.get('nug_frames', 0) + 1
+                    tp = S['tip']
+                    if c.get(tp['a']):
+                        d = dist(c[tp['a']], c[tp['b']])
+                        stats['nug_tip_max'] = max(stats.get('nug_tip_max', 0), d)
+                        if d > tp['max']:
+                            failures.append(f"skewer tip outside nugget: {d:.3f}m @t={t:.2f}")
+                    bn = S['bone']
+                    if c.get(bn['key'], 99) < bn['min']:
+                        stats['nug_bone_min'] = min(stats.get('nug_bone_min', 99), c[bn['key']])
+                        failures.append(f"finger through nugget: {c[bn['key']]:.3f}m @t={t:.2f}")
+                    else:
+                        stats['nug_bone_min'] = min(stats.get('nug_bone_min', 99), c[bn['key']])
+            elif section == 'wrist':
+                for key, w in (c.get('wrist') or {}).items():
+                    stats['wrist_applied_max'] = max(stats.get('wrist_applied_max', 0), w['appliedDeg'])
+                    stats['wrist_demand_max'] = max(stats.get('wrist_demand_max', 0), w['demandDeg'])
+                    if w['appliedDeg'] > S['applied_max_deg']:
+                        failures.append(f"wrist twist over physio limit: {key} {w['appliedDeg']:.0f}° @t={t:.2f}")
+                    if w['palmDot'] > S['palm_dot_max']:
+                        failures.append(f"palm not perpendicular to forearm: {key} {w['palmDot']:.2f} @t={t:.2f}")
+            elif section == 'tray':
+                boxes = c.get('boxPos') or {}
+                for e in S['entries']:
+                    k = (c.get('trayK') or {}).get(e['key'], 0)
+                    if k > S['k_min'] and boxes.get(e['box']) and (c.get('boxVis') or {}).get(e['box'], True):
+                        d = dist(c['hands'][e['actor']][e['side']], boxes[e['box']])
+                        stats['tray_leak_max'] = max(stats.get('tray_leak_max', 0), d)
+                        if d > e['lim']:
+                            failures.append(f"tray palm off box: {e['key']} {d:.3f}m @t={t:.2f}")
+            elif section == 'supporter':
+                boxes = c.get('boxPos') or {}
+                for box, pos in boxes.items():
+                    if not (c.get('boxVis') or {}).get(box, True):
+                        continue
+                    win = S['support_win'].get(box)
+                    if not win or not (win[0] <= t <= win[1]):
+                        continue
+                    tr = S.get('transit', {}).get(box)
+                    if tr and tr[0] <= t <= tr[1]:
+                        continue
+                    actor = S['actor_of'][box]
+                    best = min(dist(h, pos) for h in c['hands'][actor].values())
+                    stacked = S.get('stacked', {}).get(box)
+                    if stacked and t < stacked['until']:
+                        below = boxes.get(stacked['below'])
+                        if below:
+                            best = dist(pos, below)
+                    lim = S['lims'][box]
+                    stats['unsupported_min'] = min(stats.get('unsupported_min', 99), best)
+                    if best > lim:
+                        failures.append(f"box without supporter: {box} {best:.3f}m @t={t:.2f}")
+            elif section == 'lid':
+                for box, ang in (c.get('lidAngle') or {}).items():
+                    prevA = prev_box.get('lid_' + box)
+                    if prevA is not None and abs(ang - prevA) > S['angle_eps']:
+                        d = (c.get('lidTabDist') or {}).get(box, 99)
+                        stats['lid_far_max'] = max(stats.get('lid_far_max', 0), d)
+                        if d > S['max_dist']:
+                            failures.append(f"lid moves without hand: {box} hand {d:.3f}m @t={t:.2f}")
+                    prev_box['lid_' + box] = ang
+            elif section == 'pinch':
+                if S['window'][0] <= t <= S['window'][1] and c.get(S['a']) and c.get(S['point']) and c.get(S['b']):
+                    p = c[S['point']]; a = c[S['a']]; b = c[S['b']]
+                    ab = [b[i] - a[i] for i in range(3)]
+                    apv = [p[i] - a[i] for i in range(3)]
+                    L2 = sum(x * x for x in ab)
+                    u = max(0, min(1, sum(apv[i] * ab[i] for i in range(3)) / max(L2, 1e-12)))
+                    d = dist(p, [a[i] + ab[i] * u for i in range(3)])
+                    stats['pinch_min'] = min(stats.get('pinch_min', 99), d)
+                    stats['pinch_max'] = max(stats.get('pinch_max', 0), d)
+                    if d < S['min'] or d > S['max']:
+                        failures.append(f"skewer axis off pinch zone: {d:.3f}m @t={t:.2f}")
+            elif section == 'dual':
+                bp = (frame.get('bento') or {}).get('positions') or {}
+                for e in S['entries']:
+                    box = bp.get(e['box'])
+                    if not box or not (e['window'][0] <= t <= e['window'][1]):
+                        continue
+                    for side, hand in c['hands'][e['actor']].items():
+                        d = dist(hand, box)
+                        stats['carry_dual_max'] = max(stats.get('carry_dual_max', 0), d)
+                        if d > e['max']:
+                            failures.append(f"two-hand carry: {e['actor']} {side} off box {d:.3f}m @t={t:.2f}")
+            elif section == 'place':
+                bp = (frame.get('bento') or {}).get('positions') or {}
+                for e in S['entries']:
+                    box = bp.get(e['box'])
+                    if box and e['window'][0] <= t <= e['window'][1]:
+                        d = dist(c['hands'][e['actor']][e['side']], box)
+                        stats['place_max'] = max(stats.get('place_max', 0), d)
+                        if d > e['lim']:
+                            failures.append(f"place without hand: {e['actor']} {d:.3f}m @t={t:.2f}")
+            elif section == 'continuity':
+                bp = (frame.get('bento') or {}).get('positions') or {}
+                for e in S['entries']:
+                    box = bp.get(e['box'])
+                    prev = prev_box.get(e['box'])
+                    tick = math.floor(t * tick_hz + 1e-6)
+                    if box and prev:
+                        step_d = dist(box, prev)
+                        if e['window'][0] <= t < e['down_t']:
+                            if tick != prev_box.get(e['box'] + '_tick'):
+                                stats['place_step_max'] = max(stats.get('place_step_max', 0), step_d)
+                                if step_d > e['step_max']:
+                                    failures.append(f"box jumps during placement: {e['box']} {step_d:.3f}m @t={t:.2f}")
+                        elif t >= e['down_t'] and step_d > e['down_step_max']:
+                            stats['down_step_max'] = max(stats.get('down_step_max', 0), step_d)
+                            failures.append(f"box not static after down: {e['box']} {step_d:.4f}m @t={t:.2f}")
+                    if box and tick != prev_box.get(e['box'] + '_tick'):
+                        prev_box[e['box']] = box
+                        prev_box[e['box'] + '_tick'] = tick
+
+    if not args.door_only:
+        if C.get('whitelist') and stats.get('bento_frames', 0) < C['whitelist'].get('frame_min', 100):
+            failures.append('bento probe missing or too sparse: run render with the mesh-probe query flag')
+        if C.get('env') and stats.get('env_frames', 0) < C['env'].get('frame_min', 100):
+            failures.append('fence probe missing: run render with the mesh-probe query flag')
+        if C.get('food') and stats.get('nug_frames', 0) < C['food'].get('frame_min', 10):
+            failures.append('food probe missing: skewer window not sampled')
+        if C.get('bite') and stats['bite_min'] > C['bite']['max']:
+            failures.append(f"skewer never reaches mouth: min {stats['bite_min']:.3f}m")
+
+    if args.door_only:
+        stats = {k: v for k, v in stats.items() if k.startswith('door_')}
+    report = {'passed': not failures, 'stats': stats, 'failures': failures,
+              'scope': C.get('scope', DEFAULT_SCOPE)}
+    args.trace.with_name('contact_validation.json').write_text(
+        json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    print(json.dumps(stats, indent=1))
+    if failures:
+        print(f"FAIL {len(failures)} contact violations")
+        for f in failures[:20]:
+            print(' ', f)
+        raise SystemExit(2)
+    print('contact check: all assertions passed')
+
+
+if __name__ == '__main__':
+    main()

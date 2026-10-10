@@ -34,6 +34,10 @@ description: 指导动画角色的造型、变形、动作节奏及二维三维�
 要检查真实通路、全身与携物，以及完整开合窗口；代理/变形顶点与渲染同源，
 缺采样不能通过。手部姿势库按 beat 覆盖，静息半握为底。
 
+新集开工先建编写期物理门禁：contract 先行的接触探针
+[physics-gate.md](references/physics-gate.md)（scripts/contact_probe.py 通用实现），
+写谱面阶段就拦穿模/悬浮/空手托盘，探针不过不渲染。
+
 ## 选择能实现目标的路线
 
 从用户参考画面或既有风格约定确定目标；只有缺少信息且会改变工艺时才问。没有额外参考时，可把干净线条、简化色块作为工作假设，明确说明。
@@ -98,6 +102,16 @@ Three.js 是执行环境，基础几何体是建模选择；两者不要混为�
 各层的数值配方（预备时长、衰减系数、squash 幅度、涂抹阈值、timing 帧数表），
 以及在 (t,state) 表演谱 + twoBone IK + group 关节结构上的具体接入点与翻车警示，
 读 [动画原则可执行配方](references/motion-principles-recipes.md)。
+
+### 编写期物理门禁
+
+物理错误（穿模、悬浮、空手托盘、超臂长目标）前置到写谱面阶段拦截，不活到渲染后：
+生理域常量与可达性先行、姿势由道具状态机派生、探针当编译器（不过不渲染）。
+通用探针 `scripts/contact_probe.py` 吃 episode 侧 `config/contact_contract.json`
+（断言逐段参数化）与 render trace，输出 contact_validation.json。门禁工作流、
+生理域常量表模板与 trace 输出契约见 [编写期物理门禁](references/physics-gate.md)；
+接触/手部数值纪律见 [contact-and-hands.md](references/contact-and-hands.md)。
+参考实现：bio_armor_academy_s1e3（14 段断言，薄包装等效验证通过）。
 
 ## 逐镜修型与线条
 
