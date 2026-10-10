@@ -46,6 +46,8 @@ description: 走路、后退、起停与转身的制作和验收。用于 2D 换
 - 剧集自有程序角色、IK 或独立 viewer：读
   [references/procedural-footsteps.md](references/procedural-footsteps.md)，检查左右脚轨道、
   朝向、有限步数、起停与转身。不要假定该管线会执行 `Event:Move` 或共享 Walk。
+- 可执行步态引擎：有限落脚步态已晋升为共享资产 `dula-assets/lib/craft3d/locomotion.js`
+  （`createLocomotion(params)` 参数化，默认值=S1E2 验收值；换角色需重测比例、落脚与重心）。
 - 验收方法（短渲抽帧、dula-verify 盲区）：读
   [references/verify-walk-shots.md](references/verify-walk-shots.md)。
 - 先看剧集现状：`config/keyframe_timeline.json` 里带 `motionGroup` 的帧就是

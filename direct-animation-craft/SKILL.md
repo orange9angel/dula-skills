@@ -24,6 +24,8 @@ description: 指导动画角色的造型、变形、动作节奏及二维三维�
 自有 3D/IK 角色读其 [有限步态](../walk-director/references/procedural-footsteps.md)：
 造型与身体协调由本 skill 统筹，落脚计划及步态验收由该专项维护。
 
+可执行积木：连续曲面路线的基础件已晋升为共享资产 `dula-assets/lib/craft3d/`（曲面肢体/关节手/两骨 IK/步态/toon 材质与描边），已验收角色实现参考 `dula-assets/characters/bioarmor/`；新集直接 import，不再跨剧集挂载 episode 目录。
+
 动作僵硬、发力没有重量，或要给程序化表演谱补预备、跟随、挤压拉伸、涂抹帧
 与一拍二落地时，读 [动画原则可执行配方](references/motion-principles-recipes.md)。
 

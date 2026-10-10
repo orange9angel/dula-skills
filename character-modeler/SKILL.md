@@ -32,6 +32,7 @@ This workflow has two existing looks. Follow the user's established choice; clar
 - Read [references/characterbase-contract.md](references/characterbase-contract.md) for the exact fields the engine expects.
 - Read [references/anime-expression-symbols.md](references/anime-expression-symbols.md) 动漫表情符号化：汗滴/爆筋/豆豆眼/黑线脸等符号的语义表、绘制配方、触发纪律与夸张表情拓扑。
 - Read `dula-assets/characters/Doraemon.js` (round cute) and one humanoid (e.g. `Zorak.js`) as working code references.
+- 可执行积木：`dula-assets/lib/craft3d/`（surface/hand/pose/look/locomotion）是本 skill 造型工艺的共享代码形态；已验收的完整角色参考 `dula-assets/characters/bioarmor/`（《9章》系列）。新角色优先基于这些积木搭建，不要从 episode 目录拷贝。
 
 ## Workflow
 
