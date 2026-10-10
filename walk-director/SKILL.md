@@ -1,6 +1,6 @@
 ---
 name: walk-director
-description: 走路/移动镜头的创作与验收规范。Use when an episode needs a character to walk or travel on screen — choosing and accepting walk-cycle cels (A/B 触地互换), deciding between 连续换脚 vs 静帧运镜/近远两拍（walk_away 拉远）, making the camera actually follow the movement (2D `walk_follow` + `motionGroup` crop pan, or 3D `Event:Move` + follow camera), building or rebuilding walk segments in `config/keyframe_timeline.json` from `config/walk_segments.json`, validating walk groups, or diagnosing 原地踏步感、往返抖动、滑步、换腿不可读、背景互闪/身体拼接断裂、dula-verify 走路盲区等问题。
+description: 走路、后退、起停与转身的制作和验收。用于 2D 换脚 cel 与跟走镜头、3D Event:Move 步速匹配，以及程序角色/IK 的有限落脚、支撑锁定和重心协调；诊断滑步、交叉腿、碎步、朝向错位、停步跳变与背景互闪。包括同机位试片、实际接触轨迹和顺序/seek 验证。
 ---
 
 # Walk Director
@@ -8,9 +8,9 @@ description: 走路/移动镜头的创作与验收规范。Use when an episode n
 走路镜头专项规范。本 skill 放 `dula-skills/walk-director/`；产物只写到
 `dula-story/episodes/<episode>/`（`config/walk_segments.json`、
 `config/keyframe_timeline.json`、`assets/action_inbetweens/` 的走路 cel、
-以及 3D 剧集 `bootstrap.js` 里的自定义跟走运镜）。
+以及 3D 剧集的跟走运镜、程序步态与检查记录）。
 
-覆盖两条管线：
+按实际运行入口选择管线：
 
 - **2D 关键帧管线**（`*SequenceScene.js` + `config/keyframe_timeline.json`）：
   走路有两种做法，先选型再动手（见 keyframe-walk-shots.md「选型」节）：
@@ -21,6 +21,8 @@ description: 走路/移动镜头的创作与验收规范。Use when an episode n
     表现"走了一段"。cel 无法像素级锁定时用这个，不要硬上 A/B。
 - **3D 管线**（`.story` DSL + 低模角色）：走路 = `{Event:Move}` 自动并播 Walk
   动画 + 跟随运镜；步频/位移必须手动匹配，否则滑步。
+- **自有 3D/IK 管线**（独立 viewer + 程序角色）：按路径排有限落脚，协调根位移、
+  躯干和手脚，分别处理起步、收步及原地转身；导出实际模型接触轨迹验收。
 
 ## Boundaries
 
@@ -112,6 +114,13 @@ description: 走路/移动镜头的创作与验收规范。Use when an episode n
 `Event:Move` 自动并播 Walk 动画；按 references/story-dsl-walk.md 的步速公式
 匹配 `duration` 与 Walk 的 `frequency/stride`，需要平滑跟随时复制模板运镜类进
 `bootstrap.js`。
+
+## Workflow（自有 3D/IK 管线）
+
+读取 [程序角色有限步态](references/procedural-footsteps.md)。先保存基线和同机位
+短片，再检查前向、左右足轨道、步长定义、末步及转身接触；按角色比例和性格
+调整，复核实际世界脚位、鞋朝向、骨长和鞋底，最后接回原镜头与音轨。
+该 skill 提供制作与验收方法；参考代码目前在 S1E2，尚未发布为共享动作资产。
 
 ## Validation
 
