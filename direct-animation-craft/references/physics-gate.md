@@ -2,7 +2,8 @@
 
 物理错误（穿模、悬浮、空手托盘、超臂长目标）不该活到渲染后由用户复看发现。
 本门禁把它前置到写谱面阶段：探针当编译器用，不过不渲染。工艺沉淀自
-bio_armor_academy_s1e3（《9章》S1E3，14 段断言全绿后用户零物理类反馈）。
+bio_armor_academy_s1e3（《9章》S1E3，P10 十四段断言全绿后用户零物理类反馈；
+P12 扩到 17 段：gait 步态域 / limb_attach 肩臂衔接 / worn_prop 穿戴件净空）。
 
 ## 三层防线
 
@@ -30,6 +31,18 @@ viewer 的 draw state 按帧输出以下键，contact_probe.py 按 contract 消�
 | `bento`（probe-bento） | 同上 + `positions`（道具盒世界位） | whitelist/dual/place/continuity |
 | `env` | 环境障碍（铁丝网薄板代理等）相交 | env |
 | 食物/嘴/签尖/掌心/腕审计/托盘强度/盖角与盖把手距 | contact.nug/nugBoneMin/skewerTip/skewerPos/palm/wrist/trayK/lidAngle/lidTabDist/boxPos/boxVis | food/pinch/wrist/tray/lid/supporter |
+| `locomotion[actor]` | `{kind,root,yaw,bob,step,steps,feet,legs}`（行走段逐帧） | gait |
+| `contact.arms` / `contact.torsoAxis` | 手臂三点（肩/肘/腕，mesh 局部→世界）+ 躯干轴两点（含 bob/lean） | limb_attach |
+| `worn` | 穿戴件盒 vs 穿戴者网格（负 margin=深穿才报；穿戴件自身打 `userData.probeExclude` 跳过） | worn_prop |
+
+新段执行顺序追加在 SECTION_ORDER 末尾（gait/limb_attach/worn_prop 在 continuity 之后）——
+插中间会改变 failures 帧内段序，破坏跨版本报告可比性。
+
+穿戴件纪律（S1E3 P12 实录）：挂在髋部的硬盒道具（书包）若按"几何贴合"摆放必然与
+大腿面常交——正解是**枢轴移到包顶 + 外移 + 重力外倾角**（挂点扫描一次渲染定 offset：
+逐候选改变换→探针→还原，纯函数不进画面），再用负 margin 断言"只报深穿、放行贴触"。
+抬臂过肩线会让袖根脱出躯干肩环覆盖（挥手肩部断缝实录）——limb_attach 的仰角上限
+即"手不过肩线"的数值化（轰刚挥手顶点 1.58→1.46，上臂仰角 max 72.6°→域 85°）。
 
 probe 查询串约定：`render.mjs --q "&probe-door=1&probe-bento=1"`；探针模块惰性
 import（不进正片渲染路径）。15Hz 姿势帧（一拍二）下的道具连续性按姿势帧比较，
@@ -47,6 +60,6 @@ import（不进正片渲染路径）。15Hz 姿势帧（一拍二）下的道具
 ## 参考实现
 
 - 通用探针：`dula-skills/direct-animation-craft/scripts/contact_probe.py`
-- 参考 contract：`bio_armor_academy_s1e3/config/contact_contract.json`（14 段全参数化）
+- 参考 contract：`bio_armor_academy_s1e3/config/contact_contract.json`（17 段全参数化）
 - 等效验证：S1E3 薄包装 tools/check_contact.py 与旧硬编码版报告逐字段一致
   （仅 nug_frames 573→663——旧版把无 bento 段的帧静默跳过，新版覆盖 68–71s 卡段）。

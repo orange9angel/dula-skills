@@ -20,6 +20,11 @@
   dual           双手搬运：窗口内每只手都在盒旁
   place          放置段手-盒距离窗口（分段阈值：引导段/落台推滑段）
   continuity     放置连续性（按姿势帧率比较）+ 放手后静置（逐输出帧）
+  gait           步态域：walk 帧速度上限 / bout 均速下限 / bob 振幅下限 / 步频域（按角色分参数；
+                 需要 trace 的 state.locomotion[actor]={kind,root,step,bob}）
+  limb_attach    肩臂衔接：上臂轴（肩→肘）与躯干垂线夹角上限（抬臂过肩线=袖根脱嵌风险）
+                 + 肩点到躯干轴线距离上限；需要 state.contact.arms / torsoAxis
+  worn_prop      穿戴件净空：state.worn（穿戴者网格 vs 穿戴件盒，负 margin=深穿才报）零命中
 
 Usage:
   python contact_probe.py <trace.json> --contract <episode>/config/contact_contract.json [--door-only]
@@ -32,9 +37,11 @@ from pathlib import Path
 DEFAULT_SCOPE = ('Visible solid meshes vs rendered obstacle boxes, triangle intersections; '
                  'sampled collision audit, not continuous physics or artistic approval.')
 
-# 段执行顺序固定（报告 failures 的帧内段序与既有 episode 实现对齐用）
+# 段执行顺序固定（报告 failures 的帧内段序与既有 episode 实现对齐用）；
+# 新段只准追加在末尾，插入中间会改变 failures 帧内序、破坏跨版本报告可比性
 SECTION_ORDER = ['seated', 'bite', 'carry', 'whitelist', 'env', 'food', 'wrist', 'tray',
-                 'supporter', 'lid', 'pinch', 'dual', 'place', 'continuity']
+                 'supporter', 'lid', 'pinch', 'dual', 'place', 'continuity',
+                 'gait', 'limb_attach', 'worn_prop']
 
 
 def dist(a, b):
@@ -95,6 +102,7 @@ def main():
         stats.update({'bite_min': 99., 'carry_max_xz': 0., 'seated_min': 99., 'seated_max': 0.})
 
     prev_box = {}  # continuity / lid 段的上一帧状态
+    gait_prev, gait_bout, gait_bouts = {}, {}, {}  # gait 段：帧间根位/步序、当前 bout、已闭合 bout
     whitelist_allowed = (C.get('whitelist') or {}).get('allowed', [])
 
     def hit_allowed(hit, t):
@@ -292,6 +300,67 @@ def main():
                     if box and tick != prev_box.get(e['box'] + '_tick'):
                         prev_box[e['box']] = box
                         prev_box[e['box'] + '_tick'] = tick
+            elif section == 'gait':
+                loc = frame.get('locomotion') or {}
+                for actor, G in S['actors'].items():
+                    L = loc.get(actor)
+                    if not L or L.get('kind') != 'walk':
+                        if gait_bout.get(actor):
+                            gait_bouts.setdefault(actor, []).append(gait_bout.pop(actor))
+                        gait_prev[actor] = None
+                        continue
+                    bout = gait_bout.get(actor)
+                    if not bout:
+                        bout = gait_bout[actor] = {'t0': t, 't1': t, 'speeds': [], 'bob_max': 0., 'falls': 0}
+                    bout['t1'] = t
+                    bout['bob_max'] = max(bout['bob_max'], abs(L.get('bob') or 0))
+                    prev = gait_prev.get(actor)
+                    if prev:
+                        dt = t - prev['t']
+                        if dt > 1e-6:
+                            spd = math.hypot(L['root'][0] - prev['root'][0],
+                                             L['root'][2] - prev['root'][2]) / dt
+                            bout['speeds'].append(spd)
+                            stats[f'gait_speed_max_{actor}'] = max(stats.get(f'gait_speed_max_{actor}', 0), spd)
+                            if spd > G['speed_max']:
+                                failures.append(f"gait too fast: {actor} {spd:.2f}m/s @t={t:.2f}")
+                            if L.get('step', 0) > prev['step']:
+                                bout['falls'] += L['step'] - prev['step']
+                    gait_prev[actor] = {'t': t, 'root': L['root'], 'step': L.get('step', 0)}
+            elif section == 'limb_attach':
+                arms = c.get('arms') or {}
+                axis = c.get('torsoAxis') or {}
+                for actor, G in S['actors'].items():
+                    a = arms.get(actor)
+                    ax = axis.get(actor)
+                    if not a or not ax:
+                        continue
+                    down = [ax[0][i] - ax[1][i] for i in range(3)]
+                    dl = math.sqrt(sum(x * x for x in down)) or 1
+                    down = [x / dl for x in down]
+                    for side, pts in a.items():
+                        sh, el = pts[0], pts[1]
+                        ua = [el[i] - sh[i] for i in range(3)]
+                        ul = math.sqrt(sum(x * x for x in ua)) or 1
+                        cos = sum(ua[i] * down[i] for i in range(3)) / ul
+                        elev = math.degrees(math.acos(max(-1., min(1., cos))))
+                        stats[f'limb_elev_max_{actor}'] = max(stats.get(f'limb_elev_max_{actor}', 0), elev)
+                        if elev > G['max_elev_deg']:
+                            failures.append(f"arm raised past shoulder line: {actor} {side} {elev:.0f}° @t={t:.2f}")
+                        ap = [sh[i] - ax[1][i] for i in range(3)]  # 肩点到躯干轴线的距离（漂移/脱嵌）
+                        along = sum(ap[i] * down[i] for i in range(3))
+                        d = dist(sh, [ax[1][i] + down[i] * along for i in range(3)])
+                        stats[f'limb_shoulder_axis_max_{actor}'] = max(
+                            stats.get(f'limb_shoulder_axis_max_{actor}', 0), d)
+                        if d > G['max_shoulder_axis']:
+                            failures.append(f"shoulder off torso axis: {actor} {side} {d:.3f}m @t={t:.2f}")
+            elif section == 'worn_prop':
+                w = frame.get(S.get('state_key', 'worn'))
+                if w:
+                    stats['worn_frames'] = stats.get('worn_frames', 0) + 1
+                    for hit in w['hits']:
+                        stats['worn_bad'] = stats.get('worn_bad', 0) + 1
+                        failures.append(f"worn prop clip @t={t}: {hit['subject']} {hit['mesh']} vs {hit['obstacle']}")
 
     if not args.door_only:
         if C.get('whitelist') and stats.get('bento_frames', 0) < C['whitelist'].get('frame_min', 100):
@@ -302,6 +371,35 @@ def main():
             failures.append('food probe missing: skewer window not sampled')
         if C.get('bite') and stats['bite_min'] > C['bite']['max']:
             failures.append(f"skewer never reaches mouth: min {stats['bite_min']:.3f}m")
+        if C.get('worn_prop') and stats.get('worn_frames', 0) < C['worn_prop'].get('frame_min', 100):
+            failures.append('worn probe missing or too sparse: run render with the mesh-probe query flag')
+        if C.get('gait'):
+            for actor, G in C['gait']['actors'].items():
+                bouts = list(gait_bouts.get(actor, []))
+                if gait_bout.get(actor):
+                    bouts.append(gait_bout[actor])
+                if not bouts:
+                    failures.append(f'gait probe missing: {actor} never walks')
+                    continue
+                spd_all = sorted(s for b in bouts for s in b['speeds'])
+                if spd_all:
+                    stats[f'gait_speed_p50_{actor}'] = round(spd_all[len(spd_all) // 2], 3)
+                    stats[f'gait_speed_p95_{actor}'] = round(spd_all[min(len(spd_all) - 1, int(len(spd_all) * .95))], 3)
+                for b in bouts:
+                    dur = b['t1'] - b['t0']
+                    if dur < .4:
+                        continue
+                    avg = sum(b['speeds']) / max(1, len(b['speeds']))
+                    stats[f'gait_avg_min_{actor}'] = round(min(avg, stats.get(f'gait_avg_min_{actor}', 99)), 3)
+                    if avg < G['avg_min']:
+                        failures.append(f"gait too slow: {actor} avg {avg:.2f}m/s @t={b['t0']:.2f}")
+                    if b['bob_max'] < G['bob_min']:
+                        failures.append(f"gait gliding (no bob): {actor} bob {b['bob_max']:.3f} @t={b['t0']:.2f}")
+                    cad = b['falls'] / dur
+                    stats[f'gait_cadence_min_{actor}'] = round(min(cad, stats.get(f'gait_cadence_min_{actor}', 99)), 2)
+                    stats[f'gait_cadence_max_{actor}'] = round(max(cad, stats.get(f'gait_cadence_max_{actor}', 0)), 2)
+                    if cad < G['cadence'][0] or cad > G['cadence'][1]:
+                        failures.append(f"gait cadence off: {actor} {cad:.2f}steps/s @t={b['t0']:.2f}")
 
     if args.door_only:
         stats = {k: v for k, v in stats.items() if k.startswith('door_')}
