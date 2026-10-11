@@ -65,6 +65,31 @@ This workflow has two existing looks. Follow the user's established choice; clar
 
 若剧集需要提升最终镜头质量，先按 `direct-animation-craft` 检查造型和动作，再用 `cel-look` 整理线条、色块与曝光节奏。
 
+## 服装-身体一体化建造纪律（S1E3 拍摄期翻车倒逼）
+
+衣物与身体的冲突在 S1E3 全部拖到拍摄期才暴露（外套襟穿手、短袖终点+肘凸读成
+"多一节"、静息手够不到大腿）。新角色在**建造期**就要按本节规避，技术做法见
+[references/modeling-techniques.md](references/modeling-techniques.md) 第 10 节：
+
+1. **袖子是肢体件的一部分**：袖筒与上臂挂同一 group、同 twoBone 数据同步更新，
+   不许做成躯干上的静态套筒。短袖终点必须盖过肘最大屈曲时的肘尖活动域
+   （屈曲 140° 时肘尖后移量），否则屈伸露断口；终点+肘凸+长裸前臂同框读成
+   "多一节"（S1E3 P21 实录）。
+2. **襟摆/裙摆建造期即挂铰链 group**：枢轴在肩/腰（衣物的真实悬挂点），不在底边；
+   `geometry.translate` 把几何体移到枢轴下方，rotation 留给外层驱动（风摆+臂推）。
+   襟片被手臂顶开是合法解，预留接口比拍摄期补铰链便宜一个数量级。
+3. **穿戴件（背带/包/耳返）建造期即定挂点净空**：挂点选躯干低活动区（胯侧/肩后），
+   按 worn_prop 探针口径预留——贴体软接触（<2cm）合法，深穿报错；背带两端都必须
+   连得上（肩点→包顶连接件），断带是建造缺陷不是拍摄问题。
+4. **建造验收第一天接探针**：新角色出道前必须跑通建造期探针——limbBody 躯干环列
+   嵌入/肘凸（elbEx）/翼角、rest_support 可达性（坐姿肩-大腿面距离 vs 臂长，
+   臂短体型"平放大腿上"物理不可达，直接排除该静息姿势）、穿戴件 worn_prop。
+   拍完再补=把类目留给用户复看（S1E3 八轮串行枚举实录）。
+5. 数值口径全部指回
+   [direct-animation-craft/references/contact-and-hands.md](../direct-animation-craft/references/contact-and-hands.md)
+   （嵌入平阈/肘极混合/襟片臂推/穿戴件净空），此处不抄表；换装型要重测环列半径
+   （外套比贴身穿衣宽出的量进 TORSO_RINGS，否则探针把外套厚度当嵌入）。
+
 ## 动漫化形象清单
 
 形象"不像动画片"时按此清单逐项核对（bio_armor_academy_s1e2 R21 复看确认的形象层缺口）：
