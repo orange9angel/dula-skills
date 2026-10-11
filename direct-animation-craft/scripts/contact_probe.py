@@ -183,6 +183,12 @@ def torso_dist(hand, root):
     return math.hypot(hand[0] - root[0], hand[2] - root[1])
 
 
+def _actor_of(key, table):
+    """limb 键（<actor>L/R）→ contact 表里的演员键：最长前缀匹配（lei/hong 兼容，
+    apai/deng 等新卡司即用）。找不到返回 None（调用方按无数据处理）。"""
+    ks = [k for k in (table or {}) if key.lower().startswith(k.lower())]
+    return max(ks, key=len) if ks else None
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('trace', type=Path)
@@ -607,13 +613,13 @@ def main():
                         stats['limb_rootG_max'] = max(stats.get('limb_rootG_max', 0), v['rootG'])
                     # 分离判别量=上臂侧向外摆角（袖根张开楔缝来自角度不是距离：正常臂根区
                     # 距离读数已 +.04m，不可用——P16 实测）；只在持续静息帧判（手势/抬手豁免）
-                    a = (c.get('arms') or {}).get('lei' if key.startswith('lei') else 'hong', {}).get(
-                        'left' if key.endswith('L') else 'right')
+                    _act = _actor_of(key, c.get('arms'))
+                    a = ((c.get('arms') or {}).get(_act) or {}).get(
+                        'left' if key.endswith('L') else 'right') if _act else None
                     if a:
-                        handKey = ('lei' if key.startswith('lei') else 'hong') + ':' + (
-                            'left' if key.endswith('L') else 'right')
+                        handKey = _act + ':' + ('left' if key.endswith('L') else 'right')
                         hist = rest_prev.setdefault('wing:' + handKey, [])
-                        hist.append((t, (c.get('hands') or {}).get('lei' if key.startswith('lei') else 'hong', {})
+                        hist.append((t, (c.get('hands') or {}).get(_act, {})
                                      .get('left' if key.endswith('L') else 'right', a[2])))
                         while hist and hist[0][0] < t - .12:
                             hist.pop(0)
@@ -637,7 +643,7 @@ def main():
                 for key, v in lb.items():
                     if v.get('reach') is None or v['reach'] <= S['ratio_max']:
                         continue
-                    actor = 'lei' if key.startswith('lei') else 'hong'
+                    actor = _actor_of(key, arms_c)
                     side = 'left' if key.endswith('L') else 'right'
                     # 垂臂豁免：前臂近竖直=重力悬挂的全展直是正常解剖
                     a = (arms_c.get(actor) or {}).get(side)
