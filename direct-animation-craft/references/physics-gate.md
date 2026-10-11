@@ -41,6 +41,7 @@ viewer 的 draw state 按帧输出以下键，contact_probe.py 按 contract 消�
 | `handBody` | 手 skinned mesh vs 躯干/大腿代理盒（负 margin 深穿才报，代理盒 92% 半径+骨盆侧翼延伸） | hand_body_mesh |
 | `contact.handRest` | 掌点→大腿轴/盒 OBB 距离（support=取小） | rest_support |
 | `contact.doorOpen`/`doorPos`/`lidOpen`/`windGust` | 有状态元素的归一化开度/位置/环境触发量 | state_consistency |
+| `locomotion[].feet[].pitch` | 足踝俯仰（负=背屈足尖抬；支撑期滚动输出） | foot_roll |
 | `limbBody` | 上肢管 vs 躯干椭圆环列的有符号距离 g（轴采样解析式，袖根内埋区已滤） | limb_body_mesh |
 | `limbBody[].rootG/reach` | 袖根邻域 g（仅记录不判，判别力证伪）/ 腕-肩距÷臂长 | limb_body_mesh / reach |
 | `cloth` | 襟片面片局部系穿透检测（臂管段端点法向换号+交点落襟片范围） | cloth_body |

@@ -24,13 +24,13 @@
 
 | 节拍类型 | C1 碰撞 | C2 支撑 | C3 生理域 | C4 连接 | C5 接触语义 | C6 声画 | C8 渲染稳定性 |
 |----------|---------|---------|-----------|---------|-------------|---------|--------------|
-| 走跑 | doorway/env（路径净空） | locomotion 钉地滑移 + gait 速度域 | gait bob/步频 + limb_attach | — | — | 脚步声对位（有 Foley 时） | — |
+| 走跑 | doorway/env（路径净空） | locomotion 钉地滑移 + gait 速度域 | gait bob/步频 + limb_attach + **foot_roll（足踝滚动）** | — | — | 脚步声对位（有 Foley 时） | — |
 | 搬运 | whitelist（托持接触行） | supporter + grip 贴掌 | wrist 托盘扭转 | — | grip 扣边 | — | — |
 | 抓握 | whitelist（捏合接触） | 物随手（carry 类） | wrist | 交接断链=双方窗口连续 | pinch 点线域 | — | — |
 | 放置 | whitelist（落台接触） | supporter + continuity 静置 | — | lid 盖随手动 | place 手-盒距离窗 | 落台音对位 | — |
 | 交接 | — | supporter 双方窗口无缝 | — | continuity（物不瞬移） | pinch + 递出指向（审片） | — | — |
 | 进食 | — | food 尖-球心/指骨不穿 | wrist | — | palm_semantic 掌心向内 + bite 到嘴 | 咀嚼音点位 | — |
-| 坐卧 | env（矮沿/地面合法接触行） | seated 手-躯干域 | limb_attach（俯身肩缝） | **limb_body_mesh（上臂/袖筒 vs 躯干椭圆截面）** | — | 落座音对位 | — |
+| 坐卧 | env（矮沿/地面合法接触行） | seated 手-躯干域 | limb_attach（俯身肩缝）+ **reach（超伸）+ 肘外摆角** | **limb_body_mesh（上臂/袖筒 vs 躯干椭圆截面）** | — | 落座音对位 | — |
 | 开关门窗 | doorway（窗口全覆盖零命中） | — | — | 门轴纯时间函数 | — | check_audio_sync 门事件 + **C7 迁移触发者在场** | flicker（门槛/地垫共面件） |
 | 穿戴件 | worn_prop（负 margin 深穿） | — | — | 带体两端连得上（审片）+ **cloth_body（襟片穿透=换号检测）** | — | — | — |
 | 静息手（坐姿/站姿） | hand_body_mesh（深穿才报） | **rest_support（持续静息⇒贴腿/贴盒或垂臂）** | — | limb_body_mesh（垂臂贴身合法、陷入报错） | 垂放=掌心朝腿 | — | — |

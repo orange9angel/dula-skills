@@ -39,6 +39,9 @@
   reach          超伸断言：腕-肩距离/臂长比率 >ratio_max 即红（全展直=僵直）；
                  垂臂（前臂近竖直 ≤hang_deg）豁免——重力悬挂的全展直是正常解剖；
                  发力帧按 角色×侧×窗口 allowed 豁免（如"够不着"是表演内容）
+  foot_roll      足踝滚动（触地背屈→支撑放平→蹬离跖屈）：每个支撑 run 的落地帧
+                 足尖抬 ≥heel_deg_min、中间帧 |角|≤mid_deg_max、末帧跟抬 ≥toe_deg_min；
+                 需要 locomotion feet[side].pitch（负=背屈）+ stance/id
   cloth_body     衣物件（外套襟/披风片）vs 手臂/躯干代理盒相交：深穿才报（负 margin），
                  静态贴触合法；襟根枢轴邻域由 viewer 滤除
   state_consistency 状态一致性（finalize 段做全时间轴分析）：有状态元素（门/盒盖）的
@@ -62,11 +65,33 @@ SECTION_ORDER = ['seated', 'bite', 'carry', 'whitelist', 'env', 'food', 'wrist',
                  'supporter', 'lid', 'pinch', 'dual', 'place', 'continuity',
                  'gait', 'limb_attach', 'worn_prop', 'grip', 'palm_semantic',
                  'hand_body_mesh', 'rest_support', 'state_consistency', 'limb_body_mesh',
-                 'reach', 'cloth_body']
+                 'reach', 'cloth_body', 'foot_roll']
 
 
 def dist(a, b):
     return math.dist(a, b)
+
+
+def _roll_close(key, run, S, stats, failures, truncated=False):
+    """支撑 run 收尾评估：落地背屈 / 中途放平 / 末帧蹬离。
+    truncated=被转身/段尾截断（段尾根位移饱和、支撑定格在脚跟着地相）——只判落地相。"""
+    if run['n_ticks'] < 3:
+        return
+    if run.get('from_stand'):  # 段首从站立起步：第一支撑相=推离，无脚跟着地（正当）
+        stats['foot_runs'] = stats.get('foot_runs', 0) + 1
+        return
+    stats['foot_runs'] = stats.get('foot_runs', 0) + 1
+    if run['maxTU'] < S['heel_deg_min']:
+        failures.append(f"no heel strike (flat plant): {key} maxToeUp {run['maxTU']:.0f}° "
+                        f"@t={run['t0']:.2f}–{run['t1']:.2f}")
+    if not truncated and run['minTU'] > -S['toe_deg_min']:
+        failures.append(f"no toe-off roll: {key} minToeUp {run['minTU']:.0f}° "
+                        f"@t={run['t0']:.2f}–{run['t1']:.2f}")
+    flat = run['flatSeen'] or (run['maxTU'] > 2 and run['minTU'] < -2)  # 跨零=滚过放平
+    if not truncated and not flat:
+        failures.append(f"stance never rolls flat: {key} @t={run['t0']:.2f}–{run['t1']:.2f}")
+    stats['roll_heel_min'] = min(stats.get('roll_heel_min', 99), round(run['maxTU'], 1))
+    stats['roll_toe_min'] = min(stats.get('roll_toe_min', 99), round(run['minTU'], 1))
 
 
 def state_consistency_pass(SC, data, stats, failures):
@@ -210,6 +235,8 @@ def main():
     prev_box = {}  # continuity / lid 段的上一帧状态
     gait_prev, gait_bout, gait_bouts = {}, {}, {}  # gait 段：帧间根位/步序、当前 bout、已闭合 bout
     rest_prev = {}  # rest_support 段：各手位置历史（~0.1s 窗算手速，防 15Hz 姿势帧间冻结误判静息）
+    roll_run = {}   # foot_roll 段：各脚当前支撑 run 的首/中/末帧俯仰
+    roll_walk_start = {}  # foot_roll：各角色本 bout 起步时刻
     whitelist_allowed = (C.get('whitelist') or {}).get('allowed', [])
 
     def hit_allowed(hit, t):
@@ -624,6 +651,41 @@ def main():
                     if not ok:
                         stats['cloth_bad'] = stats.get('cloth_bad', 0) + 1
                         failures.append(f"cloth embedded: {hit['subject']} vs {hit['obstacle']} @t={t:.2f}")
+            elif section == 'foot_roll':
+                loc = frame.get('locomotion') or {}
+                for actor in S['actors']:
+                    L = loc.get(actor)
+                    walking = bool(L and L.get('kind') == 'walk')
+                    if walking and not gait_prev.get('roll_ws_' + actor):
+                        roll_walk_start[actor] = t  # 本 bout 起步时刻（段首站立起步相豁免用）
+                    gait_prev['roll_ws_' + actor] = walking
+                    for side in ('left', 'right'):
+                        key = f'{actor}:{side}'
+                        ft = walking and (L.get('feet') or {}).get(side)
+                        run = roll_run.get(key)
+                        if ft and ft.get('stance'):
+                            tick = math.floor(t * 15 + 1e-6)  # 一拍二：量化是 floor(t*15)，探针必须同 floor（round 会吞掉半 tick 的放平帧——19.6 实录）
+                            if not run:
+                                roll_run[key] = run = {'t0': t, 't1': t, 'n_ticks': 0,
+                                                       'maxTU': -99, 'minTU': 99, 'flatSeen': False,
+                                                       'lastTick': None,
+                                                       'from_stand': t - roll_walk_start.get(actor, -9) < .2}  # bout 起步 .2s 内=站立起步
+                            if tick != run['lastTick']:  # 支撑 tick：累计三个不变量
+                                tu = -math.degrees(ft.get('pitch', 0))
+                                run['n_ticks'] += 1
+                                run['t1'] = t
+                                run['maxTU'] = max(run['maxTU'], tu)
+                                run['minTU'] = min(run['minTU'], tu)
+                                if abs(tu) <= S['mid_deg_max']:
+                                    run['flatSeen'] = True
+                                run['lastTick'] = tick
+                        elif run:
+                            if walking and ft:  # 收腿首 tick 的俯仰=蹬离值（支撑末接触在摆动曲线 q=0 上）
+                                tu = -math.degrees(ft.get('pitch', 0))
+                                run['minTU'] = min(run['minTU'], tu)
+                            # kind 切走（转身/段尾）=截断：只判落地相
+                            _roll_close(key, run, S, stats, failures, truncated=not walking)
+                            roll_run[key] = None
 
     if not args.door_only:
         if C.get('whitelist') and stats.get('bento_frames', 0) < C['whitelist'].get('frame_min', 100):
@@ -646,6 +708,12 @@ def main():
             failures.append('limb-body probe missing or too sparse')
         if C.get('cloth_body') and stats.get('cloth_frames', 0) < C['cloth_body'].get('frame_min', 100):
             failures.append('cloth probe missing or too sparse')
+        if C.get('foot_roll'):
+            for run in roll_run.values():
+                if run:
+                    _roll_close('(tail)', run, C['foot_roll'], stats, failures)
+            if stats.get('foot_runs', 0) < C['foot_roll'].get('run_min', 6):
+                failures.append('foot_roll: too few stance runs')
         if C.get('rest_support') and stats.get('rest_still_frames', 0) < C['rest_support'].get('still_frame_min', 20):
             failures.append('rest-support probe found no still hands to validate')
         if C.get('state_consistency'):
