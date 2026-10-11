@@ -43,6 +43,7 @@ viewer 的 draw state 按帧输出以下键，contact_probe.py 按 contract 消�
 | `contact.doorOpen`/`doorPos`/`lidOpen`/`windGust` | 有状态元素的归一化开度/位置/环境触发量 | state_consistency |
 | `limbBody` | 上肢管 vs 躯干椭圆环列的有符号距离 g（轴采样解析式，袖根内埋区已滤） | limb_body_mesh |
 | `limbBody[].rootG/reach` | 袖根邻域 g（仅记录不判，判别力证伪）/ 腕-肩距÷臂长 | limb_body_mesh / reach |
+| `cloth` | 襟片面片局部系穿透检测（臂管段端点法向换号+交点落襟片范围） | cloth_body |
 
 新段执行顺序追加在 SECTION_ORDER 末尾（gait/limb_attach/worn_prop 在 continuity 之后）——
 插中间会改变 failures 帧内段序，破坏跨版本报告可比性。

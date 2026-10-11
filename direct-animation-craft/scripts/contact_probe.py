@@ -39,6 +39,8 @@
   reach          超伸断言：腕-肩距离/臂长比率 >ratio_max 即红（全展直=僵直）；
                  垂臂（前臂近竖直 ≤hang_deg）豁免——重力悬挂的全展直是正常解剖；
                  发力帧按 角色×侧×窗口 allowed 豁免（如"够不着"是表演内容）
+  cloth_body     衣物件（外套襟/披风片）vs 手臂/躯干代理盒相交：深穿才报（负 margin），
+                 静态贴触合法；襟根枢轴邻域由 viewer 滤除
   state_consistency 状态一致性（finalize 段做全时间轴分析）：有状态元素（门/盒盖）的
                  迁移窗口 from/to 态成立 + 触发者在场（角色距离/手近盖把/环境阵风量）+
                  音效事件落在迁移窗口 ±tol + 行为-状态规则（角色过门平面帧门必须开）
@@ -60,7 +62,7 @@ SECTION_ORDER = ['seated', 'bite', 'carry', 'whitelist', 'env', 'food', 'wrist',
                  'supporter', 'lid', 'pinch', 'dual', 'place', 'continuity',
                  'gait', 'limb_attach', 'worn_prop', 'grip', 'palm_semantic',
                  'hand_body_mesh', 'rest_support', 'state_consistency', 'limb_body_mesh',
-                 'reach']
+                 'reach', 'cloth_body']
 
 
 def dist(a, b):
@@ -611,6 +613,17 @@ def main():
                         continue
                     stats['reach_max'] = max(stats.get('reach_max', 0), v['reach'])
                     failures.append(f"arm over-extended: {key} ratio={v['reach']:.2f} @t={t:.2f}")
+            elif section == 'cloth_body':
+                cl = frame.get(S.get('state_key', 'cloth'))
+                if not cl or not (S['window'][0] <= t <= S['window'][1]):
+                    continue
+                stats['cloth_frames'] = stats.get('cloth_frames', 0) + 1
+                for hit in cl['hits']:
+                    ok = any(r['subject'] == hit['subject'] and r.get('obstacle', hit['obstacle']) == hit['obstacle']
+                             and r['window'][0] <= t <= r['window'][1] for r in S.get('allowed', []))
+                    if not ok:
+                        stats['cloth_bad'] = stats.get('cloth_bad', 0) + 1
+                        failures.append(f"cloth embedded: {hit['subject']} vs {hit['obstacle']} @t={t:.2f}")
 
     if not args.door_only:
         if C.get('whitelist') and stats.get('bento_frames', 0) < C['whitelist'].get('frame_min', 100):
@@ -631,6 +644,8 @@ def main():
             failures.append('hand-body probe missing or too sparse')
         if C.get('limb_body_mesh') and stats.get('limbbody_frames', 0) < C['limb_body_mesh'].get('frame_min', 100):
             failures.append('limb-body probe missing or too sparse')
+        if C.get('cloth_body') and stats.get('cloth_frames', 0) < C['cloth_body'].get('frame_min', 100):
+            failures.append('cloth probe missing or too sparse')
         if C.get('rest_support') and stats.get('rest_still_frames', 0) < C['rest_support'].get('still_frame_min', 20):
             failures.append('rest-support probe found no still hands to validate')
         if C.get('state_consistency'):
