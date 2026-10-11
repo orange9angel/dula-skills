@@ -68,7 +68,9 @@ import（不进正片渲染路径）。15Hz 姿势帧（一拍二）下的道具
 4. 走路不自然的预防入口：步态风格用 walk-director 的 persona 参数化
    （createLocomotion 参数）与有限落脚验收，不在谱面里手写脚位。
 5. **渲染稳定性终审**（C8）：出成片后跑 `flicker_probe.py`（成片逐帧二阶差分，
-   watch 区回归带+背景角格粗扫；episode 侧 `config/flicker_watch.json` 声明
+   watch 区回归带+背景角格粗扫+**台阶检测**——声明 `step_ratio` 的区域相邻帧
+   边缘密度比超阈即红，专抓换层/换密度这类二阶差分抓不到的一次性阶跃，P20 铁丝网
+   换层 pop 实录）；episode 侧 `config/flicker_watch.json` 声明
    共面件/细 alpha 件风险区）；已接入 `episode_gate.py` 第七步
    （成片比源码旧自动跳过并标注，提醒先 `--out`）。
 

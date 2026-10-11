@@ -582,7 +582,7 @@ def main():
                     continue
                 stats['limbbody_frames'] = stats.get('limbbody_frames', 0) + 1
                 for key, v in lb.items():
-                    lim = -(v['tubeR'] + S.get('embed_margin', .015))  # g<lim：管面陷进躯干表面
+                    lim = -S.get('embed_margin', .02)  # 管面陷入躯干表面 >20mm 即报（环列插值误差带 ~14mm 实测）
                     if v['g'] < lim:
                         ok = any(r['subject'] == key
                                  and r['window'][0] <= t <= r['window'][1] for r in S.get('allowed', []))
@@ -590,6 +590,17 @@ def main():
                         if not ok:
                             stats['limbbody_bad'] = stats.get('limbbody_bad', 0) + 1
                             failures.append(f"limb embedded in torso: {key} g={v['g']:.3f}m @t={t:.2f}")
+                    # 肘尖轮廓凸包（P21"多一节"实录）：肘点横向 X 超躯干同高截面半宽
+                    # +管半径+elb_ex_max 即报（垂臂肘贴体侧占掉管半径余量=合法接触带）。
+                    # 嵌入判据只管"进躯干"，管不了"肘顶出侧影"。
+                    if v.get('elbEx') is not None:
+                        stats['limb_elbEx_max'] = max(stats.get('limb_elbEx_max', -9), v['elbEx'])
+                        if v['elbEx'] > v['tubeR'] + S.get('elb_ex_max', .02):
+                            ok = any(r['subject'] == key
+                                     and r['window'][0] <= t <= r['window'][1] for r in S.get('allowed', []))
+                            if not ok:
+                                stats['limbbody_bad'] = stats.get('limbbody_bad', 0) + 1
+                                failures.append(f"elbow bumps silhouette: {key} ex={v['elbEx']:.3f}m @t={t:.2f}")
                     # rootG（袖根邻域距离）只记录不判：正常臂根区读数恒 +.04m，判别力为零
                     # （P16 实测证伪）；分离判别量=下方静息帧外摆角
                     if v.get('rootG') is not None:

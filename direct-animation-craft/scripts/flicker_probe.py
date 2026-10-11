@@ -4,11 +4,17 @@ z-fighting 共面件 / alphaTest 细件被 mipmap 吃掉的特征是像素值 A-
 平滑运动的二阶差分趋零。流式逐帧（内存只留 3 帧），对 watch 区（声明的像素矩形+
 时间窗）与全屏 4×4 背景粗扫分别累计 二阶差分均值/峰值/超阈占比，超标即红。
 
+台阶检测（P20 换层 pop 实录）：二阶差分只抓高频振荡，抓不到「换层/换密度」这类
+一次性台阶。对声明 step_ratio 的 watch 区逐帧算边缘密度（mean|∇|），相邻帧比值
+超过 step_ratio（或低于其倒数）即红——透视变焦是渐变不会触发，只有切镜/换层
+这类阶跃会。铁丝网区域必须声明。
+
 用法：
   python flicker_probe.py <video.mp4> --watch <episode>/config/flicker_watch.json \
       [--out <report.json>] [--work 640x360]
 watch 配置：{"regions":[{"name","rect":[x,y,w,h]（1280×720 像素坐标）,"window":[t0,t1],
-  "mean_max":均值阈,"frac_max":超阈像素占比阈,"pix":像素二阶差阈值}],
+  "mean_max":均值阈,"frac_max":超阈像素占比阈,"pix":像素二阶差阈值,
+  "step_ratio":相邻帧边缘密度比阈（可选，如 3.0）}],
   "bg_grid": {"pix":阈值,"frac_max":占比阈}}
 """
 import argparse
@@ -53,18 +59,46 @@ def main():
             return slice(int(y * sy), int((y + h) * sy)), slice(int(x * sx), int((x + w) * sx))
 
         acc = [{'sum': 0., 'max': 0., 'over': 0, 'cnt': 0, 'sl': region_slice(R['rect']),
-                'win': [R.get('window', [0, n / fps])[0] - args.t0, R.get('window', [0, n / fps])[1] - args.t0]}
+                'win': [R.get('window', [0, n / fps])[0] - args.t0, R.get('window', [0, n / fps])[1] - args.t0],
+                'step_ratio': R.get('step_ratio'), 'prev_stat': None, 'prev_in': False,
+                'step_peak': 0., 'step_at': None}
                for R in regions]
         gy, gx = hh // 4, ww // 4
         bg_cells = bg.get('cells') or [[a, b] for a in range(4) for b in range(4)]
         bgacc = {tuple(c): {'sum': 0., 'over': 0, 'cnt': 0} for c in bg_cells}
 
+        def edge_stat(fr, sl):
+            seg = fr[sl]
+            return float(np.abs(np.diff(seg, axis=1)).mean() + np.abs(np.diff(seg, axis=0)).mean())
+
+        def step_scan(fr, t):
+            # 台阶检测：相邻帧边缘密度比（透视变焦是渐变，只有换层/切镜级阶跃超阈）
+            for R, A in zip(regions, acc):
+                if not A['step_ratio']:
+                    continue
+                stat = edge_stat(fr, A['sl'])
+                in_win = A['win'][0] <= t <= A['win'][1]
+                if in_win and A['prev_in'] and A['prev_stat'] > 1e-6:
+                    r = stat / A['prev_stat']
+                    jump = max(r, 1 / r)
+                    if jump > A['step_peak']:
+                        A['step_peak'] = jump
+                        A['step_at'] = t
+                    if jump > A['step_ratio']:
+                        report_steps.append(f"step @{R['name']} t={t:.2f}: edge density x{jump:.2f} over {A['step_ratio']}")
+                A['prev_stat'] = stat
+                A['prev_in'] = in_win
+
+        report_steps = []
         f0 = np.asarray(Image.open(files[0]), dtype=np.float32)
         f1 = np.asarray(Image.open(files[1]), dtype=np.float32)
+        step_scan(f0, 0.0)
+        step_scan(f1, 1.0 / fps)
         for i in range(2, n):
             f2 = np.asarray(Image.open(files[i]), dtype=np.float32)
             d2 = np.abs(f2 * 2 - f1 - f0)  # A-B-A 振荡放大，平滑运动≈0
             t = i / fps
+            step_scan(f2, t)
             for A in acc:
                 if A['win'][0] <= t <= A['win'][1]:
                     seg = d2[A['sl']]
@@ -87,6 +121,9 @@ def main():
         frac = A['over'] / A['cnt']
         row = {'name': R['name'], 'window': A['win'], 'mean': round(mean, 2),
                'max': round(A['max'], 1), 'frac_over': round(frac, 5)}
+        if A['step_ratio']:
+            row['step_peak'] = round(A['step_peak'], 2)
+            row['step_at'] = A['step_at']
         report['regions'].append(row)
         if mean > R.get('mean_max', 8) or frac > R.get('frac_max', .01):
             report['failures'].append(
@@ -100,11 +137,13 @@ def main():
                              'frac_over': round(frac, 5)})
         if frac > bg.get('frac_max', .02):
             report['failures'].append(f"flicker @bg cell ({a},{b}): frac {frac:.4f}")
+    report['failures'].extend(report_steps)
     report['passed'] = not report['failures']
     out = args.out or args.video.with_suffix('.flicker.json')
     out.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     for row in report['regions']:
-        print(f"  {row['name']}: mean {row['mean']} max {row['max']} frac {row['frac_over']}")
+        extra = f" step x{row['step_peak']}@{row['step_at']}" if 'step_peak' in row else ''
+        print(f"  {row['name']}: mean {row['mean']} max {row['max']} frac {row['frac_over']}{extra}")
     if report['failures']:
         print('FAIL', len(report['failures']), 'flicker violations')
         for f in report['failures'][:10]:
