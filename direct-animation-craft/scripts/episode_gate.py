@@ -6,6 +6,8 @@
   ③ check_locomotion.py（trace 里存在 locomotion 段时）
   ④ check_audio_sync.py（存在 assets3d/mixed.wav 且该检查件存在时）
   ⑤ 逐拍近景审片组（存在 config/review_shots.json 时，render.mjs --shots 出帧）
+  ⑥ flicker 渲染稳定性（存在成片 + config/flicker_watch.json 时：
+     flicker_probe.py 逐帧二阶差分，watch 区+背景粗扫；用最近一次 render 后的成片）
 
 汇总 gate_report.json（默认 <episode>/storyboard/gate/）+ 人类可读摘要；
 contact 失败按 config/timeline.json 定位到节拍（段 id）。
@@ -95,6 +97,22 @@ def main():
         steps.append(run_step('review_shots', [
             'node', 'render.mjs', '--check', '--shots', 'config/review_shots.json',
             '--board', f'{args.board}/shots'], ep))
+
+    # ⑥ 渲染稳定性（成片存在 + watch 配置存在才跑；成片必须比源码新，否则判陈旧跳过）
+    flicker_watch = ep / 'config/flicker_watch.json'
+    video = ep / 'output/craft3d_full.mp4'
+    probe = Path(__file__).with_name('flicker_probe.py')
+    if flicker_watch.exists() and video.exists():
+        # 成片陈旧（比画面源码旧）时跳过：陈旧片的闪烁结果无意义
+        srcs = [ep / p for p in ('viewer.js', 'performance.js', 'scenes/RooftopNoonScene.js')]
+        srcs = [p for p in srcs if p.exists()]
+        stale = srcs and video.stat().st_mtime < max(p.stat().st_mtime for p in srcs)
+        if stale:
+            steps.append({'name': 'flicker', 'passed': True, 'skipped': True,
+                          'note': 'video older than sources; render --out 后再跑'})
+        else:
+            steps.append(run_step('flicker', [sys.executable, str(probe), str(video),
+                '--watch', str(flicker_watch), '--out', str(board / 'flicker_report.json')], ep))
 
     # contact 失败定位到节拍
     beat_map = {}
