@@ -31,8 +31,14 @@
                  viewer 只在约束激活帧记录 contact.palmIn[key]）
   hand_body_mesh 手-躯干/大腿网格级相交：state.handBody（手 skinned mesh vs 代理盒，负 margin
                  深穿才报）窗口内零命中，allowed 行按 手×代理×窗口 声明合法接触
+  limb_body_mesh 上肢管/袖筒-躯干相交：state.limbBody（LimbSurface/袖 vs 躯干代理盒，
+                 负 margin −15mm；viewer 已滤除袖根内埋区）窗口内零命中，allowed 同上；
+                 间隙上限：rootG（袖根邻域 g）>sep_max=分离断开（嵌入与分离同一量的两端）
   rest_support   静息手必有支撑：坐姿窗口内手速 <max_speed 且手高 <max_y 时，
                  contact.handRest[actor][side].support（贴腿/贴盒取小）≤gap_max
+  reach          超伸断言：腕-肩距离/臂长比率 >ratio_max 即红（全展直=僵直）；
+                 垂臂（前臂近竖直 ≤hang_deg）豁免——重力悬挂的全展直是正常解剖；
+                 发力帧按 角色×侧×窗口 allowed 豁免（如"够不着"是表演内容）
   state_consistency 状态一致性（finalize 段做全时间轴分析）：有状态元素（门/盒盖）的
                  迁移窗口 from/to 态成立 + 触发者在场（角色距离/手近盖把/环境阵风量）+
                  音效事件落在迁移窗口 ±tol + 行为-状态规则（角色过门平面帧门必须开）
@@ -53,7 +59,8 @@ DEFAULT_SCOPE = ('Visible solid meshes vs rendered obstacle boxes, triangle inte
 SECTION_ORDER = ['seated', 'bite', 'carry', 'whitelist', 'env', 'food', 'wrist', 'tray',
                  'supporter', 'lid', 'pinch', 'dual', 'place', 'continuity',
                  'gait', 'limb_attach', 'worn_prop', 'grip', 'palm_semantic',
-                 'hand_body_mesh', 'rest_support', 'state_consistency']
+                 'hand_body_mesh', 'rest_support', 'state_consistency', 'limb_body_mesh',
+                 'reach']
 
 
 def dist(a, b):
@@ -540,6 +547,70 @@ def main():
                         failures.append(f"resting hand unsupported: {key} gap={g['support']:.3f}m @t={t:.2f}")
             elif section == 'state_consistency':
                 pass  # 迁移/触发/事件/行为规则需要全时间轴——finalize 段统一做
+            elif section == 'limb_body_mesh':
+                lb = frame.get(S.get('state_key', 'limbBody'))
+                if not lb or not (S['window'][0] <= t <= S['window'][1]):
+                    continue
+                stats['limbbody_frames'] = stats.get('limbbody_frames', 0) + 1
+                for key, v in lb.items():
+                    lim = -(v['tubeR'] + S.get('embed_margin', .015))  # g<lim：管面陷进躯干表面
+                    if v['g'] < lim:
+                        ok = any(r['subject'] == key
+                                 and r['window'][0] <= t <= r['window'][1] for r in S.get('allowed', []))
+                        stats['limb_g_min'] = min(stats.get('limb_g_min', 99), v['g'])
+                        if not ok:
+                            stats['limbbody_bad'] = stats.get('limbbody_bad', 0) + 1
+                            failures.append(f"limb embedded in torso: {key} g={v['g']:.3f}m @t={t:.2f}")
+                    # rootG（袖根邻域距离）只记录不判：正常臂根区读数恒 +.04m，判别力为零
+                    # （P16 实测证伪）；分离判别量=下方静息帧外摆角
+                    if v.get('rootG') is not None:
+                        stats['limb_rootG_max'] = max(stats.get('limb_rootG_max', 0), v['rootG'])
+                    # 分离判别量=上臂侧向外摆角（袖根张开楔缝来自角度不是距离：正常臂根区
+                    # 距离读数已 +.04m，不可用——P16 实测）；只在持续静息帧判（手势/抬手豁免）
+                    a = (c.get('arms') or {}).get('lei' if key.startswith('lei') else 'hong', {}).get(
+                        'left' if key.endswith('L') else 'right')
+                    if a:
+                        handKey = ('lei' if key.startswith('lei') else 'hong') + ':' + (
+                            'left' if key.endswith('L') else 'right')
+                        hist = rest_prev.setdefault('wing:' + handKey, [])
+                        hist.append((t, (c.get('hands') or {}).get('lei' if key.startswith('lei') else 'hong', {})
+                                     .get('left' if key.endswith('L') else 'right', a[2])))
+                        while hist and hist[0][0] < t - .12:
+                            hist.pop(0)
+                        spd = dist(hist[-1][1], hist[0][1]) / max(hist[-1][0] - hist[0][0], 1e-6)
+                        sg = -1 if key.endswith('L') else 1
+                        dy = a[0][1] - a[1][1]
+                        if dy > 0 and spd < .08:
+                            wing = math.degrees(math.atan2(sg * (a[1][0] - a[0][0]), dy))
+                            stats['limb_wing_max'] = max(stats.get('limb_wing_max', 0), wing)
+                            if wing > S.get('sep_deg_max', 30):
+                                ok = any(r['subject'] == key
+                                         and r['window'][0] <= t <= r['window'][1] for r in S.get('allowed', []))
+                                if not ok:
+                                    stats['limbbody_bad'] = stats.get('limbbody_bad', 0) + 1
+                                    failures.append(f"limb winged off torso: {key} {wing:.0f}° @t={t:.2f}")
+            elif section == 'reach':
+                lb = frame.get('limbBody')
+                arms_c = c.get('arms') or {}
+                if not lb:
+                    continue
+                for key, v in lb.items():
+                    if v.get('reach') is None or v['reach'] <= S['ratio_max']:
+                        continue
+                    actor = 'lei' if key.startswith('lei') else 'hong'
+                    side = 'left' if key.endswith('L') else 'right'
+                    # 垂臂豁免：前臂近竖直=重力悬挂的全展直是正常解剖
+                    a = (arms_c.get(actor) or {}).get(side)
+                    if a:
+                        f = [a[2][i] - a[1][i] for i in range(3)]
+                        fl = math.sqrt(sum(x * x for x in f)) or 1
+                        if math.degrees(math.acos(max(-1., min(1., -f[1] / fl)))) <= S.get('hang_deg', 20):
+                            continue
+                    if any(r['subject'] == key and r['window'][0] <= t <= r['window'][1]
+                           for r in S.get('allowed', [])):
+                        continue
+                    stats['reach_max'] = max(stats.get('reach_max', 0), v['reach'])
+                    failures.append(f"arm over-extended: {key} ratio={v['reach']:.2f} @t={t:.2f}")
 
     if not args.door_only:
         if C.get('whitelist') and stats.get('bento_frames', 0) < C['whitelist'].get('frame_min', 100):
@@ -558,6 +629,8 @@ def main():
             failures.append('palm-semantic probe missing: no bring-to-mouth frames logged')
         if C.get('hand_body_mesh') and stats.get('handbody_frames', 0) < C['hand_body_mesh'].get('frame_min', 100):
             failures.append('hand-body probe missing or too sparse')
+        if C.get('limb_body_mesh') and stats.get('limbbody_frames', 0) < C['limb_body_mesh'].get('frame_min', 100):
+            failures.append('limb-body probe missing or too sparse')
         if C.get('rest_support') and stats.get('rest_still_frames', 0) < C['rest_support'].get('still_frame_min', 20):
             failures.append('rest-support probe found no still hands to validate')
         if C.get('state_consistency'):
