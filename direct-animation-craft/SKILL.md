@@ -42,6 +42,8 @@ description: 指导动画角色的造型、变形、动作节奏及二维三维�
 S1E3 已实现 `episode_gate.py <episode> --physics-only` 的纯数值入口、厚度探针、
 逐配对覆盖与输入指纹检查；P23 增加真实衣片面相交和固定腕点/骨长的肘部候选
 搜索。候选通过局部检查不等于可直接烘焙；使用范围、反例及剩余盲区见上述参考。
+P24 已有候选的持物/衣物/轮廓/时序联合筛选和节拍相对修正曲线；通过局部筛选
+后须重跑新全片数值门禁，历史 trace 的局部拼接不充当正式验收。
 
 新集开工先建编写期物理门禁：contract 先行的接触探针
 [physics-gate.md](references/physics-gate.md)（scripts/contact_probe.py 通用实现），
