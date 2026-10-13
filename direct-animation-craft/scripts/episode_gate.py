@@ -26,8 +26,10 @@ from pathlib import Path
 
 def run_step(name, cmd, cwd):
     p = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
+    lines = (p.stdout + p.stderr).strip().splitlines()
     return {'name': name, 'cmd': ' '.join(str(c) for c in cmd), 'returncode': p.returncode,
-            'passed': p.returncode == 0, 'tail': (p.stdout + p.stderr).strip().splitlines()[-5:]}
+            'passed': p.returncode == 0, 'tail': lines[-5:],
+            'errors': [line for line in lines if re.match(r'^\w*Error:|^FAIL\b', line)][:5]}
 
 
 def beat_of(timeline, t):
@@ -77,7 +79,8 @@ def main():
     if wrapper.exists() and trace.exists():
         steps.append(run_step('contact_probe', [sys.executable, str(wrapper), str(trace), *(['--summary'] if args.physics_only else [])], ep))
     else:
-        steps.append({'name': 'contact_probe', 'passed': False, 'note': 'tools/check_contact.py 缺失'})
+        steps.append({'name': 'contact_probe', 'passed': False,
+                      'note': 'trace 缺失，先排查采样步骤' if wrapper.exists() else 'tools/check_contact.py 缺失'})
 
     # ③ 步态检查（trace 有 locomotion 段才跑）
     loco = ep / 'tools/check_locomotion.py'

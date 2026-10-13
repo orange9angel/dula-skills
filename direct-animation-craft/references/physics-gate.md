@@ -49,7 +49,7 @@ viewer 的 draw state 按帧输出以下键，contact_probe.py 按 contract 消�
 | `limbBody` | 臂轴采样相对躯干椭圆环列的径向近似 g（未计管半径，不是精确表面净空；袖根内埋区已滤） | limb_body_mesh |
 | `limbBody[].rootG/reach` | 袖根邻域 g（仅记录不判，判别力证伪）/ 腕-肩距÷臂长 | limb_body_mesh / reach |
 | `cloth` | 襟片面片局部系穿透检测（臂管段端点法向换号+交点落襟片范围） | cloth_body |
-| `surface.pairs` | 部件对的实际顶点/有限衣片代理侵入深度、最坏点、评估数、过滤数与方法标识 | surface_clearance（P22 新增，旧探针同时保留） |
+| `surface.pairs` | 躯干侵入深度、部件/环号；真实衣片相交数；最坏点、评估数、过滤数与方法标识，旧衣片代理仅作对照 | surface_clearance（P22/P23，旧探针同时保留） |
 
 新段执行顺序追加在 SECTION_ORDER 末尾（gait/limb_attach/worn_prop 在 continuity 之后）——
 插中间会改变 failures 帧内段序，破坏跨版本报告可比性。
@@ -71,6 +71,9 @@ S1E3 已支持 `episode_gate.py <episode> --physics-only`：纯数值采样、�
 [collision-prevention.md](collision-prevention.md#p22-已实现的数值检查入口)。
 `--skip-render` 可复用未过期 trace；surface_clearance 要求的源码/资产/config
 指纹变化或窗口采样缺失会失败，不能复用旧绿灯。
+衣片 `max_crossings: 0` 与躯干 `max_depth` 分别校验；相交字段缺失、必检窗口
+为空或没有必检配对均失败。修正候选命令及“局部求解不直接烘焙”边界见
+[P23](collision-prevention.md#p23-曲面复核与受约束的修正候选)。
 
 1. 写谱面 → `contact_probe.py`（contract 先行）红 → 改谱面/道具路径 → 绿。
 2. 报绿后核对覆盖与输入版本；只为未覆盖交互、异常或画面审美生成必要抽帧。

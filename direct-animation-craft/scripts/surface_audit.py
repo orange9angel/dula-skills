@@ -9,6 +9,8 @@ def audit_surfaces(data, config):
     if not isinstance(fps, (float, int)) or not math.isfinite(fps) or fps < config.get('fps_min', 30):
         return {'passed': False, 'coverage_errors': ['invalid or insufficient fps'], 'events': [], 'pairs': {}}
     errors, events, summary = [], [], {}
+    if not config.get('pairs'):
+        errors.append('missing required surface pairs')
     frames = data.get('frames', [])
     ticks = {}
     previous = -math.inf
@@ -22,15 +24,22 @@ def audit_surfaces(data, config):
         if abs(t - tick / fps) > .0011 or tick in ticks:
             errors.append(f'invalid or duplicate frame tick: {t}')
         ticks[tick] = frame
-    for rule in config['pairs']:
+    for rule in config.get('pairs', []):
         key = rule['key']
         limit = rule['max_depth']
+        crossing_limit = rule.get('max_crossings')
         if not math.isfinite(limit) or limit < 0:
             errors.append(f'invalid depth limit: {key}')
             continue
+        if crossing_limit is not None and (type(crossing_limit) is not int or crossing_limit < 0):
+            errors.append(f'invalid crossing limit: {key}')
+            continue
         start, end = rule['window']
+        if not all(isinstance(t, (int, float)) and math.isfinite(t) for t in (start, end)) or start < 0 or end <= start:
+            errors.append(f'invalid required window: {key}')
+            continue
         active = None
-        stat = summary[key] = {'frames': 0, 'worst_depth': 0, 'worst_t': None, 'max_depth': limit}
+        stat = summary[key] = {'frames': 0, 'worst_depth': 0, 'worst_crossings': 0, 'worst_t': None, 'max_depth': limit}
         missing = 0
         for tick in range(math.ceil(start * fps - 1e-7), math.ceil(end * fps - 1e-7)):
             frame = ticks.get(tick, {})
@@ -43,18 +52,23 @@ def audit_surfaces(data, config):
                 missing += 1
                 active = None
                 continue
+            crossings = value.get('crossings', 0)
+            if crossing_limit is not None and ('crossings' not in value or type(crossings) is not int or crossings < 0):
+                missing += 1
+                active = None
+                continue
             depth, t = value['depth'], frame['t']
             stat['frames'] += 1
-            if depth > stat['worst_depth']:
-                stat.update(worst_depth=depth, worst_t=t)
-            if depth > limit + 1e-7:
+            if depth > stat['worst_depth'] or crossings > stat['worst_crossings']:
+                stat.update(worst_depth=max(depth, stat['worst_depth']), worst_crossings=max(crossings, stat['worst_crossings']), worst_t=t)
+            if depth > limit + 1e-7 or (crossing_limit is not None and crossings > crossing_limit):
                 if active is None:
-                    active = {'pair': key, 'start': t, 'end': t, 'frames': 0, 'worst_depth': 0, 'worst_t': t, 'max_depth': limit}
+                    active = {'pair': key, 'start': t, 'end': t, 'frames': 0, 'worst_depth': 0, 'worst_crossings': 0, 'worst_t': t, 'max_depth': limit, 'max_crossings': crossing_limit}
                     events.append(active)
                 active['end'] = t
                 active['frames'] += 1
-                if depth > active['worst_depth']:
-                    active.update(worst_depth=depth, worst_t=t, point=value.get('point'), part=value.get('part'))
+                if depth > active['worst_depth'] or crossings > active['worst_crossings']:
+                    active.update(worst_depth=max(depth, active['worst_depth']), worst_crossings=max(crossings, active['worst_crossings']), worst_t=t, point=value.get('point'), part=value.get('part'), vertex=value.get('vertex'))
             else:
                 active = None
         if missing:
@@ -67,7 +81,7 @@ def audit_surfaces(data, config):
             path = Path(item['path'])
             if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != item['sha256']:
                 errors.append(f'stale or missing input: {path.name}')
-    events.sort(key=lambda event: event['worst_depth'], reverse=True)
+    events.sort(key=lambda event: (event['worst_depth'], event['worst_crossings']), reverse=True)
     return {'passed': not errors and not events, 'coverage_errors': errors, 'events': events,
             'pairs': summary, 'event_count': len(events),
-            'scope': 'sampled rendered vertices and finite cloth proxy; not continuous collision or artistic approval'}
+            'scope': 'sampled torso vertices and transverse cloth surface crossings; not continuous collision or artistic approval'}

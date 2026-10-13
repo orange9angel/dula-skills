@@ -771,7 +771,7 @@ def main():
     if not args.door_only and C.get('surface_clearance'):
         surface = audit_surfaces(data, C['surface_clearance'])
         failures.extend('surface coverage: ' + err for err in surface['coverage_errors'])
-        failures.extend(f"surface penetration: {e['pair']} depth={e['worst_depth']:.4f}m limit={e['max_depth']:.4f}m frames={e['frames']} @t={e['worst_t']:.3f}"
+        failures.extend(f"surface penetration: {e['pair']} depth={e['worst_depth']:.4f}m limit={e['max_depth']:.4f}m crossings={e['worst_crossings']} frames={e['frames']} @t={e['worst_t']:.3f}"
                         for e in surface['events'])
     report = {'passed': not failures, 'stats': stats, 'failures': failures,
               'scope': C.get('scope', DEFAULT_SCOPE)}

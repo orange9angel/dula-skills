@@ -7,6 +7,27 @@ from surface_audit import audit_surfaces
 
 
 class SurfaceAuditTests(unittest.TestCase):
+    def test_empty_or_invalid_contract_cannot_pass(self):
+        self.assertFalse(audit_surfaces(self.trace, {'pairs': []})['passed'])
+        self.config['pairs'][0]['window'] = [1, 1]
+        self.assertFalse(audit_surfaces(self.trace, self.config)['passed'])
+        self.config['pairs'][0]['window'] = [0, .1]
+        self.config['pairs'][0]['max_crossings'] = -1
+        self.assertFalse(audit_surfaces(self.trace, self.config)['passed'])
+
+    def test_surface_crossings_cannot_pass_on_zero_depth(self):
+        config = {'pairs': [{'key': 'cloth', 'window': [0, 1/30], 'max_depth': 0,
+                            'max_crossings': 0, 'method': 'triangles'}]}
+        value = {'depth': 0, 'evaluated': 12, 'method': 'triangles', 'crossings': 2}
+        trace = {'fps': 30, 'frames': [{'t': 0, 'surface': {'pairs': {'cloth': value}}}]}
+        report = audit_surfaces(trace, config)
+        self.assertFalse(report['passed'])
+        self.assertEqual(report['events'][0]['worst_crossings'], 2)
+        value['crossings'] = 0
+        self.assertTrue(audit_surfaces(trace, config)['passed'])
+        del value['crossings']
+        self.assertTrue(audit_surfaces(trace, config)['coverage_errors'])
+
     def setUp(self):
         self.config = {'fps_min': 30, 'pairs': [
             {'key': 'arm:torso', 'window': [0, .1], 'max_depth': .005, 'method': 'actual'}]}
