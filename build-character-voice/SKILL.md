@@ -79,3 +79,15 @@ Create acting first and audio processing second. Preserve a believable native vo
 - **笑声象声词 ASR 转写不稳**："哈哈"容易被转写成"呵呵"（拼音重合率 87%
   判红）或干脆不进转写。拟声笑声用单字"哈！"最稳；QC 对笑声项的转写
   失败不算内容错误，以内容字覆盖率为准。
+
+## 2026-10-14：中文请求与时长缓存
+
+- Windows 旧 PowerShell 的 here-string 管道到 `python -` 可能把中文变为 `?`。
+  S1E4 的 Seed-Audio 因此返回 `TTSInvalidText:ReadableTextRatioTooLow`，并非服务没开通。
+  中文脚本通过文件补丁写入 UTF-8 后直接执行；发送前检查请求文本没有成串 `???`，
+  保留不含凭证的请求元数据。不要据一次损坏文本的响应误判服务不可用。
+- 台词缓存至少校验文本、声线、情感参数和音频文件摘要，不能只看 mp3 存在。
+  稍长台词先保留内在停顿，调整 `.story` 中的可用时间，再派生字幕、音频摆放和
+  最终分轨口型；不截断词尾或悄悄给 QC 增大实际不存在的窗口。
+- viewer 自有声音链可以从最终放置的 PCM 分轨做 10ms 能量口型，检查静默阈值及
+  非说话窗内口型为零。记录这是能量开合，不是音素视素或戏感验收。

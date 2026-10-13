@@ -56,6 +56,7 @@ import json
 import math
 from pathlib import Path
 from surface_audit import audit_surfaces
+from bounded_staging_audit import audit_bounded_staging
 
 DEFAULT_SCOPE = ('Visible solid meshes vs rendered obstacle boxes, triangle intersections; '
                  'sampled collision audit, not continuous physics or artistic approval.')
@@ -773,10 +774,17 @@ def main():
         failures.extend('surface coverage: ' + err for err in surface['coverage_errors'])
         failures.extend(f"surface penetration: {e['pair']} depth={e['worst_depth']:.4f}m limit={e['max_depth']:.4f}m crossings={e['worst_crossings']} frames={e['frames']} @t={e['worst_t']:.3f}"
                         for e in surface['events'])
+    bounded = None
+    if not args.door_only and C.get('bounded_staging'):
+        bounded = audit_bounded_staging(data, C['bounded_staging'])
+        failures.extend('bounded coverage: ' + err for err in bounded['errors'])
+        failures.extend(f"bounded: {v['key']} {v['example']} frames={v['count']} @t={v['first_t']:.3f}" for v in bounded['violations'])
     report = {'passed': not failures, 'stats': stats, 'failures': failures,
               'scope': C.get('scope', DEFAULT_SCOPE)}
     if surface is not None:
         report['surface'] = surface
+    if bounded is not None:
+        report['bounded_staging'] = bounded
     args.trace.with_name('contact_validation.json').write_text(
         json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     if args.summary:

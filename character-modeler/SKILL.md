@@ -24,6 +24,7 @@ This workflow has two existing looks. Follow the user's established choice; clar
 - Match the look of existing characters: `MeshToonMaterial` + 4-step canvas gradient. Do not introduce new shading styles (PBR, custom shaders) unless the user asks.
 - Follow the `CharacterBase` contract exactly — the animation, lip-sync, expression, and combat systems read specific fields. Read `dula-engine/characters/CharacterBase.js` and a reference character (仓库内的 Q 版角色范例 `dula-assets/characters/Doraemon.js`) before writing code.
 - Never claim the character looks right until you have rendered screenshots via `dula-verify` and inspected them.
+- If the user explicitly requests no visual inspection, follow that constraint. Use bounded poses and numeric geometry checks, deliver a video for the user's review, and describe the character's appearance as unreviewed. Do not treat numeric clearance as artistic approval.
 
 ## Load Context
 
@@ -33,6 +34,9 @@ This workflow has two existing looks. Follow the user's established choice; clar
 - Read [references/anime-expression-symbols.md](references/anime-expression-symbols.md) 动漫表情符号化：汗滴/爆筋/豆豆眼/黑线脸等符号的语义表、绘制配方、触发纪律与夸张表情拓扑。
 - Read `dula-assets/characters/Doraemon.js` (round cute) and one humanoid (e.g. `Zorak.js`) as working code references.
 - 可执行积木：`dula-assets/lib/craft3d/`（surface/hand/pose/look/locomotion）是本 skill 造型工艺的共享代码形态；已验收的完整角色参考 `dula-assets/characters/bioarmor/`（《9章》系列）。新角色优先基于这些积木搭建，不要从 episode 目录拷贝。
+- 有限站姿新角色参考 `characters/bioarmor/QianTangKuiCraft.js`；真实袖/手对躯干探针在
+  `lib/craft3d/body-audit.js`，边界见 [有限动作试验](../direct-animation-craft/references/collision-prevention.md)。
+  先量实际鞋底最低点、袖根以外表面与手部；不可直接沿用旧角色踝高或把骨轴在体外当成净空。
 
 ## Workflow
 
