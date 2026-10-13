@@ -139,6 +139,17 @@ Open the screenshots in `episodes/<name>_showcase/storyboard/` (or the path the 
 
 ## Common Failures
 
+- Imported textured faces: separating iris motion, eyelids, brows and lips is necessary but not sufficient
+  for expressive acting. The S1E4 first dialogue preview was rejected for lifeless eyes despite blinking
+  and mouth movement. Review listener reactions and gaze intent in the actual shot, not just rig controls.
+- Painting over an old iris with sampled white produced duplicate rims; a continuous local texture warp
+  pinned at the eyelid boundary reduced that artifact. It remains a limited frontal graphic rig, not
+  independent eyeball geometry or a recovered anatomical face. Strong turns and large emotions need
+  separate validation. Small authored morphs must not be described as a complete ARKit facial rig.
+- Imported garment repair must isolate cloth. A bind-space bounding box can also contain the forearm;
+  filtering its influences to hips creates torn-looking skin. In the current stylized Aoi, restricting
+  the correction by dark albedo separated skirt from skin, but this palette-specific fix is not universal.
+
 - Face buried inside the head sphere → move face parts forward on +Z until they sit on the surface; sphere radius r ⇒ surface at z = r.
 - Arms rotate from the elbow/wrong pivot → the arm *group* must be at the shoulder with the capsule mesh offset downward inside it.
 - Character floats or sinks → check the lowest foot point vs. `y=0` ground; adjust leg group positions, not the root.
