@@ -39,6 +39,8 @@ description: 指导动画角色的造型、变形、动作节奏及二维三维�
 有界接触、连续时间覆盖、约束求解、探针反例与异常摘要。
 已验证且覆盖完整的几何检查走数值门禁；视觉用于覆盖缺口、异常与造型表演，
 不把每轮全片看图作为默认回归。文中的待实施算法不代表当前工具已支持。
+S1E3 已实现 `episode_gate.py <episode> --physics-only` 的纯数值入口、厚度探针、
+逐配对覆盖与输入指纹检查；使用范围、反例及剩余盲区见上述参考。
 
 新集开工先建编写期物理门禁：contract 先行的接触探针
 [physics-gate.md](references/physics-gate.md)（scripts/contact_probe.py 通用实现），

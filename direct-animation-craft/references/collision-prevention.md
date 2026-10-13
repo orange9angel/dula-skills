@@ -7,7 +7,7 @@
 
 ## 当前能力与审计边界
 
-2026-10-13 对 `bio_armor_academy_s1e3` 的源码审计（未重渲、未实施下列升级）：
+2026-10-13 对 `bio_armor_academy_s1e3` 的初始源码审计（下表为旧探针；后续实现见下节）：
 
 | 已有入口 | 能力与边界 | 下一步 |
 |---|---|---|
@@ -17,8 +17,51 @@
 | `scripts/contact_probe.py` 的白名单 | 主要按部件、物体、时间窗放行；未统一约束接触区域与深度 | 分开接触权限和穿透上限，区分碰撞豁免与轮廓豁免 |
 | episode `window.stepAt(t)` | 更新姿态与探针，不绘制画面；`render.mjs --check` 仍保存检查帧 | 可扩展纯数值入口，勿声称已有 physics-only CLI |
 
-以上证明的是检测盲区，不证明当前影片必然存在对应穿透。当前报告的 green 只覆盖
-已实现判据；本文其余部分是升级与验收规范，不是新增 API 或已通过的成片验证。
+以上证明的是检测盲区，不证明当前影片必然存在对应穿透。报告的 green 只覆盖
+已实现判据；明确标为待实施的能力不能作为当前影片的验收依据。
+
+## P22 已实现的数值检查入口
+
+- `dula-engine/lib/MeshCollision.js`：静态局部三角网格的空间索引、封闭实体点内外
+  判定与世界空间距离；实际变形顶点的侵入检查；有限三角片与整条胶囊轴距离。
+  `dula-assets` 的 torso 引用与 ringStride 同源提供躯干几何/封口拓扑；袖根嵌合
+  元数据来自实际做嵌合的 finishSleeveRoot，不复制躯干半径表。
+- S1E3 `tools/surface_probe.js` 输出 `surface.pairs`，`surface_clearance` contract
+  声明部件对、完整时间窗、最大深度和检测方法。身体读取真实可见臂/袖顶点，
+  衣物仍是带厚度胶囊对有限平面代理；尚未升级为曲面衣物网格或时间 CCD。
+- `scripts/surface_audit.py` 按配对逐帧检查覆盖、有限数值、非零评估数、检测方法
+  与输入指纹；按连续时间窗合并侵入事件。接入 `contact_probe.py --summary`，
+  全部原始证据保留本地，终端只打印事件数及最严重的五个事件。
+- S1E3 `render.mjs --physics-only` 只调用 stepAt，记录逐帧 trace 与数值 seek
+  对比，不编码检查图或视频。统一门禁已支持以下调用（其他 episode 要先实现
+  对应 render 参数，不能默认全部 viewer 已支持）：
+
+```powershell
+# 在 dula-story 根目录运行；返回非零表示检测失败，查看报告定位问题
+.venv/Scripts/python.exe ../dula-skills/direct-animation-craft/scripts/episode_gate.py ./episodes/bio_armor_academy_s1e3 --physics-only --board storyboard/physics_p22/final
+```
+
+边界：顶点审计不证明所有三角面/边都无交叉；有限衣片代理可能产生模型误差。
+程序角色由相交部件拼成，真实体积重叠也可能是待定义的合法缝合，不能把全量
+重叠无条件当动作错误。仍需对连接区域做有依据的标注，不能扩大白名单刷绿。
+本阶段不自动移动角色、改骨长或修改成片；姿势自动求解、有界持物白名单和
+连续碰撞检测仍待实施。严格门禁可以失败，不能因旧门禁曾绿而降低阈值。
+
+测试：engine 的 `test/mesh-collision.test.js` 覆盖体外轴线的厚度侵入、同侧衣片、
+跨薄片线段、实体包容、变换/缩放、可见 drawRange、环口封闭及无效输入；
+`scripts/test_surface_audit.py` 覆盖反例、漏帧/漏部件、空检测、NaN 和过期输入。
+线段跨薄片测试是空间线段查询，不应宣传为已实现动画时间 CCD。
+
+P22 数值 seek 实录：初跑 75 个点中 23 个不一致，全部来自隐藏便当盒仍保留后续
+镜头的位置；图像 seek 无法看到隐藏状态。修复在道具状态机中重置隐藏盒的位置、
+朝向与盖角，不能只删除报告中的差异字段。数值比较对有限浮点允许 1e-7 的
+运算噪声，缺字段/非有限值仍失败；这个容差不用于放行可见的物理位移。
+
+本轮全片实测：2130 帧、零检查图、数值 seek 75/75 通过，原有接触/步态/声画
+检查通过；新配对覆盖错误为零，但有 23 段超限候选，总门禁保持 FAIL。候选含
+袖体连接及衣片代理误差，须核定接触模型，不能直接认定为 23 处可见穿模或用
+宽松阈值消掉报告。证据位于 episode 的
+`storyboard/physics_p22/final/{gate_report,contact_validation,seek_check}.json`。
 
 ## 几何：同源、分层、带厚度
 

@@ -55,6 +55,7 @@ import argparse
 import json
 import math
 from pathlib import Path
+from surface_audit import audit_surfaces
 
 DEFAULT_SCOPE = ('Visible solid meshes vs rendered obstacle boxes, triangle intersections; '
                  'sampled collision audit, not continuous physics or artistic approval.')
@@ -194,6 +195,7 @@ def main():
     ap.add_argument('trace', type=Path)
     ap.add_argument('--contract', type=Path, required=True)
     ap.add_argument('--door-only', action='store_true')
+    ap.add_argument('--summary', action='store_true', help='仅打印聚合摘要；完整证据仍写 contact_validation.json')
     args = ap.parse_args()
     C = json.loads(args.contract.read_text(encoding='utf-8'))
     data = json.loads(args.trace.read_text())
@@ -765,14 +767,28 @@ def main():
 
     if args.door_only:
         stats = {k: v for k, v in stats.items() if k.startswith('door_')}
+    surface = None
+    if not args.door_only and C.get('surface_clearance'):
+        surface = audit_surfaces(data, C['surface_clearance'])
+        failures.extend('surface coverage: ' + err for err in surface['coverage_errors'])
+        failures.extend(f"surface penetration: {e['pair']} depth={e['worst_depth']:.4f}m limit={e['max_depth']:.4f}m frames={e['frames']} @t={e['worst_t']:.3f}"
+                        for e in surface['events'])
     report = {'passed': not failures, 'stats': stats, 'failures': failures,
               'scope': C.get('scope', DEFAULT_SCOPE)}
+    if surface is not None:
+        report['surface'] = surface
     args.trace.with_name('contact_validation.json').write_text(
         json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    print(json.dumps(stats, indent=1))
+    if args.summary:
+        print(json.dumps({'passed': not failures, 'failure_count': len(failures),
+                          'surface_event_count': surface['event_count'] if surface and 'event_count' in surface else None,
+                          'coverage_errors': surface['coverage_errors'] if surface else [],
+                          'worst_events': surface['events'][:5] if surface else []}, ensure_ascii=False))
+    else:
+        print(json.dumps(stats, indent=1))
     if failures:
         print(f"FAIL {len(failures)} contact violations")
-        for f in failures[:20]:
+        for f in failures[:0 if args.summary else 20]:
             print(' ', f)
         raise SystemExit(2)
     print('contact check: all assertions passed')

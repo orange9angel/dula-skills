@@ -41,6 +41,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('episode', type=Path)
     ap.add_argument('--skip-render', action='store_true', help='复用已有 trace，不重渲 check')
+    ap.add_argument('--physics-only', action='store_true', help='数值采样与验收，不编码检查图；episode render.mjs 须支持该参数')
     ap.add_argument('--board', default='storyboard/gate', help='报告与帧输出目录（episode 相对）')
     ap.add_argument('--probe-q', default='&probe-door=1&probe-bento=1', help='探针查询串')
     args = ap.parse_args()
@@ -60,8 +61,8 @@ def main():
             print(f'gate FAIL: --skip-render 但 {trace} 不存在')
             sys.exit(2)
     else:
-        steps.append(run_step('render_check', [
-            'node', 'render.mjs', '--check', '--board', rel_board, '--trace', rel_trace,
+        steps.append(run_step('physics_sample' if args.physics_only else 'render_check', [
+            'node', 'render.mjs', '--physics-only' if args.physics_only else '--check', '--board', rel_board, '--trace', rel_trace,
             '--q', args.probe_q], ep))
 
     # seek 一致性（check 模式产物）
@@ -74,7 +75,7 @@ def main():
     # ② 接触/物理探针
     wrapper = ep / 'tools/check_contact.py'
     if wrapper.exists() and trace.exists():
-        steps.append(run_step('contact_probe', [sys.executable, str(wrapper), str(trace)], ep))
+        steps.append(run_step('contact_probe', [sys.executable, str(wrapper), str(trace), *(['--summary'] if args.physics_only else [])], ep))
     else:
         steps.append({'name': 'contact_probe', 'passed': False, 'note': 'tools/check_contact.py 缺失'})
 
@@ -93,7 +94,7 @@ def main():
 
     # ⑤ 逐拍近景审片组（有镜表才出）
     shots = ep / 'config/review_shots.json'
-    if shots.exists():
+    if shots.exists() and not args.physics_only:
         steps.append(run_step('review_shots', [
             'node', 'render.mjs', '--check', '--shots', 'config/review_shots.json',
             '--board', f'{args.board}/shots'], ep))
@@ -102,7 +103,7 @@ def main():
     flicker_watch = ep / 'config/flicker_watch.json'
     video = ep / 'output/craft3d_full.mp4'
     probe = Path(__file__).with_name('flicker_probe.py')
-    if flicker_watch.exists() and video.exists():
+    if flicker_watch.exists() and video.exists() and not args.physics_only:
         # 成片陈旧（比画面源码旧）时跳过：陈旧片的闪烁结果无意义
         srcs = [ep / p for p in ('viewer.js', 'performance.js', 'scenes/RooftopNoonScene.js')]
         srcs = [p for p in srcs if p.exists()]
@@ -129,9 +130,9 @@ def main():
                 beat_map[beat or f"t={m.group(1)}"] += 1
 
     passed = all(s.get('passed') for s in steps)
-    report = {'episode': ep.name, 'passed': passed,
+    report = {'episode': ep.name, 'passed': passed, 'mode': 'physics-only' if args.physics_only else 'full',
               'steps': steps, 'contact_failures_by_beat': beat_map,
-              'note': '物理完整性=断言绿+审片全+声画绿；审片帧（shots/）仍需人工过五点清单'}
+              'note': '数值采样验收；视觉表演与连续碰撞未验证' if args.physics_only else '按报告列出的检查范围验收；生成审片图不等于完成视觉评审'}
     (board / 'gate_report.json').write_text(
         json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
