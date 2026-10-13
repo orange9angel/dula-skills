@@ -43,6 +43,7 @@ Own the episode's sound intent and integration contract. Keep voice, ambience/Fo
 
 7. Review against picture.
    - Listen once without watching, once with picture, and once at low volume.
+   - Scope these passes to the work: review a new final mix as a whole; during local revisions, replay the affected lines/cues and their surrounding context instead of repeatedly reviewing every unchanged stem.
    - Check intelligibility, room continuity, event sync, musical exits, false sound associations, hard cuts, and excess density.
    - Rebuild raster lip sync from the final dialogue stem after voice timing changes.
 
@@ -62,6 +63,10 @@ Own the episode's sound intent and integration contract. Keep voice, ambience/Fo
 
 ## 踩坑记录
 
+- **听觉复核允许且按需使用（2026-10-14 用户澄清）**：最终目标是稳定、快速产出
+  高质量动画片并迭代工艺，算法用于减少无效复核。先用 ASR/时长/电平/声画同步
+  定位技术问题，再听新声线、关键情绪、重要音效和配乐进退；不能因数值通过就省掉
+  必要听觉判断，也不因一处局部修订重复听遍全部素材。区分实际听过与仅数值检查。
 - **导演描述必须进入实际执行链（2026-10-14 S1E4 审计）**：12 句确实用了
   seed-tts-2.0，但雷晓 6 句统一 calm，千堂葵 6 句原生情绪为空；计划里的 energy、
   intent、subtext 等没有进入生成器，混音仅执行 pace/volume 等有限参数。核查
