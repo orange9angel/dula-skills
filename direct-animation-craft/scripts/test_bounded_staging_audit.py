@@ -14,6 +14,21 @@ class BoundedTest(unittest.TestCase):
         self.data={'fps':30,'frames':[{'t':round(i/30,3),'entry':1,'metrics':{'a':copy.deepcopy(a),'b':copy.deepcopy(a),
             'actorGap':1,'cameraEnvironmentGap':2,'focus':{'arm':{'projection':[0,0,.9],'pixels':70,'blocked':False}}}} for i in range(3)]}
     def test_valid(self):self.assertTrue(audit_bounded_staging(self.data,self.config)['passed'])
+    def test_support_allows_swing_but_rejects_sliding_and_airborne(self):
+        self.config['support']={'max_swing_height':.06,'max_slip':.001,'max_turn_delta':.001,'min_stance_feet':1}
+        for f in self.data['frames']:
+            for name in ('a','b'):
+                f['metrics'][name]['feet']={side:{'stance':True,'contact':side,'position':[0,.095,0],'forward':[0,0,1]} for side in ('left','right')}
+        self.assertTrue(audit_bounded_staging(self.data,self.config)['passed'])
+        for mode in ('swing','slide','turn','airborne','missing'):
+            d=copy.deepcopy(self.data);a=d['frames'][1]['metrics']['a']
+            if mode=='swing':a['soleY'][0]=.035;a['feet']['left']['stance']=False
+            if mode=='slide':a['feet']['left']['position'][0]=.02
+            if mode=='turn':a['feet']['left']['forward']=[.1,0,.995]
+            if mode=='airborne':
+                for foot in a['feet'].values():foot['stance']=False
+            if mode=='missing':del a['feet']
+            with self.subTest(mode=mode):self.assertEqual(audit_bounded_staging(d,self.config)['passed'],mode=='swing')
     def test_missing_and_invalid_fail_closed(self):
         for mode in ['frame','actor','nan','offgrid','zero_vertices','projection','duplicate']:
             with self.subTest(mode=mode):

@@ -37,7 +37,7 @@ def audit_bounded_staging(data, config):
             problem(key,t,f'{value:g} outside [{low:g}, {high:g}]')
     def vector(value, n):
         return isinstance(value,list) and len(value)==n and all(finite(x) for x in value)
-    previous = {}; missing = 0; count = 0
+    previous = {}; contacts = {}; missing = 0; count = 0
     for tick in range(math.ceil(window[0]*fps-1e-7),math.ceil(window[1]*fps-1e-7)):
         f=ticks.get(tick)
         if not f:
@@ -57,7 +57,25 @@ def audit_bounded_staging(data, config):
                     check(f'{actor}:self:{pair}',(a.get('selfGaps') or {}).get(pair),config['min_self_gap'],math.inf,t)
             if not vector(sole,2):problem(actor+':soles',t,'need two finite rendered sole heights')
             else:
-                for side,y in zip(('left','right'),sole):check(f'{actor}:sole:{side}',y,*config['sole_y'],t)
+                supporting=0
+                for side,y in zip(('left','right'),sole):
+                    foot=(a.get('feet') or {}).get(side) or {}
+                    if 'support' not in config:
+                        check(f'{actor}:sole:{side}',y,*config['sole_y'],t);continue
+                    rule=config['support'];stance=foot.get('stance');name=foot.get('contact')
+                    pos,forward=foot.get('position'),foot.get('forward')
+                    if type(stance) is not bool or not isinstance(name,str) or not name or not vector(pos,3) or not vector(forward,3):
+                        problem(f'{actor}:foot:{side}',t,'missing stance/contact/world transform');continue
+                    check(f'{actor}:sole:{side}',y,config['sole_y'][0],config['sole_y'][1] if stance else rule['max_swing_height'],t)
+                    if stance:
+                        supporting+=1;key=(actor,side,name)
+                        if key in contacts:
+                            anchor,direction=contacts[key]
+                            check(f'{actor}:footSlip:{side}',math.dist(pos,anchor),0,rule['max_slip'],t)
+                            check(f'{actor}:footTurn:{side}',math.dist(forward,direction),0,rule['max_turn_delta'],t)
+                        else:contacts[key]=(pos,forward)
+                if 'support' in config and supporting<config['support'].get('min_stance_feet',1):
+                    problem(actor+':support',t,'insufficient planted feet')
             root,wrists=a.get('root'),a.get('wrists')
             valid=vector(root,3) and isinstance(wrists,list) and len(wrists)==2 and all(vector(w,3) for w in wrists)
             if not valid:problem(actor+':trajectory',t,'missing root or wrist world positions');previous.pop(actor,None)
