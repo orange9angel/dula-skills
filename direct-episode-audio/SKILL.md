@@ -62,6 +62,12 @@ Own the episode's sound intent and integration contract. Keep voice, ambience/Fo
 
 ## 踩坑记录
 
+- **导演描述必须进入实际执行链（2026-10-14 S1E4 审计）**：12 句确实用了
+  seed-tts-2.0，但雷晓 6 句统一 calm，千堂葵 6 句原生情绪为空；计划里的 energy、
+  intent、subtext 等没有进入生成器，混音仅执行 pace/volume 等有限参数。核查
+  每项演绎决策如何落实为后端参数或表演指令；未支持的项明确标识，不能以
+  reviewed、ASR 通过或供应商名称代替演绎验收。配乐和动作音效为空须作为实际
+  制作取舍报告；本例前集 BGM 来自 Seed-Audio，不能误归为未接入 Suno。
 - **混音放置零点必须与逐字对齐零点一致（2026-10-07 yuki_airport_t2）**：台词音频
   放进 mix 的 t0 和逐字对齐的 seg.start 若差哪怕 50ms，口型就会系统性偏。放置
   点、视素轨、字幕轨共用同一个零点常量，别各自加减"呼吸量"。
