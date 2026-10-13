@@ -5,7 +5,11 @@
 bio_armor_academy_s1e3（《9章》S1E3，P10 十四段断言全绿后用户零物理类反馈；
 P12 扩 gait/limb_attach/worn_prop；P13 扩 grip/palm_semantic；P14 扩
 hand_body_mesh/rest_support/state_consistency 共 22 段——但 P13 同时证明断言
-全绿≠看起来对，必须配末尾的逐拍近景审片协议）。
+全绿≠看起来对，需按末尾协议处理数值未覆盖的交互）。
+
+减少视觉检查或升级碰撞算法时先读 [算法防穿模与低成本验收](collision-prevention.md)。
+以正反例、几何/时间覆盖和版本一致性决定数值结论的范围；当前工具绿灯不自动
+代表完整物理保证。已覆盖的几何回归无需每轮重复多机位审片。
 
 ## 三层防线
 
@@ -14,7 +18,7 @@ hand_body_mesh/rest_support/state_consistency 共 22 段——但 P13 同时证�
    手悬空；坐姿肩高 1.16m/台面 0.58m/臂长 0.43m 时，身侧台面必须带 lean 俯身才够得着）。
    常量表：腕扭转 ±60°、掌法向量⊥前臂轴、手-躯干轴距离域、步幅/落脚域
    （数值见 [contact-and-hands.md](contact-and-hands.md) 与
-   [walk-director](../walk-director/SKILL.md) 的已验收实测）。
+   [walk-director](../../walk-director/SKILL.md) 的已验收实测）。
 2. **姿势由道具状态机派生**：hidden→held→placing→down，状态转换只发生在手接触
    事件；空手回静息。手写"姿态约束挂角色"会泄漏（S1E3 实录：放下盒后手仍托盘状、
    盒盖无人自己开）。
@@ -42,7 +46,7 @@ viewer 的 draw state 按帧输出以下键，contact_probe.py 按 contract 消�
 | `contact.handRest` | 掌点→大腿轴/盒 OBB 距离（support=取小） | rest_support |
 | `contact.doorOpen`/`doorPos`/`lidOpen`/`windGust` | 有状态元素的归一化开度/位置/环境触发量 | state_consistency |
 | `locomotion[].feet[].pitch` | 足踝俯仰（负=背屈足尖抬；支撑期滚动输出） | foot_roll |
-| `limbBody` | 上肢管 vs 躯干椭圆环列的有符号距离 g（轴采样解析式，袖根内埋区已滤） | limb_body_mesh |
+| `limbBody` | 臂轴采样相对躯干椭圆环列的径向近似 g（未计管半径，不是精确表面净空；袖根内埋区已滤） | limb_body_mesh |
 | `limbBody[].rootG/reach` | 袖根邻域 g（仅记录不判，判别力证伪）/ 腕-肩距÷臂长 | limb_body_mesh / reach |
 | `cloth` | 襟片面片局部系穿透检测（臂管段端点法向换号+交点落襟片范围） | cloth_body |
 
@@ -62,7 +66,7 @@ import（不进正片渲染路径）。15Hz 姿势帧（一拍二）下的道具
 ## 工作流门禁
 
 1. 写谱面 → `contact_probe.py`（contract 先行）红 → 改谱面/道具路径 → 绿。
-2. 绿了才渲染抽帧目检（画面审美仍要目检，探针管不了"看起来对不对"）。
+2. 报绿后核对覆盖与输入版本；只为未覆盖交互、异常或画面审美生成必要抽帧。
 3. 走路段先过 locomotion 数值（step 滑移/支撑脚钉地/轨迹宽度，见 walk-director）
    再看画面。
 4. 走路不自然的预防入口：步态风格用 walk-director 的 persona 参数化
@@ -77,14 +81,16 @@ import（不进正片渲染路径）。15Hz 姿势帧（一拍二）下的道具
 ## 参考实现
 
 - 通用探针：`dula-skills/direct-animation-craft/scripts/contact_probe.py`
-- 参考 contract：`bio_armor_academy_s1e3/config/contact_contract.json`（19 段全参数化）
+- 参考 contract：`bio_armor_academy_s1e3/config/contact_contract.json`（段数以当前配置为准）
 - 等效验证：S1E3 薄包装 tools/check_contact.py 与旧硬编码版报告逐字段一致
   （仅 nug_frames 573→663——旧版把无 bento 段的帧静默跳过，新版覆盖 68–71s 卡段）。
 
 ## 逐拍近景审片协议（P13 实录：断言全绿≠看起来对）
 
 数值探针是编译器，但"盒浮在掌上 5cm"这种错误可以一路绿灯（距离阈值内的悬浮）。
-**每个道具交互事件必须出 2–3 机位近景帧**（特写+侧写各一），逐张过五点清单：
+新交互或数值尚未覆盖的接触，可出 2–3 机位近景帧（特写+侧写各一），过五点清单。
+已由经反例验证且覆盖完整的数值门禁承担的几何项目，无需每轮重复看图；
+只要求算法诊断时明确覆盖缺口，不把视觉审片扩成额外任务。
 
 1. **掌向**：送嘴=掌心向内（不是向外反掌）；挥手=掌心朝外；托举=掌面朝上。
 2. **接触**：盒底贴掌面（无缝）；手指扣在盒底前缘/侧壁；放置帧手贴盒。
@@ -96,7 +102,8 @@ import（不进正片渲染路径）。15Hz 姿势帧（一拍二）下的道具
 shots JSON 逐镜点名 `[{name,t,camera:[px,py,pz,lx,ly,lz,fov?]}]`，不走 checkTimes，
 4s 出 22 帧（S1E3 P13 基建）。审片发现的任何问题顺手修掉再复跑探针。
 抽样审片的教训（P13 一轮四例）：掌心语义错误、俯身肩缝、托盘浮盒、递签指向，
-全部是 17 段断言全绿时近景才暴露的——**断言覆盖不了"语义对不对"，协议兜底**。
+全部是当时 17 段断言全绿时近景才暴露的；应将可数值化的掌向/贴合要求补入
+探针，未覆盖的读感再用审片判断，不把所有接触语义永久交给视觉。
 
 ## 穿戴件做工纪律（P13 实录）
 
