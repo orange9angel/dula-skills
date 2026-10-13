@@ -17,6 +17,9 @@ Translate dramatic intent into a validated visual contract and Dula runtime impl
 
 ## Load Context
 
+- For an accepted text-to-image background plus interactive 3D geometry, keep [hybrid-craft-scene](../hybrid-craft-scene/SKILL.md). A successful character generation trial is not a reason to rebuild the location.
+- If a specific prop or building needs a generated mesh, use [build-image-to-3d](../build-image-to-3d/SKILL.md) for that asset, then validate scene scale, walkability, camera coverage and contacts here. A single room image does not establish a complete navigable room.
+
 - Read [references/scene-contract.md](references/scene-contract.md) before creating or changing a contract.
 - Read [references/dula-scene-runtime.md](references/dula-scene-runtime.md) before editing scene JavaScript, bootstrap registrations, custom events, coordinate spaces, or camera obstacles.
 - For 2D keyframe sequence scenes (`*SequenceScene.js` with source-space procedural layers), read [references/2d-sequence-scene-layers.md](references/2d-sequence-scene-layers.md) — layer coordinates must be measured, never eyeballed.

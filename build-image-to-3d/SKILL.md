@@ -1,6 +1,6 @@
 ---
 name: build-image-to-3d
-description: 将角色或道具参考图转为可在 Dula 中使用的三维资产，组织图像准备、生成后端、网格清理、绑定、材质和逐镜验收。用于单图或多视图建模、导入 GLB、生成模型无法动画或与场景不融合；纯天空接缝和普通贴图使用 hybrid-craft-scene。
+description: 将角色或道具参考图转为 Dula 三维资产，包含 Tripo Studio 浏览器生成、费用与任务回执、网格清点及绑定接入。用于图生三维、Tripo 角色测试、GLB 导入及生成模型无法动画；文生图背景与普通贴图走 hybrid-craft-scene。
 ---
 
 # 图像到可制作的三维资产
@@ -8,6 +8,16 @@ description: 将角色或道具参考图转为可在 Dula 中使用的三维资�
 技能负责组织生成、加工、接入与验收；几何重建由选定的模型或服务执行。
 只有文件和说明时报告“流程已建立”，只有静态网格时报告“静态资产”，不要声称
 已得到可表演的角色或复现某个生成平台的能力。
+
+## 与角色、场景技能分工
+
+- 角色设计及最终验收由 [character-modeler](../character-modeler/SKILL.md) 承接：
+  身份、关节变形、手指、眼神、表情与口型。本技能提供生成后端与资产加工。
+- 场景布局及最终验收由 [scene-designer](../scene-designer/SKILL.md) 承接：
+  尺度、通行、镜头、遮挡、交互。文生图背景板与贴图优先沿用
+  [hybrid-craft-scene](../hybrid-craft-scene/SKILL.md)，无需为背景生成完整网格。
+- 用户选择 Tripo 时，读取 [Tripo Studio 实测流程](references/tripo-studio.md)。
+  不把角色测试自动扩大为整集或整场景替换，保留用户已认可的场景制作方式。
 
 ## 先决定重建什么
 
@@ -62,6 +72,10 @@ python dula-skills/build-image-to-3d/scripts/inspect_glb.py path/to/actor.glb --
 几何缓冲、不验证权重数值、不测世界尺寸、不判断穿插或造型，也不替代正式 glTF 验证。
 压缩扩展需要执行环境具备相应解码器；外部依赖必须随资产交付。
 
+人形角色的蒙皮还可运行 `scripts/audit_glb_skin.py actor.glb --humanoid --out skin.json`
+（需 numpy），解码权重归一化、索引范围与异常单骨集中。失败不能凭 joint 数量放行；
+通过仍不代表衣物、关节或表情合格。不支持的稀疏/压缩数据会明确报错。
+
 随后在实际导入环境完成：
 
 - **形体**：看正、侧、背和剪影；修孔洞、悬浮碎片、粘连、重复面和错误法线。
@@ -93,5 +107,7 @@ root motion、支撑脚与装备父级显式接入，不能凭“GLB 能打开�
 
 ## 当前实现范围
 
-已提供生产流程与离线 GLB 清点工具。没有附带模型权重，也没有内置或实测某家
-收费生成 API 的端到端适配。实际生成时按当前可用后端补接，不能把检查工具当成生成器。
+已实测 Tripo Studio 的 Chrome 登录会话上传、生成、减面、绑定、预设动作与正常会员
+导出；GLB 已导入本地 Three.js，能播放动作并控制骨骼。网页操作记录和已知缺陷见
+[Tripo 实测](references/tripo-studio.md)。独立无头访问仍未通过，脸部表演及最终变形
+尚未验收；没有附带重建模型权重，也不把网站会话当成稳定开发者 API。

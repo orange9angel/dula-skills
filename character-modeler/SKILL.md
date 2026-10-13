@@ -1,15 +1,22 @@
 ---
 name: character-modeler
-description: Procedurally "hand-draw" new Dula cartoon characters in Three.js — sculpt with primitives, toon shading, jointed group pivots, and an animatable face — then register the character in dula-assets and verify it with rendered screenshots. Use when an agent needs to create a brand-new character for the Dula engine without external modeling tools or imported meshes.
+description: Design, build, and integrate distinct animatable Dula characters using procedural Three.js geometry or generated 3D meshes. Own character identity, silhouette, rig and face integration, and deformation review; route Tripo and image-to-mesh generation through build-image-to-3d.
 ---
 
 # Character Modeler
 
-Create a new Dula character entirely in code. "Hand-drawing" here means procedural modeling: composing Three.js primitives into a readable cartoon silhouette, with the face and joint structure the Dula animation system expects — then, optionally, giving it a true hand-drawn ink treatment (sketch mode) via `dula-engine/handdrawn`. No Blender, no GLTF imports, no textures from disk.
+Create a distinct character that can perform in the selected Dula runtime. Choose procedural geometry, generated meshes, or a combination based on the requested appearance and deformation needs. The existing procedural workflow below composes Three.js shapes and an animatable face; it does not prohibit imported models or textures on other routes.
 
 Keep the skill in `dula-skills/character-modeler/`. New characters live in `dula-assets/characters/<Name>.js` and are registered in `dula-assets/index.js`.
 
-This skill covers the primitive-based construction route. When final-shot quality requires continuous limb contours, articulated elbows/knees, camera-specific shape correction, or imported rigged meshes, use [direct-animation-craft](../direct-animation-craft/SKILL.md). The primitive-only choice below is not a project-wide restriction or a guarantee of production quality.
+## Choose the construction route
+
+- For an existing procedural character, retain its working performance and improve the relevant silhouette, anatomy, face or material; use the workflow below.
+- For text-to-image followed by Tripo or another image-to-mesh backend, use [build-image-to-3d](../build-image-to-3d/SKILL.md). This skill still owns the character design and acceptance. Skip primitive-only construction instructions for an imported mesh.
+- For continuous limbs, joint deformation and shot-specific correction, use [direct-animation-craft](../direct-animation-craft/SKILL.md). A static attractive model is not proof of a usable speaking character.
+- Identify the real integration target first: `CharacterBase` or an episode's self-contained viewer. Preserve the selected target's pose, face, readiness and equipment contracts.
+
+For a generated candidate, review front/side/back and hands, hair and clothing separation; then test one line with gaze change, an arm lift or grasp, and a step. Report static appearance, rig presence, deformation and face support separately. Do not replace an accepted environment as a side effect of changing a character.
 
 ## Drawing Methods
 
@@ -22,7 +29,7 @@ This workflow has two existing looks. Follow the user's established choice; clar
 
 - For the primitive-only task this skill describes, use Three.js primitives (Sphere/Capsule/Cylinder/Box/Cone/Torus/Tube/Lathe) composed in code. If that representation cannot meet the requested silhouette or deformation, explain the limitation and follow the production route above instead of treating this constraint as universal.
 - Match the look of existing characters: `MeshToonMaterial` + 4-step canvas gradient. Do not introduce new shading styles (PBR, custom shaders) unless the user asks.
-- Follow the `CharacterBase` contract exactly — the animation, lip-sync, expression, and combat systems read specific fields. Read `dula-engine/characters/CharacterBase.js` and a reference character (仓库内的 Q 版角色范例 `dula-assets/characters/Doraemon.js`) before writing code.
+- For the `CharacterBase` route, follow its contract exactly: animation, lip-sync, expression and combat read specific fields. Read `dula-engine/characters/CharacterBase.js` and a reference character before implementation. A self-contained viewer instead follows its actual pose, face and loading contracts.
 - Never claim the character looks right until you have rendered screenshots via `dula-verify` and inspected them.
 - If the user explicitly requests no visual inspection, follow that constraint. Use bounded poses and numeric geometry checks, deliver a video for the user's review, and describe the character's appearance as unreviewed. Do not treat numeric clearance as artistic approval.
 
@@ -146,6 +153,11 @@ Open the screenshots in `episodes/<name>_showcase/storyboard/` (or the path the 
 - Spikes/tufts sized to sit exactly flush with a hair/shell surface get swallowed by it (Dodo's hair spikes: tip == cap top → invisible): size signature protrusions so tips clear the enclosing shell by a visible margin, then confirm from a front close-up.
 
 ## 踩坑记录
+
+- **新角色辨识度（2026-10-14 S1E4）**：独立参数表并不证明画面能区分角色。
+  用户再次否决女主与男主过像后，实际同时改了下颌/眼形、长发外轮廓、领口和裙装，
+  并在原机位双人画面复核。共享绑定可以保留；角色设计不能仅靠换色或小幅缩放。
+  镜像领片时同步翻三角绕序，否则其中一侧会露出背面描边而变成黑片。
 
 - **脸贴片翻车三连（2026-10-07 bio_armor_academy_s1e2）**：①脸贴覆盖角必须匹配
   角色 yaw 朝向与机位扇区——贴片只盖正面 ±36° 而角色面朝 +x、机位在 +z 时
