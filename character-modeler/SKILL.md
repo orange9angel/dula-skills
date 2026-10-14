@@ -18,6 +18,10 @@ Keep the skill in `dula-skills/character-modeler/`. New characters live in `dula
 
 For a generated candidate, review front/side/back and hands, hair and clothing separation; then test one line with gaze change, an arm lift or grasp, and a step. Report static appearance, rig presence, deformation and face support separately. Do not replace an accepted environment as a side effect of changing a character.
 
+For a textured imported face that blinks and speaks but still feels lifeless, read
+[Imported face performance](references/imported-face-performance.md). Separate acting timing
+from rig limitations, and compare a short dialogue shot before extending the change to an episode.
+
 ## Drawing Methods
 
 This workflow has two existing looks. Follow the user's established choice; clarify only when an unresolved style choice materially changes the work:
