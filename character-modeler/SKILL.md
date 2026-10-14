@@ -39,6 +39,12 @@ This workflow has two existing looks. Follow the user's established choice; clar
 
 ## Load Context
 
+- 用户要求人物更好看、更像原画或积累审美经验时，先读
+  [人物审美判断](references/character-aesthetics.md)：解释目标为何成立、当前差在哪里，
+  同时检查修正不足与修正过量；之后再选实现方法。
+- 用户要求角色接近文生图、把三维角色渲染成二维画风，或希望像混合场景一样让
+  生成图直接贡献成片细节时，读 [生成绘画直接用于角色](references/generated-character-paint.md)。
+  原始已确认绘画是美术目标；程序截图不能充当独立参考来证明还原成功。
 - 用户希望沿用小雪 craft3d 的二维观感，或将生成网格与手绘工艺融合时，读
   [曲面角色与绘制外观](references/craft3d-drawn-characters.md)：连续造型、曲面五官、
   主发束、全身色块与生成前约束；区分造型方法和某个历史角色的验收状态。
