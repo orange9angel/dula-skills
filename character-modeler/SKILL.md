@@ -39,6 +39,10 @@ This workflow has two existing looks. Follow the user's established choice; clar
 
 ## Load Context
 
+- 用户希望沿用小雪 craft3d 的二维观感，或将生成网格与手绘工艺融合时，读
+  [曲面角色与绘制外观](references/craft3d-drawn-characters.md)：连续造型、曲面五官、
+  主发束、全身色块与生成前约束；区分造型方法和某个历史角色的验收状态。
+
 - Read [references/modeling-techniques.md](references/modeling-techniques.md) for the collected Three.js hand-modeling techniques (primitive sculpting, toon shading, outline, pivots, face construction, proportions).
 - Read [references/handdrawn-style.md](references/handdrawn-style.md) for sketch mode (ink strokes, sketchify, boiling) when the user wants a hand-drawn look.
 - Read [references/characterbase-contract.md](references/characterbase-contract.md) for the exact fields the engine expects.
