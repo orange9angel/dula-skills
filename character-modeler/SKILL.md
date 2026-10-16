@@ -11,6 +11,8 @@ Keep the skill in `dula-skills/character-modeler/`. New characters live in `dula
 
 ## Choose the construction route
 
+- Keep one character entrypoint with separate head and body references. Head identity, facial projections and hair use the existing appearance references below; reusing a rigged body or changing wardrobe uses [Body reuse and wardrobe adaptation](references/body-reuse-and-wardrobe.md). Join them for head/body proportion, neck/shoulder/collar connections and final-shot style review.
+- Motion remains owned by [direct-animation-craft](../direct-animation-craft/SKILL.md) and its walk/contact references: the character supplies geometry, bind axes, deformation and contact anchors; the episode supplies acting and timing. A bad motion mapping is not by itself a reason to rebuild an accepted body.
 - For an existing procedural character, retain its working performance and improve the relevant silhouette, anatomy, face or material; use the workflow below.
 - For text-to-image followed by Tripo or another image-to-mesh backend, use [build-image-to-3d](../build-image-to-3d/SKILL.md). This skill still owns the character design and acceptance. Skip primitive-only construction instructions for an imported mesh.
 - For continuous limbs, joint deformation and shot-specific correction, use [direct-animation-craft](../direct-animation-craft/SKILL.md). A static attractive model is not proof of a usable speaking character.
