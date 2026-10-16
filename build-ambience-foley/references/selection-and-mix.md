@@ -79,3 +79,13 @@ Prefer CC0 or clearly licensed material. Do not claim a generated or downloaded 
 4. Add music and resolve rhythmic or tonal collisions.
 5. Watch once at normal speed without looking at the timeline.
 6. Remove at least every sound that draws attention for the wrong reason.
+
+## Quiet Indoor Movement (2026-10-17)
+
+Repeated short noise can turn a soft shoe recording into conspicuous rustling when
+triggered on every landing. If the user chooses silent walking for a scene, remove its
+footstep cue and record the scene-scoped exclusion; do not replace it with cloth noise.
+Retain landing anchors for motion validation, but make audio validation conditional on
+the reviewed cue plan. A silent-footstep decision should pass with zero step cues and
+zero Foley in the entry walk. Configuration regeneration must preserve reviewed decisions.
+This is a scene choice, not a rule that all indoor scenes have no footsteps.

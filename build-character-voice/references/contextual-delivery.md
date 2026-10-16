@@ -89,3 +89,19 @@ For a playful basketball exchange:
 - A boast should gain confidence through pace and emphasis, not a higher voice.
 - A protest can gain energy and compression without becoming shrill.
 - A final teasing line should leave room after the punchline instead of adding a comic vocal effect.
+
+## Relationship Direction and Executable Controls
+
+- A character can retain the same voice while the scene changes from danger to intimacy.
+  Do not carry a combat or exhausted performance into a romantic conversation by default.
+  Quiet speech should retain breath support, responsive inflection and a clear intention.
+- For custom episode synthesizers, inspect the actual request builder. A reviewed plan's
+  `energy`, `intent`, or `subtext` has no audible effect if never compiled into supported
+  native controls. Put relationship and the line's intention in the provider's supported
+  instruction field; include those fields and the request-schema version in cache keys.
+- Rehearse a request and a teasing response at comparable loudness before regenerating
+  the character. Keep short concern/surprise beats; warm direction is not uniform happiness.
+- `scripts/listen_audio.py` can send supplied audio to the existing DashScope audio reviewer
+  (`--prompt`, `--out`, `--env-dir`). Treat its observations as advisory: blinded comparisons
+  can be inconsistent, and a whole-scene pass may miss one odd line. Retain the reviewed
+  audio hash and distinguish model observation from human listening and user acceptance.

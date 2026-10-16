@@ -29,8 +29,9 @@ Body:
   {"user": {"uid": "any"},
    "req_params": {"text": "台词",
                   "speaker": "zh_female_vv_uranus_bigtts",
-                  "audio_params": {"format": "mp3", "sample_rate": 24000},
-                  "emotion": "...", "emotion_scale": 1-5}}
+                  "audio_params": {"format": "mp3", "sample_rate": 24000,
+                                   "emotion": "happy", "emotion_scale": 2},
+                  "additions": "{\"context_texts\":[\"温柔、带笑意地与同学交谈\"]}"}}
 ```
 
 - 响应是**逐行 JSON 流**（每行一个对象，`data` 字段是 base64 音频分块），
@@ -43,8 +44,10 @@ Body:
 - 认证失败 vs 未开通的区分：`requested resource not granted` = 服务/音色没开通
   或没 0 元下单；401/格式错误才是 key 问题。
 - 文本上限 1024 字节（建议 <300 字符）；每次 reqid 必须唯一。
-- 情感参数：`emotion` + `emotion_scale`（1-5）+ 需 `enable_emotion: true`，
-  支持的情感范围按音色不同，见官方"多情感音色"列表。
+- 情感参数放在 `req_params.audio_params` 内，按音色支持范围使用。
+  旧脚本把它们放在 `req_params` 根层并加 `enable_emotion`，不是当前文档契约；
+  请求成功不能证明旧参数起效。TTS 2.0 的自然语言导演指令使用
+  `req_params.additions.context_texts`，其中 `additions` 是 JSON 字符串。
 
 ## 与 CosyVoice 的分工（当前剧集现状）
 
@@ -90,13 +93,25 @@ Body:
 - **情感参数纪律：emotion_scale=2 弱档**。弱档能出戏感且最稳；实测
   happy/calm/surprised/tenderness 在 uranus 和 taocheng 上都有效且
   无性别漂移（E04 的漂移是个别音色问题，不是模型问题——但仍要逐音色
-  试听验证，API 不报错不代表参数生效，可对比输出 md5 确认有差异）。
+  试听验证。随机合成即使参数相同也可能产生不同文件，摘要变化只证明文件不同，
+  不能证明情感控制生效）。
 - 新验证可用的音色（seed-tts-2.0 resource 下已解锁）：
   `zh_female_xiaohe_uranus_bigtts`（小何）、`zh_male_m191_uranus_bigtts`
   （云舟）、`zh_male_taocheng_uranus_bigtts`（小天）、
   `zh_male_ruyayichen_uranus_bigtts`（儒雅逸辰）。
-- **没有 rate 控制**：单向 V3 HTTP API 不支持调速，台词超时只能精简文本
-  或加宽槽位（uranus 自然语速偏慢，E05 有 3 句因此改词/加窗）。
+- **语速控制更正（2026-10-17）**：当前 V3 文档提供
+  `audio_params.speech_rate`，范围 `-50..100`，`0` 为原速；旧“没有 rate”结论过时。
+  本集接通自然语言指令，原生速率先用 `0`。原生调速与后期 atempo 不重复叠加；
+  时长仍以最终 PCM 验证，不截断台词。
 - **换音色/换情感后必须重跑全部 omni 镜头**：OmniHuman 视频的口型由旧音频
   驱动，幂等跳过逻辑会掩盖失同步——删 tmp/omni*.mp4 和 assets/omni/<shot>/
   重跑，别只重跑改过的那几句对应的角色镜头清单要按"音频变了的角色"算。
+
+## 2026-10-17：导演配置必须进入实际请求
+
+S1E4 的自有合成器只消费情感标签，未消费关系、意图与能量，且强度写死。
+现用 `volc-voice-casting/scripts/seedtts_say.py` 将情绪放入正确层级，支持
+`context_texts` 和原生语速；七句男声实际调用成功，内容检查通过。
+将请求格式版本、指令、声线及速率全部纳入缓存键，保存不含密钥的请求元数据。
+只改男主时显式选角色，保留女主已验收音频，不借公共接口修复顺手全量重生。
+官方接口依据：[V3 HTTP 文档](https://docs.volcengine.com/docs/DoubaoVoice/HTTPChunkedSSEUnidirectionalStreaming-V3?lang=zh)。

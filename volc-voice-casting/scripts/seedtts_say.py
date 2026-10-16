@@ -14,7 +14,8 @@ Access notes (dula-skills/build-character-voice/references/volcano-seedtts.md):
   - The key comes from the speech console (not ARK): env VOLC_SPEECH_API_KEY.
   - "requested resource not granted" (403) = service/voice not unlocked in
     the console; 401 = key problem.
-  - Emotion needs emotion + emotion_scale (1-5) + enable_emotion: true.
+  - Emotion and strength belong in audio_params; TTS 2.0 acting instructions
+    belong in the JSON-encoded additions.context_texts field.
 
 Usage:
   seedtts_say.py --text "台词" --speaker zh_female_vv_uranus_bigtts \
@@ -68,6 +69,8 @@ def synthesize(
     resource_id: str = DEFAULT_RESOURCE_ID,
     audio_format: str = DEFAULT_FORMAT,
     sample_rate: int = DEFAULT_SAMPLE_RATE,
+    context_texts: list[str] | None = None,
+    speech_rate: int | None = None,
     timeout: float = 60.0,
 ) -> Path:
     """Synthesize one line and write the encoded audio (mp3) to out_path."""
@@ -81,9 +84,18 @@ def synthesize(
         "audio_params": {"format": audio_format, "sample_rate": sample_rate},
     }
     if emotion:
-        req_params["emotion"] = emotion
-        req_params["emotion_scale"] = emotion_scale if emotion_scale else 3
-        req_params["enable_emotion"] = True
+        strength = emotion_scale if emotion_scale is not None else 3
+        if not 1 <= strength <= 5:
+            raise ValueError("emotion_scale must be between 1 and 5")
+        req_params["audio_params"].update(emotion=emotion, emotion_scale=strength)
+    if speech_rate is not None:
+        if not -50 <= speech_rate <= 100:
+            raise ValueError("speech_rate must be between -50 and 100")
+        req_params["audio_params"]["speech_rate"] = speech_rate
+    if context_texts:
+        if not all(isinstance(s, str) and s.strip() for s in context_texts):
+            raise ValueError("context_texts must contain nonempty instructions")
+        req_params["additions"] = json.dumps({"context_texts": context_texts}, ensure_ascii=False)
     payload = {"user": {"uid": "dula-e04-cat"}, "req_params": req_params}
     headers = {
         "X-Api-Key": api_key,
@@ -147,6 +159,8 @@ def main() -> int:
         help="Emotion strength 1-5 (default 3 when --emotion is given)",
     )
     parser.add_argument("--out", required=True, help="Output audio path (mp3)")
+    parser.add_argument("--context", action="append", help="Native TTS 2.0 acting instruction")
+    parser.add_argument("--speech-rate", type=int, help="Native rate: -50 to 100; 0 is normal")
     parser.add_argument("--resource-id", default=DEFAULT_RESOURCE_ID)
     parser.add_argument("--format", default=DEFAULT_FORMAT)
     parser.add_argument("--sample-rate", type=int, default=DEFAULT_SAMPLE_RATE)
@@ -170,6 +184,8 @@ def main() -> int:
             resource_id=args.resource_id,
             audio_format=args.format,
             sample_rate=args.sample_rate,
+            context_texts=args.context,
+            speech_rate=args.speech_rate,
         )
     except SeedTTSError as exc:
         print(f"ERROR: synthesis failed: {exc}", file=sys.stderr)

@@ -95,12 +95,12 @@ dula-story/.venv/Scripts/python.exe dula-skills/volc-voice-casting/scripts/audit
   ICL 复刻音色（`ICL_*`）挂在别的 resource，配错报 55000000 resource
   mismatch。本目录只含 seed-tts-2.0 音色，天然规避。
 - **emotion 生效要验证**：API 不报错不代表参数生效。换 emotion/scale 后
-  对比输出文件 md5，有差异才说明真的生效（详见证词见
-  build-character-voice/references/volcano-seedtts.md）。
+  要检查请求字段和代表台词听感；随机生成的 md5 不同不能证明情感生效。
+  参数位置与 TTS 2.0 自然语言指令见 build-character-voice/references/volcano-seedtts.md。
 - **emotion_scale=2 弱档最稳**：能出戏感且不易性别漂移；个别音色有漂移
   前科，逐音色试听验证，不要批量信任。
-- **无 rate 控制**：V3 单向 HTTP API 不支持调速。时长超窗（⚠️）只能
-  精简台词或加宽剧本槽位，别无他法。
+- **原生 rate（2026-10-17 更正）**：V3 的 `audio_params.speech_rate` 支持
+  `-50..100`，正常为 `0`。与后期 atempo 只选一处调速，实际时长仍要解码检查。
 - **空成功坑（2026-09-26 选声实测）**：部分音色对不支持的文本语言不报错——
   流式响应返回 `code:0` + `code:20000000` 成功哨兵但 `data` 全为 null，
   零音频块。实测 `fr_male_fr_m29`、`en_male_chandler_p1` 喂中文台词即如此。
