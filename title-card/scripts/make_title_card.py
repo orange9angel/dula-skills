@@ -132,12 +132,14 @@ def subtitle(im: Image.Image, text, a):
 
 
 def render_card(bg_path, sub, out_dir, n_frames, ink: InkTitle,
-                reveal=(0.18, 0.66), dissolve_out=True, fade_black=False):
+                reveal=(0.18, 0.66), dissolve_out=True, fade_black=False, fps=FPS):
     src = Image.open(bg_path).convert("RGB").resize((W, H), Image.LANCZOS)
     out_dir.mkdir(parents=True, exist_ok=True)
-    total = n_frames / FPS
+    if fps <= 0:
+        raise ValueError('fps must be positive')
+    total = n_frames / fps
     for n in range(n_frames):
-        t = n / FPS
+        t = n / fps
         bg = bg_frame(src, t, total)
         # 墨韵进度
         if t < reveal[0]:
@@ -180,20 +182,24 @@ def main() -> int:
     ap.add_argument("--title-y", type=float, default=0.30, help="标题纵位（画面比例）")
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--duration", type=float, default=1.2, help="秒")
+    ap.add_argument("--fps", type=int, default=FPS, help="与成片帧率一致；默认 24")
     ap.add_argument("--reveal", default="0.18,0.62", help="墨韵侵蚀起止（秒,秒）")
     ap.add_argument("--out-mode", choices=["white", "black"], default="white",
                     help="出场方式：白光爆发 / 淡黑")
     ap.add_argument("--out-dir", required=True, help="帧序列输出目录")
     args = ap.parse_args()
+    if args.fps <= 0 or args.duration <= 0:
+        ap.error('fps and duration must be positive')
 
     r0, r1 = (float(x) for x in args.reveal.split(","))
     ink = InkTitle(args.title, args.title_size, args.title_y, seed=args.seed)
     render_card(
         Path(args.bg), args.subtitle, Path(args.out_dir),
-        int(round(args.duration * FPS)), ink,
+        int(round(args.duration * args.fps)), ink,
         reveal=(r0, r1),
         dissolve_out=(args.out_mode == "white"),
         fade_black=(args.out_mode == "black"),
+        fps=args.fps,
     )
     return 0
 

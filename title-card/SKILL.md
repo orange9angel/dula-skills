@@ -16,7 +16,7 @@ PY=dula-story/.venv/Scripts/python.exe
 # 中间转场卡（白光爆发切出）
 $PY dula-skills/title-card/scripts/make_title_card.py \
   --bg <底图.png> --title "9章" --subtitle "残卷 · 其一" \
-  --duration 1.2 --reveal 0.18,0.62 --out-mode white --out-dir tmp/card_frames
+  --duration 1.2 --fps 24 --reveal 0.18,0.62 --out-mode white --out-dir tmp/card_frames
 # 结束卡（淡黑收尾）
 $PY dula-skills/title-card/scripts/make_title_card.py \
   --bg <底图.png> --title "9章" --subtitle "序章 · 完" \
@@ -26,7 +26,23 @@ ffmpeg -framerate 24 -i tmp/card_frames/f_%03d.png -c:v libx264 -pix_fmt yuv420p
 ```
 
 参数：`--title-size`（默认 200）、`--title-y`（纵位比例）、`--seed`
-（墨韵噪声种子，换 seed 换侵蚀形状）。
+（墨韵噪声种子，换 seed 换侵蚀形状）、`--fps`（默认 24；30fps 成片可生成原生
+30fps 帧，避免 24→30 重复帧节奏）。
+
+## 重做剧集时保留系列转场
+
+- 开工先查前集实际成片及字卡清单，确认字体、显字工艺、底图、光效和进退方式。
+  角色或渲染器替换不等于获得改动片头、片尾与转场的授权。沿用原配方，只替换
+  当前集文字及适用底图；时长取 `script.story` 派生的时间线。
+- 导出链必须接入真正的字卡帧。清单声明帧率、时间窗、逐帧路径与哈希；检查数量
+  和窗口匹配。按局部秒数乘素材帧率取帧，避免重复套 easing 改变显字/光扫节拍。
+- 最终构建缺清单或缺帧应报错，不能静默回退成黑底文字或其它临时标题。调试用的
+  占位模式必须显式选择，并在构建记录中可见。验收实际开头、中段、出场及收尾帧，
+  以及缺素材时确实失败；保留音轨和全片时长。
+- **S1E4 教训（2026-10-17）**：重做人物时未沿用前集帧序列接入，正式导出仍在
+  画静态微软雅黑标题，原来的楷体墨迹、光扫和光斑全部丢失。角色和接触数值通过
+  不能证明系列包装保留。修复参考本集 `tools/build_series_cards.py`、
+  `tools/check_series_cards.mjs` 和 `config/cards.json`。
 
 ## 工艺要点
 
