@@ -89,3 +89,10 @@ Retain landing anchors for motion validation, but make audio validation conditio
 the reviewed cue plan. A silent-footstep decision should pass with zero step cues and
 zero Foley in the entry walk. Configuration regeneration must preserve reviewed decisions.
 This is a scene choice, not a rule that all indoor scenes have no footsteps.
+
+If rustling remains after removing footsteps, solo every bus at its actual mix level.
+S1E4's room bed was documented as −53 dBFS but executed at −43 dBFS; starting it with
+the entry walk suggested footsteps. Verify the written level against rendered PCM.
+For a deliberately quiet interior, removing an unhelpful bed is valid. Persist an
+ambience stem even when it is zero, and check the rejected sound across ambience,
+Foley and score; zero Foley alone cannot prove a rustle-free opening.

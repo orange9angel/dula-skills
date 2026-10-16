@@ -124,6 +124,8 @@ def main():
     ap.add_argument('--headed', action='store_true', help='显示浏览器窗口（默认无头后台运行）')
     ap.add_argument('--restore-cookies', action='store_true', help='显式从备份恢复 cookie；正常使用持久 profile，避免旧备份覆盖新登录')
     ap.add_argument('--probe', action='store_true', help='探测页面结构')
+    ap.add_argument('--library-probe', action='store_true', help='只检查作品筛选和现有生成结果，不提交生成')
+    ap.add_argument('--download-id', help='仅下载账号内已有曲目的播放音频，不提交生成')
     ap.add_argument('--create-voice', help='建档声音克隆：<名称>（配合 --voice-file）')
     ap.add_argument('--voice-file', type=Path, help='声音克隆参考音频（wav/mp3）')
     ap.add_argument('--voice', help='生成时使用的已建档 Voice 名称')
@@ -136,6 +138,7 @@ def main():
     ap.add_argument('--out', type=Path, default=Path('.'))
     ap.add_argument('--timeout', type=int, default=300)
     args = ap.parse_args()
+    args.out.mkdir(parents=True, exist_ok=True)
 
     from playwright.sync_api import sync_playwright
 
@@ -157,6 +160,26 @@ def main():
             except Exception as exc:
                 log(f'cookies 注入失败（忽略）：{exc}')
         page = ctx.new_page()
+        receipts=[]
+        failures=[]
+        def capture_result(response):
+            url=response.url
+            if response.status>=400 and any(host in url for host in ['suno.com/','suno.ai/']):
+                from urllib.parse import urlsplit
+                parts=urlsplit(url)
+                failures.append({'status':response.status,'method':response.request.method,'endpoint':parts.netloc+parts.path})
+                (args.out/'request_failures.json').write_text(json.dumps(failures,indent=2),encoding='utf-8')
+            if response.request.method!='POST' or not re.search(r'/generate(?:/|\?|$)',url):return
+            try:
+                data=response.json()
+                clips=data.get('clips',[]) if isinstance(data,dict) else []
+                receipt={'status':response.status,'ids':[c['id'] for c in clips if isinstance(c,dict) and c.get('id')],
+                         'detail':str(data.get('detail',data.get('error','')))[:600] if isinstance(data,dict) else ''}
+                receipts.append(receipt)
+                (args.out/'generation_receipts.json').write_text(json.dumps(receipts,indent=2),encoding='utf-8')
+                log('Generation response: '+json.dumps(receipt))
+            except Exception:pass
+        page.on('response',capture_result)
         page.goto('https://suno.com/create', wait_until='domcontentloaded')
         # Cloudflare 挑战检测（无头模式易被拦）：命中则提示改用 --headed
         page.wait_for_timeout(2500)
@@ -220,13 +243,109 @@ def main():
             click_first(page, ['button:has-text("Upload Audio")'], 'upload-audio')
             page.wait_for_timeout(800)
             fi = page.locator('input[type=file]').first
+            # 上传链路观测（P3 校准）：记录 upload/clips 相关响应状态码
+            page.on('response', lambda r: log(f'net {r.status} {r.url[:110]}')
+                    if any(k in r.url for k in ('upload', 'clip', 'voice')) else None)
             fi.set_input_files(str(args.voice_file))
-            log('音频已上传，等待处理...')
-            page.wait_for_timeout(6000)
-            named = fill_first(page, ['input[placeholder*="name" i]', 'input[placeholder*="Name"]',
+            log('音频已上传，等 upload-finish 响应...')
+            # v6 上传流程（P3 校准两轮实录）：①Continue 在未选内容类型时一直禁用，
+            # 等它没用；②上传完成后再点 Voice 芯片，Continue 才解锁。顺序错=回拖放区。
+            try:
+                page.wait_for_event('response', predicate=lambda r: 'upload-finish' in r.url,
+                                    timeout=60000)
+            except Exception:
+                log('60s 未见 upload-finish——上传未完成')
+                args.out.mkdir(parents=True, exist_ok=True)
+                page.screenshot(path=str(args.out / 'voice_upload_stall.png'))
+                ctx.close()
+                return 2
+            # 选内容类型 Voice 芯片（与页面顶部 Voice 入口同文，限定在对话框内点）
+            click_first(page, ['div.fixed.inset-0 button:has-text("Voice")',
+                               '[role="dialog"] button:has-text("Voice")',
+                               'div.fixed.inset-0 :text-is("Voice")'], 'upload-kind-voice')
+            page.wait_for_timeout(1200)
+            try:
+                page.wait_for_function(
+                    "() => { const dlg=document.querySelector('div.fixed.inset-0,[role=dialog]');"
+                    " if(!dlg) return false;"
+                    " const b=[...dlg.querySelectorAll('button')].find(x=>/Continue/i.test(x.innerText));"
+                    " return b && !b.disabled; }", timeout=15000)
+            except Exception:
+                log('选片后 Continue 仍未解锁')
+            click_first(page, ['div.fixed.inset-0 button:has-text("Continue")',
+                               '[role="dialog"] button:has-text("Continue")',
+                               'button:has-text("Continue"):visible'], 'upload-continue')
+            log('内容类型已提交（Voice），等待建档处理...')
+            page.wait_for_timeout(10000)
+            # v6 正解（P3 JS 逆工程）：上传成 clip 后关对话框，在 clip 卡片的
+            # More options 菜单里点 Voice（songActions.voice）才进命名弹层。
+            # "Select from library" 是选既有歌的旁路，上传件不在 Songs 列表。
+            log('上传已成 clip——关对话框走卡片菜单 Voice 入口')
+            page.keyboard.press('Escape')
+            page.wait_for_timeout(1500)
+            clip_title = args.voice_file.stem
+            card = page.locator(f'div:has(> *:text-is("{clip_title}"))').last
+            try:
+                btn = page.locator('button[aria-label="More options"]').first
+                card.hover()
+                page.wait_for_timeout(600)
+                card.locator('button[aria-label="More options"]').click()
+                log('卡片 More options 已开')
+            except Exception:
+                log('卡片菜单定位失败，试全局第一个 More options')
+                page.locator('button[aria-label="More options"]').first.click()
+            page.wait_for_timeout(1000)
+            click_first(page, ['[role="menuitem"]:has-text("Voice")', 'text=Voice'], 'card-menu-voice')
+            page.wait_for_timeout(2000)
+            named = fill_first(page, ['div.fixed.inset-0 input[placeholder*="name" i]',
+                                      '[role="dialog"] input[placeholder*="name" i]',
+                                      'input[placeholder*="name" i]:visible',
                                       'input[type="text"]:visible'], args.create_voice, 'voice-name')
             if not named:
-                log('未找到命名框，尝试直接找保存按钮')
+                log('卡片 Voice 路径仍无命名框')
+                click_first(page, ['div.fixed.inset-0 button:has-text("Select from library")',
+                                   '[role="dialog"] button:has-text("Select from library")',
+                                   'button:has-text("Select from library"):visible'], 'pick-from-library')
+                page.wait_for_timeout(3000)
+                clip_name = args.voice_file.stem
+                # 先搜索框过滤（上传件可能不在默认序前列——P3 实录）
+                sb = page.locator('div.fixed.inset-0 input[placeholder*="Search" i], '
+                                  '[role="dialog"] input[placeholder*="Search" i]').first
+                if sb.count() and sb.is_visible():
+                    sb.fill(clip_name)
+                    log(f'库选择器内搜索: {clip_name}')
+                    page.wait_for_timeout(2000)
+                args.out.mkdir(parents=True, exist_ok=True)
+                (args.out / 'voice_library_probe.txt').write_text(
+                    chr(10).join(page.locator('[role="dialog"],div.fixed.inset-0')
+                                 .evaluate_all('(els)=>els.map(e=>e.innerText)')), encoding='utf-8')
+                page.screenshot(path=str(args.out / 'voice_library_probe.png'))
+                pick = page.locator(f'div.fixed.inset-0 :text-is("{clip_name}"), '
+                                    f'[role="dialog"] :text-is("{clip_name}")').last
+                if pick.count() and pick.is_visible():
+                    pick.click()
+                    log(f'库中选中上传件: {clip_name}')
+                    page.wait_for_timeout(2500)
+                    named = fill_first(page, ['div.fixed.inset-0 input[placeholder*="name" i]',
+                                              '[role="dialog"] input[placeholder*="name" i]',
+                                              'input[placeholder*="name" i]:visible',
+                                              'input[type="text"]:visible'],
+                                       args.create_voice, 'voice-name')
+            if not named:
+                # 命名框漂移即停：盲点是/否按钮会提交无名 voice 或点到禁用件（P3 实录）。
+                # 落盘对话框结构供校准，不继续。
+                args.out.mkdir(parents=True, exist_ok=True)
+                dump = {'inputs': page.locator('input').evaluate_all(
+                            '(els)=>els.map(e=>({ph:e.placeholder||"",type:e.type||"",vis:!!e.offsetParent,dis:e.disabled}))'),
+                        'buttons': page.locator('button').evaluate_all(
+                            '(els)=>els.filter(e=>e.offsetParent).map(e=>({t:e.innerText.trim(),dis:e.disabled})).slice(0,40)'),
+                        'texts': page.locator('[role="dialog"],div.fixed.inset-0').evaluate_all(
+                            '(els)=>els.map(e=>e.innerText.trim().slice(0,400))')}
+                (args.out / 'voice_dialog_probe.json').write_text(json.dumps(dump, ensure_ascii=False, indent=2))
+                page.screenshot(path=str(args.out / 'voice_dialog_probe.png'))
+                log('命名框未找到：已落盘 voice_dialog_probe.json/.png 供校准，未提交')
+                ctx.close()
+                return 2
             for sel in ('button:has-text("Save")', 'button:has-text("Create")',
                         'button:has-text("Done")', 'button:has-text("Confirm")'):
                 loc = page.locator(sel).last
@@ -239,6 +358,89 @@ def main():
             ctx.close()
             return 0
 
+        if args.download_id:
+            if not re.fullmatch(r'[0-9a-f-]{36}',args.download_id):raise ValueError('Invalid song id')
+            song_media=[]
+            def collect_song_media(response):
+                if args.download_id in response.url and '.mp3' in response.url:song_media.append(response.url)
+                if 'json' not in response.headers.get('content-type',''):return
+                if not any(x in response.url for x in ('clip','feed','song')):return
+                try:
+                    def visit(value):
+                        if isinstance(value,dict):
+                            if value.get('id')==args.download_id and value.get('audio_url'):song_media.append(value['audio_url'])
+                            for child in value.values():visit(child)
+                        elif isinstance(value,list):
+                            for child in value:visit(child)
+                    visit(response.json())
+                except Exception:pass
+            page.on('response',collect_song_media)
+            page.goto('https://suno.com/song/'+args.download_id,wait_until='domcontentloaded')
+            page.wait_for_timeout(7000)
+            metadata=page.locator('body').inner_text()[:9000]
+            sources=page.locator('audio').evaluate_all('(els)=>els.map(e=>e.currentSrc||e.src).filter(Boolean)')
+            # The initial audio element contains sil-100.mp3, a silent player
+            # placeholder. Only the requested song's actual media is evidence.
+            if not any(args.download_id in s for s in sources):
+                for sel in ['button[aria-label="Play"]','button[aria-label*="Play song"]']:
+                    loc=page.locator(sel).first
+                    if loc.count():loc.click();page.wait_for_timeout(1800);break
+                for _ in range(15):
+                    sources=page.locator('audio').evaluate_all('(els)=>els.map(e=>e.currentSrc||e.src).filter(Boolean)')+song_media
+                    if any(args.download_id in s and 'sil-100' not in s for s in sources):break
+                    page.wait_for_timeout(1000)
+            source=next((s for s in sources if args.download_id in s and 'sil-100' not in s),None)
+            if not source:
+                # v6 can expose a blob player plus audio_url=/api/forbidden.
+                # Use the authorized download dialog, never reconstruct/decode
+                # protected player media. Unlock consumes the account's download allowance.
+                try:
+                    page.get_by_role('button',name='More options',exact=True).first.click()
+                    page.get_by_role('menuitem',name='Download',exact=True).hover()
+                    dialog=page.get_by_role('dialog').filter(has_text='Download').first
+                    dialog.wait_for(state='visible',timeout=10000)
+                    dialog.get_by_role('button',name='WAV',exact=True).click()
+                    confirm=dialog.get_by_role('button',name=re.compile(r'^(Unlock & Download|Download)$')).first
+                    with page.expect_download(timeout=max(120000,args.timeout*1000)) as pending:
+                        confirm.click()
+                    dl=pending.value
+                    target=args.out/((args.title or args.download_id)+'.wav');dl.save_as(str(target))
+                    if dl.failure():raise RuntimeError(dl.failure())
+                    import hashlib,subprocess
+                    probe=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration','-of','json',str(target)]))
+                    if float(probe['format']['duration'])<1:raise RuntimeError('Downloaded audio is empty')
+                    target.with_suffix('.source.json').write_text(json.dumps({'provider':'Suno','song_id':args.download_id,
+                        'song_url':'https://suno.com/song/'+args.download_id,'sha256':hashlib.sha256(target.read_bytes()).hexdigest(),
+                        'download_kind':'authorized UI WAV download','duration':float(probe['format']['duration'])},ensure_ascii=False,indent=2),encoding='utf-8')
+                    log('Downloaded authorized WAV: '+str(target));ctx.close();return 0
+                except Exception as exc:
+                    page.screenshot(path=str(args.out/'authorized_download_failed.png'))
+                    (args.out/'authorized_download_status.json').write_text(json.dumps({
+                        'status':'not-confirmed','error':type(exc).__name__,
+                        'detail':str(exc).splitlines()[0][:240],
+                        'dialogs':page.locator('[role="dialog"]').all_inner_texts()},ensure_ascii=False,indent=2),encoding='utf-8')
+                    log('Authorized download UI did not complete: '+type(exc).__name__+'; use the existing normal browser session if needed.')
+                (args.out/'download_probe.json').write_text(json.dumps({'text':metadata,'buttons':page.locator('button').evaluate_all('(els)=>els.map(e=>({text:e.innerText,aria:e.getAttribute("aria-label")}))')},ensure_ascii=False,indent=2),encoding='utf-8')
+                ctx.close();return 4
+            from urllib.parse import urlsplit
+            parsed=urlsplit(source);host=parsed.hostname or ''
+            if parsed.scheme!='https' or not (host.endswith('.suno.com') or host.endswith('.suno.ai')):raise RuntimeError('Unexpected audio source host')
+            response=ctx.request.get(source)
+            if response.status!=200:raise RuntimeError('Audio download status '+str(response.status))
+            payload=response.body()
+            if len(payload)<100000:raise RuntimeError('Audio response is implausibly short; refusing placeholder')
+            target=args.out/((args.title or args.download_id)+'.mp3');target.write_bytes(payload)
+            import hashlib
+            target.with_suffix('.source.json').write_text(json.dumps({'provider':'Suno','song_id':args.download_id,'song_url':'https://suno.com/song/'+args.download_id,'audio_source':source,'sha256':hashlib.sha256(target.read_bytes()).hexdigest(),'download_kind':'existing library song; not generated during this run'},ensure_ascii=False,indent=2),encoding='utf-8')
+            log('Downloaded existing song playback audio: '+str(target));ctx.close();return 0
+        if args.library_probe:
+            button=page.locator('button:has-text("Filters")')
+            log('Filters controls: '+str(button.count()))
+            if button.count():button.first.click();page.wait_for_timeout(1500)
+            data={'text':page.locator('body').inner_text()[:24000],
+              'controls':page.locator('input,button,[role="checkbox"],[role="switch"]').evaluate_all('(els)=>els.filter(e=>e.offsetParent).map(e=>({tag:e.tagName,role:e.getAttribute("role"),text:e.innerText,aria:e.getAttribute("aria-label"),checked:e.getAttribute("aria-checked"),type:e.type,placeholder:e.placeholder}))')}
+            (args.out/'library_probe.json').write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf-8')
+            ctx.close();return 0
         if args.probe:
             dump = {
                 'url': page.url,
@@ -248,6 +450,9 @@ def main():
                     '(els)=>els.filter(e=>e.offsetParent).map(e=>e.innerText.trim()).filter(Boolean).slice(0,60)'),
                 'toggles': page.locator('[role="switch"],[role="tab"],[role="checkbox"]').evaluate_all(
                     '(els)=>els.map(e=>e.innerText.trim()||e.getAttribute("aria-label")||"").slice(0,40)'),
+                'body_text':page.locator('body').inner_text()[:18000],
+                'song_links':page.locator('a[href*="/song/"]').evaluate_all('(els)=>els.map(e=>e.getAttribute("href")).slice(0,60)'),
+                'image_sources':page.locator('img').evaluate_all('(els)=>els.map(e=>e.getAttribute("src")).filter(Boolean).slice(0,80)'),
             }
             page.screenshot(path=str(args.out / 'suno_probe.png'), full_page=False)
             (args.out / 'suno_probe.json').write_text(json.dumps(dump, ensure_ascii=False, indent=2))
@@ -288,7 +493,11 @@ def main():
             return 1
 
         if args.instrumental:
-            click_first(page, INSTRUMENTAL_SELECTORS, 'instrumental')
+            # Current v6 explicitly labels an empty lyric editor as instrumental.
+            if page.get_by_text('Start writing lyrics, or leave this empty for instrumental',exact=False).count():
+                fill_first(page,LYRICS_SELECTORS,'','instrumental-empty-lyrics')
+            else:
+                click_first(page, INSTRUMENTAL_SELECTORS, 'instrumental')
         elif lyrics:
             if not fill_first(page, LYRICS_SELECTORS, lyrics, 'lyrics'):
                 page.screenshot(path=str(args.out / 'suno_fail_lyrics.png'))
@@ -312,9 +521,10 @@ def main():
 
         # 记录已有 clip uuid，生成后找新增
         def clip_uuids():
+            receipt_ids={i for receipt in receipts for i in receipt.get('ids',[])}
             srcs = page.locator('img[src*="suno.ai/image"]').evaluate_all(
                 '(els)=>els.map(e=>e.getAttribute("src")||e.getAttribute("data-src")||"")')
-            out = set()
+            out = set(receipt_ids)
             for s in srcs:
                 m = re.search(r'image_(?:large_)?([0-9a-f-]{36})', s or '')
                 if m:
@@ -346,6 +556,10 @@ def main():
                     page.wait_for_timeout(5000)
                     if clip_uuids() - before:
                         return True
+                    if page.get_by_text('Generation failed',exact=True).count():
+                        page.screenshot(path=str(args.out/'suno_generation_failed.png'))
+                        log('页面明确返回 Generation failed；停止，不重复提交。')
+                        return False
                     ov = page.locator('div.fixed.inset-0')
                     if ov.count():
                         txt = ov.first.inner_text()[:200].replace('\n', ' | ')
@@ -360,8 +574,12 @@ def main():
                                 cl.evaluate('(e)=>e.click()')
                                 log(f'遮罩内确认: {csel}')
                                 break
-                        return True
-                log(f'create: {sel} 点了没反应，试下一个')
+                        # An overlay is not a job receipt. Stop after this one
+                        # submission if no clip id has actually been returned.
+                        page.wait_for_timeout(2500)
+                        return bool(clip_uuids()-before)
+                log(f'create: {sel} 已点击但未确认，停止以免重复提交')
+                return False
             return False
 
         if not try_create():
@@ -375,6 +593,11 @@ def main():
         new_uuid = None
         while time.time() < deadline:
             page.wait_for_timeout(5000)
+            if page.get_by_text('Generation failed',exact=True).count():
+                page.screenshot(path=str(args.out/'suno_generation_failed.png'))
+                log('页面明确返回 Generation failed；停止等待。')
+                ctx.close()
+                return 1
             new = clip_uuids() - before
             if new:
                 new_uuid = sorted(new)[0]

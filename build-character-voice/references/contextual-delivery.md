@@ -105,3 +105,11 @@ For a playful basketball exchange:
   (`--prompt`, `--out`, `--env-dir`). Treat its observations as advisory: blinded comparisons
   can be inconsistent, and a whole-scene pass may miss one odd line. Retain the reviewed
   audio hash and distinguish model observation from human listening and user acceptance.
+- After repeated feedback that a voice sounds weak, audition a different native actor.
+  A voice designed as frail can resist cheerful direction. Compare a short positive
+  acting instruction with the longer instruction; avoid endlessly adding negative
+  adjectives. Reuse the exact selected audition audio when the production line matches,
+  including its request and audio hashes, instead of silently drawing another take.
+- Keep audio-review questions neutral. Leading questions can produce inconsistent,
+  overly specific performance claims. The user's hearing overrides model approval;
+  one favorable model comparison remains provisional casting, not artistic acceptance.

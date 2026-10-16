@@ -27,6 +27,9 @@ Score the story rather than every line. Make music support the emotional arc whi
    - Preserve intentional music-free sections.
 
 4. Prepare assets.
+   - 用户或工作区明确指定平台时优先遵守，例如 Suno 配乐、火山环境音/配音。
+     下列历史默认后端不覆盖当前指示。记录每个 cue 的实际 provider 与素材摘要；
+     平台失败时明确待办，不让通用音效脚本把配乐静默重生成到另一平台。
    - Prefer a curated episode asset in `assets/audio/music/` or `materials/bgm/`.
    - **正式集 BGM 首选 Seed-Audio 1.0 大模型作曲**（2026-09-05 决议，取代
      此前"首选 Pixabay 真人曲目"的策略）：prompt 工艺见

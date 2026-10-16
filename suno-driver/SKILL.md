@@ -5,6 +5,35 @@ description: Suno 网页版自动化（Playwright 持久会话）—— 无公�
 
 # Suno Driver（网页自动化）
 
+## 本地凭据与下载真实性（2026-10-14）
+
+- 用户明确授权保存凭据后，Windows 可用 `scripts/suno_credentials.py --store`
+  将凭据保存到已忽略的 `.suno_profile/credentials.dpapi`，当前用户 DPAPI 加密。
+  `--check` 只报告是否可用；登录脚本优先环境变量，其次读取加密存储。不要把密码
+  写入记忆、技能、命令行或日志。加密写入和解密须处在相同 Windows 身份/执行上下文；
+  沙箱身份保存的文件曾在沙箱外无法解密。加密保存不代表永远无需二次认证。
+- Suno 播放器初始 `sil-100.mp3` 是静音占位，不是当前歌曲。`--download-id` 只接受
+  对应 song id 的真实媒体源，并检查下载响应。文件存在、HTTP 200 或歌曲页显示
+  正确标题都不能证明音频下载成功；还要解码、验时长与源摘要。S1E4 的占位下载已拒用。
+- 生成器记录提交响应的状态与 clip id；点击按钮超时且没有 receipt 时，写“生成未确认”，
+  不宣称成功。S1E4 后续通过常用浏览器取得生成回执和授权 WAV，见下节。
+
+## 2026-10-17：真实浏览器提交与授权下载
+
+- S1E4 持久无头会话可浏览作品，却在 Create 后失败或始终无生成回执；常用浏览器
+  的 Kimi WebBridge 会话成功提交 v6，返回两个 clip id。保留明确失败/超时证据后
+  切换已有登录的正常浏览器，不反复点击。仅点击或遮罩出现不代表任务已经创建。
+- 新播放器可能使用 blob，`audio_url` 返回 `/api/forbidden`，媒体另含编码元数据。
+  不提取/解码受保护播放流。正常路径是歌曲 **More options → 悬停 Download → WAV
+  → Unlock & Download**；首次解锁消耗账号下载额度，已解锁歌曲可再次下载。
+- UI 的合法下载响应返回 WAV 链接后，可直接保存该响应文件；临时签名 URL 不写入
+  提交内容。检查解码、时长、声道、SHA，并记录 song id、生成回执与编辑参数。
+  S1E4 实际取得 86.4s、48kHz 双声道 WAV；不能把早前的静音占位或失败记录当新结果。
+- `--download-id` 已补正常 WAV 对话框回退；按钮没有产生新 id 或明确报失败时停止，
+  避免多个选择器连续提交同一任务。请求故障日志仅记录主机/路径/状态，不保存凭证。
+  本机无头回退复测仍超时，不能写成 CLI 端到端成功；实际验证通过的是常用浏览器
+  提交与 Unlock & Download 后保存合法 WAV 的通路。失败时保留对话框截图和阶段信息。
+
 Suno **没有公开自助 API**（官方 API 仅企业定制 $499/月起）。本 skill 用
 Playwright 持久化会话驱动网页版，完成 生成→下载 自动化。
 
@@ -99,3 +128,20 @@ SUNO_EMAIL='you@gmail.com' SUNO_PASSWORD='***' \
   密码框是 `input[name="Passwd"]`；导航慢，要 `wait_for_selector` 等到可见再填。
 - Suno 头部 "Log in" 按钮对 `wait_for_selector`/`locator.click` 不稳定（明明
   可见却超时），直接 `page.evaluate` 按 innerText 找元素 `.click()` 可靠。
+
+## 2026-10-11（《迟到的一拍》P3）：Voices 音频上传建档 = 账号级封锁
+
+- **确诊**：`POST /api/persona/create/`（Bearer=抓 app 自带 studio-api 请求头）对上传 clip
+  返回 **403 "Voices cannot be made from audio uploads."**——前端 JS 里对应的门是
+  `personas-audio-upload` feature flag + `voices-geo` 地域门（`isAudioUploadDisabled`）。
+  本机账号两样都没有。选择器怎么校准都没用，别再试。
+- **上传本身能走通**（Voice 对话框 → Upload Audio → upload-finish → 选 Voice 芯片 →
+  Continue → initialize-clip 200）：上传的 clip 入库可生成，只是不能建档成 Voice。
+  脚本里这段流程已按 v6 校准（芯片与页面顶部 Voice 入口同文要限定对话框内点；
+  Continue 未选芯片时禁用，等它没用，要先看 upload-finish 再点芯片）。
+- **还能用的 Voice 路径**：从"生成出来的歌"建档 persona（persona_type='vox'，
+  root_clip_id=生成 clip）——不是上传音色，是 Suno 原生声线。要角色音色一致性
+  （对白 TTS 声线=歌声）的企划别走这条，走 volc-song-gen+Seed-VC 回退链。
+- 副产品 API 备忘：`/api/persona/get-personas/`（GET 列表）、`/api/persona/create/`
+  （POST，persona_type∈['vox','legacy']）、`/api/persona/get-persona/{id}/`；
+  Bearer token 抓 app 对 studio-api-prod 的任一请求头即可（user_config 必带）。
