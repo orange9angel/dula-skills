@@ -57,6 +57,8 @@ This workflow has two existing looks. Follow the user's established choice; clar
   [多视角拟合与失败复盘](references/multiview-character-fit.md)。先分清几何、
   UV、分层和遮挡问题；单张 90° 漂亮不能证明连续转面成立。70°—90°换脸感、
   裸头与带发不一致、耳发修改牵连正面时，读该文末的连续眼颊边界与耳发修订记录。
+  近眼偏圆时参照其“近眼投影与虹膜包裹”复盘；已获授权按角度并行修订时，执行
+  “并行角度候选的合并验证”，冻结候选源码后重新检查组合效果。
 - 用户希望沿用小雪 craft3d 的二维观感，或将生成网格与手绘工艺融合时，读
   [曲面角色与绘制外观](references/craft3d-drawn-characters.md)：连续造型、曲面五官、
   主发束、全身色块与生成前约束；区分造型方法和某个历史角色的验收状态。
