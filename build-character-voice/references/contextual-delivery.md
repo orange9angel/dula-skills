@@ -113,3 +113,19 @@ For a playful basketball exchange:
 - Keep audio-review questions neutral. Leading questions can produce inconsistent,
   overly specific performance claims. The user's hearing overrides model approval;
   one favorable model comparison remains provisional casting, not artistic acceptance.
+
+## Scene-specific replies instead of a uniform genre voice
+
+- S1E4 user review rejected a heroine's explanation as deliberately performed rather
+  than addressed to her worried classmate. Every line had inherited an instruction
+  for a smiling romantic-comedy performance, including the difficult admission.
+  A pleasing timbre and correct words did not establish a believable conversation.
+- Replace that uniform instruction with a concise situation: who just spoke, what
+  the character has observed, and what they want to communicate to that person.
+  For a difficult answer, direct the observation and honest admission; avoid adding
+  a list of voice-quality adjectives or requesting a smile through every beat.
+- Compare the preceding line plus the complete reply, at comparable loudness and
+  without score. Include a neutral same-actor take before assuming a new actor is
+  required. Preserve the selected audition audio, then rebuild final PCM and lips.
+  S1E4's revised takes passed content/timing checks and received a provisional model
+  preference; naturalness remains pending user listening, not an established cure.
