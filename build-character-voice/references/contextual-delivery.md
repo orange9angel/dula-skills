@@ -81,6 +81,20 @@ Bad uses:
 
 ## Continuity
 
+Measure reply gaps from the final placed PCM, not only adjacent story windows.
+In S1E4, two playful exchanges had about 2.81 and 3.00 seconds between a finished
+line and its reply, despite short gaps between their authored windows. New acting
+instructions alone did not change those holds. Review the preceding line, listener
+reaction and answer as one exchange. A short response can enter sooner, while a
+prop handover or an intentionally difficult answer may need its full pause.
+
+For an isolated audition, shorten a hold at an existing camera cut only after the
+visible action has completed; keep the selected score continuous across the edit.
+If adopted into the episode, revise story timing and regenerate dependent cues,
+audio, subtitles and lips. An editorial trial is not a new production timeline.
+When words or delivery change, align visemes to the exact new PCM. Do not reuse
+the old mouth timing or claim naturalness from alignment success alone.
+
 Review lines in scene order. Limit the difference between adjacent lines unless the story contains a real emotional turn. Keep a character's spectral identity stable even when energy changes.
 
 For a playful basketball exchange:
