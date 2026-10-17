@@ -60,6 +60,10 @@ This workflow has two existing looks. Follow the user's established choice; clar
 - 用户要求角色接近文生图、把三维角色渲染成二维画风，或希望像混合场景一样让
   生成图直接贡献成片细节时，读 [生成绘画直接用于角色](references/generated-character-paint.md)。
   原始已确认绘画是美术目标；程序截图不能充当独立参考来证明还原成功。
+- 曲面绘画出现面具感、聊天与唱跳角色不统一，或裙壳随动作脱节时，读
+  [晴印三维舞蹈修订](references/sunprint-dance-revision.md)：沿实际头面、髋膝和
+  表演实例定位问题。用户已授权自由选择工艺时，以最终融合效果决策，不再把
+  自绘或映射等技术选择交还用户；技术采样通过与用户美术认可分别记录。
 - 正面接近原画而 45°/65° 失真，或要把审美判断变成可重复工艺时，读
   [多视角拟合与失败复盘](references/multiview-character-fit.md)。先分清几何、
   UV、分层和遮挡问题；单张 90° 漂亮不能证明连续转面成立。70°—90°换脸感、
