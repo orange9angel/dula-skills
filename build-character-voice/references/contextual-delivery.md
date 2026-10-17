@@ -127,6 +127,15 @@ For a playful basketball exchange:
 - Keep audio-review questions neutral. Leading questions can produce inconsistent,
   overly specific performance claims. The user's hearing overrides model approval;
   one favorable model comparison remains provisional casting, not artistic acceptance.
+- Long stereo WAV uploads can time out before a review request reaches the service.
+  For advisory listening, make a small mono MP3 copy and retain the production WAV;
+  the reviewed copy's hash and its source must remain traceable. A 14 MB musical WAV
+  timed out during upload; the 24 kHz/96 kbps copy succeeded (2026-10-17).
+- Do not use audio-model prose as an alignment clock. In the same musical, a model
+  described timestamps beyond a 74.4-second file and contradicted its own singer map.
+  Reject those times; use known-text alignment for timing, and short phrase excerpts
+  for advisory singer-role checks. Ask who actually sings each phrase without showing
+  intended actor assignments. Short reviews still do not establish user acceptance.
 
 ## Scene-specific replies instead of a uniform genre voice
 
