@@ -30,6 +30,10 @@ imagegen 产物完全一致，零适配成本。
 
 ## 渲染工具
 
+用户明确要求文生图加自绘时，可用生成原画保住细节，程序做有限二维动作；这是
+混合路线，不是本 skill 的零生图纯绘制路线。已验证问题与能力边界见
+[生成原画与程序动作混合](references/illustrated-deformation.md)。
+
 SVG → PNG 走 dula-engine 已有的 Puppeteer 依赖，无新增依赖：
 
 ```bash
