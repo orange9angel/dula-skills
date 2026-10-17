@@ -30,6 +30,7 @@ dula-skills/
 ├── walk-director/       # 走路/起停/转身：2D cel、3D/IK 有限落脚、跟随运镜与接触验收
 ├── motion-transfer-video/# 动作迁移短视频（抖音素材下载 + seedance 多模态参考）
 ├── beatcut-edit/        # 音乐卡点剪辑（节奏检测 + 特效栈 + 表情卡点 + 变速）
+├── op-sequence/         # 动画片头工艺（歌先行双通道抽卡 + 拍网五段式蒙太奇 + 群像亮相/战壳生长秀 + 画外音 gag 收尾）
 ├── promo-cut/           # 正片 → 15-30s 卡点广告片（选段 + 定格语法 + 字卡，直出 mp4）
 ├── map-transition-ad/   # 地图转场创意广告（陶阿狗君式：地图 UI + 巡城变装 + swipe 卡点 + 音频驱动开口）
 ├── previz-animatic/     # 零成本平面预演（flatpreviz 库用法 + 镜头表/口型/视差纪律）

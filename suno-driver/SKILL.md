@@ -50,6 +50,17 @@ description: Suno 网页版自动化（Playwright 持久会话）—— 无公�
 - 生成后核对回执里的实际歌词与原文逐字相同。本次 571 字符、47 行一致，取得两个
   clip id 及 74.4s/71.56s 授权 WAV；这证明提交与下载正确，不证明歌手遵守角色分工。
 
+### 歌声验收的 whisper 阈值坑（2026-10-17《星屑战壳》OP 实测）
+
+- **whisper 默认 `no_speech_threshold=0.6` 会把 Suno 歌声整轨拒识成零段落**
+  （或只剩"字幕by索兰娅"式幻觉串），不能据此下"纯器乐"结论。复跑须用
+  `no_speech_threshold ≤0.2 + condition_on_previous_text=False`，base 模型即可
+  转出与歌词逐行对应的段落。pyin 的 voiced 率在重伴奏摇滚混音里也不可靠
+  （底鼓/贝斯会被判成 98Hz 男声）。
+- **现行 Suno 歌曲页（v6/chirp-hawk 期）歌词面板是纯静态渲染**，无 karaoke
+  逐词时间轴 DOM，`/words/`、`/aligned_words/` 等接口 404——不能用作人声判据。
+  判据优先级：clip metadata `make_instrumental` + 宽松参数 whisper 复跑。
+
 Suno **没有公开自助 API**（官方 API 仅企业定制 $499/月起）。本 skill 用
 Playwright 持久化会话驱动网页版，完成 生成→下载 自动化。
 

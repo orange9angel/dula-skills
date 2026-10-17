@@ -117,3 +117,14 @@ cd dula-story
    产出约 26.4s（v4.3 按曲式结构收尾，不补满请求时长）。下游需要精确时长
    时用 `apad=whole_dur=N` 补静音尾部，不要用 `-shortest`（会把视频轨也
    裁短）。纯音乐/无人声写法：prompt 直接声明"纯音乐，无歌词无人声"。
+8. **Mood 完整枚举（2026-10-17 100010 错误信息带回）**：Angry/Aggressive、
+   Calm/Relaxing、Chill、Cute/Playful、Dynamic/Energetic、Excited、Funny、
+   Happy、Healing、Inspirational/Hopeful、Sentimental/Melancholic/Lonely、
+   Miss、Mysterious、Romantic、Sorrow/Sad、Sweet_SA_MOOD、
+   Thrilling/Suspenseful/Tense、Weird、Groovy/Funky、Nostalgic/Memory、
+   Dreamy/Ethereal、Magnificent/Epic、Brisk/Carefree、Warm/Kind、
+   Confident/Determined、Lyrical/Ballad。热血动画 OP 用 `Magnificent/Epic`；
+   "Passionate" **不是**合法值。v4.3 `--instrument Drums,Electric_Guitar,Brass`
+   实测接受。注意：Epic+铜管配置也可能产出 72-99 BPM 的慢版（实测 3 候选里
+   2 首变慢），**BPM 是抽卡指标，选版时必须逐首实测**（librosa beat_track），
+   不能只看结构分。
