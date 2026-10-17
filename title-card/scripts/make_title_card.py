@@ -132,7 +132,8 @@ def subtitle(im: Image.Image, text, a):
 
 
 def render_card(bg_path, sub, out_dir, n_frames, ink: InkTitle,
-                reveal=(0.18, 0.66), dissolve_out=True, fade_black=False, fps=FPS):
+                reveal=(0.18, 0.66), dissolve_out=True, fade_black=False, fps=FPS,
+                in_mode="white"):
     src = Image.open(bg_path).convert("RGB").resize((W, H), Image.LANCZOS)
     out_dir.mkdir(parents=True, exist_ok=True)
     if fps <= 0:
@@ -160,7 +161,7 @@ def render_card(bg_path, sub, out_dir, n_frames, ink: InkTitle,
             im = subtitle(im, sub, min(1.0, (t - reveal[1]) / 0.25))
         im = im.convert("RGB")
         # 注意：ImageDraw 在 RGBA 画布上是像素替换而非混合，淡入淡出必须走 blend
-        if t < 0.15:
+        if in_mode == "white" and t < 0.15:
             im = Image.blend(im, Image.new("RGB", (W, H), (255, 255, 255)), 1 - t / 0.15)
         if dissolve_out and t >= total - 0.28:
             q = (t - (total - 0.28)) / 0.28
@@ -184,6 +185,8 @@ def main() -> int:
     ap.add_argument("--duration", type=float, default=1.2, help="秒")
     ap.add_argument("--fps", type=int, default=FPS, help="与成片帧率一致；默认 24")
     ap.add_argument("--reveal", default="0.18,0.62", help="墨韵侵蚀起止（秒,秒）")
+    ap.add_argument("--in-mode", choices=["image", "white"], default="white",
+                    help="入场方式：底图直接可见 / 白光消退；片头首帧需有画面时选 image")
     ap.add_argument("--out-mode", choices=["white", "black"], default="white",
                     help="出场方式：白光爆发 / 淡黑")
     ap.add_argument("--out-dir", required=True, help="帧序列输出目录")
@@ -200,6 +203,7 @@ def main() -> int:
         dissolve_out=(args.out_mode == "white"),
         fade_black=(args.out_mode == "black"),
         fps=args.fps,
+        in_mode=args.in_mode,
     )
     return 0
 
