@@ -81,3 +81,28 @@ Seedream 纹理+法线派生+背景板/连续天空，几何动画不动只换�
 - 口型：OP 一般不对口型；角色唱歌镜头走 song-lipsync
 - 场景纹理：hybrid-craft-scene；字卡：title-card；ED：credits-sequence
 - 正片预告剪辑（有正片后）：promo-cut
+
+## 音频通道偏好（监制 2026-10-17 明确）
+
+- **配乐**：Suno 会员通道优先（边际成本零+风格上限高），volc-song-gen 全自动兜底
+- **配音/音效/环境音**：全走火山（seed-tts-2.0 + Seed-Audio）。**不要**用
+  fighting-sfx 程序合成当正式音效（只能打样）——《星屑战壳》R2 因此整轮返工。
+- Seed-Audio 批量：逐支 prompt+`.source.json` 溯源+skip-if-exists（参考
+  stardust_clad_op `tools/gen_sfx.py`）；环境底床做三道节律验收，连续性检查
+  要单轨验（别量混音，歌曲尾奏回落会误判 dropout）。
+- **AAC 编码过冲**：混音 wav 卡 −1.8dBFS 不够，上限 −2.2dBFS 留编码余量。
+
+## R2-R2.6 实战补充（《星屑战壳》）
+
+- **多场景跳切**：OP 要跨场景（登场分场景→打斗跨场景硬切→冲锋一场一镜汇聚）。
+  多场景同存按段切 visible（硬切压拍，禁止渐隐穿帮）；timeline 每段带 scene 字段。
+- **穿戴件**：悬浮环是雷区（"腰上圆圈挂铁片"被监制点名），贴身纪律和
+  clad_fit 探针见 character-modeler。
+- **出拳接缝**：目标点 ≤.85 臂长 + 出拳拍 `noSwing`（跑步摆臂叠加会顶爆
+  reach 钳位）+ 三角肌盖遮断面；新角色先量臂长再摆道具目标点。
+- **肖像/审片帧要 solo 隔离**（render --shots 加 per-shot 隐藏其他角色），
+  否则其他角色按谱面姿势乱入镜头（悬浮腿事故）。
+- **画外音 gag 可升级为真人出镜**：女神坐圣物上晃腿说台词比纯画外音效果好；
+  口型用能量包络轨即可（OP 不需要逐字视素）。
+- **接手被叫停的并行轮先 `git status` 盘点半成品**：评估可用性后合并，
+  比推翻重做省一整轮。
