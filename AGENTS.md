@@ -22,8 +22,8 @@ dula-skills/
 ├── cel-look/            # 二维画面整理：稳定轮廓/可选速写、色块阴影、脸部图形、曝光节奏
 ├── build-continuous-story-images/# 跨模型的连续分镜生图与角色锁定
 ├── direct-episode-audio/# 配音、环境音、音效、配乐的声音总导演
-├── build-character-voice/# 语境化角色配音与逐句后期
-├── build-ambience-foley/# 环境音、Foley 与事件音效
+├── build-character-voice/# 标准配音工艺链（选声→逐句演绎→缓存三元组→后期→QC→口型；火山-only）
+├── build-ambience-foley/# 标准环境音/Foley 工艺链（Seed-Audio 生成→三道验收→折尾环→摆点对位；火山-only）
 ├── f5-tts-voice/        # 可选的 F5 个性化配音后端
 ├── episode-scoring/     # 剧情与画面驱动的 BGM
 ├── walk-director/       # 走路/起停/转身：2D cel、3D/IK 有限落脚、跟随运镜与接触验收

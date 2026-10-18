@@ -10,6 +10,8 @@ Make the world audible without narrating every visible motion. Use picture, dial
 ## Workflow
 
 1. Read the episode context.
+   - **先读标准工艺链 [references/standard-ambience-pipeline.md](references/standard-ambience-pipeline.md)
+     （Seed-Audio 生成纪律/底床三道验收/折尾环/摆点对位的火山-only 流水线）。**
    - Read `script.story`, `config/audio_direction.json`, the active picture timeline, scene contract, existing SFX assets/tags, music cues, and exclusions.
    - Read [references/selection-and-mix.md](references/selection-and-mix.md) before adding sounds.
    - Preserve rejected sounds recorded in `exclusions`.

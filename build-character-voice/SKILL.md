@@ -10,6 +10,8 @@ Create acting first and audio processing second. Preserve a believable native vo
 ## Workflow
 
 1. Read context before choosing parameters.
+   - **先读标准工艺链 [references/standard-voice-pipeline.md](references/standard-voice-pipeline.md)
+     （选声→演绎→缓存→后期→QC→口型的火山-only 流水线，9章/星屑战壳定型）。**
    - Read `script.story`, `config/audio_direction.json`, `config/voice_config.json`, the visual timeline, and existing tone/audio manifests.
    - For each line, consider the previous line, expected response, relationship, subtext, visible action, shot distance, and scene-level emotional arc.
    - Read [references/contextual-delivery.md](references/contextual-delivery.md) before changing pitch, formants, speed, breath, or SOX effects.
