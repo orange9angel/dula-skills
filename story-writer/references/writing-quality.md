@@ -98,3 +98,13 @@ directing-craft checks (see `directing-craft.md`):
 Any dimension below `3` or a failed directing check rejects the draft.
 Rewrite the weakest beat and its setup together — never polish isolated
 words. Then rerun structural and registry validation.
+
+## Unicode integrity in Windows production
+
+When writing Chinese scripts from Windows PowerShell, avoid piping a Python program
+containing Chinese literals through the shell's default native-process encoding. In
+the 2026-10-19 serial rewrite, the timing and tags validated while every dialogue line
+had silently become ASCII question marks. Write the UTF-8 source with `apply_patch`
+or an explicitly UTF-8 file, then execute that file. Read back representative dialogue
+and inspect character integrity before compiling or paying for synthesis. Parser success
+does not prove that the authored words survived transport.

@@ -172,3 +172,23 @@ explicit user request
 ```
 
 When the reviewed plan conflicts with `script.story`, update the story or cue materialization so the story remains the timing authority; do not silently create two timelines.
+
+## Final-stem evidence after a serial rewrite
+
+Keep dialogue, score, ambience and Foley/SFX as separate final stems. Check that their
+sum agrees with the exported mix within PCM quantization error, and compare speech
+with the other stems over genuinely voiced samples. A loud combined mix does not prove
+speech is audible: music or impacts can supply that energy.
+
+In the 2026-10-19 human-opponent rewrite, regenerated speech changed both attack-name
+lengths and the release timing. Store a distinct release cue when the attack starts
+after its spoken name; derive SFX and picture from that cue, and rebuild the lip envelope
+from the exact voice PCM used in the final mix. Footsteps should come from actual landing
+transitions, then receive a density/perspective review; sounding every small visible
+movement is not the goal.
+
+An audio model's observation is advisory. It can identify a boot sample that sounds like
+a squeaking door or a wind bed that resembles thunder, but may also overstate certainty
+or claim synchronization without seeing picture. Keep the audio hash, prompt, observation
+and its limits. Recheck the corrected source and its mixed context rather than treating
+transcription accuracy or a positive model verdict as artistic approval.
