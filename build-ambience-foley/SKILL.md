@@ -48,13 +48,13 @@ Make the world audible without narrating every visible motion. Use picture, dial
      ② 每秒 RMS 包络 max/mean < 1.4，0.5–1s 周期自相关 < 0.15；③ 4–8kHz 嘶声
      占比 < 0.2，超线做 EQ（highpass 60 + lowpass 1500）；节律不达标用 0.4s 滑动
      包络归一化兜底（E04 river_water 修复工艺）。
-   - Prefer a clean, appropriate recorded or curated sound with compatible perspective.
+   - Use a clean, appropriate recorded or curated sound with compatible perspective.
    - Preserve source URL, creator, license, and any attribution requirement.
-   - Procedural synthesis 仅限非真实/风格化声音（魔法、机械、UI 音等），
-     **真实环境音禁止程序化**（E04 教训：程序化河水的 0.5s 汩声节律穿帮，
-     程序化夜风被观众判"不自然"）。老素材沿用前必须跑同样的节律验收，
+   - **一切声音走火山 Seed-Audio 生成**（2026-11-05 监制令）：算法合成
+     （程序生成波形）一律禁止进正片——真实环境音与风格化战斗音效同禁
+     （E04 程序化河水/夜风穿帮 + 星屑战壳 R2 程序合成音效整轮返工；
+     原 fighting-sfx skill 已删除）。老素材沿用前必须跑同样的节律验收，
      "以前用过"不等于免检。
-   - Use the sibling `fighting-sfx` workflow only for deliberately stylized combat effects.
 
 6. Build and mix the layer.
    - Keep beds low and stable; avoid audible looping.

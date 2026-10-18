@@ -26,7 +26,6 @@ dula-skills/
 ├── build-ambience-foley/# 环境音、Foley 与事件音效
 ├── f5-tts-voice/        # 可选的 F5 个性化配音后端
 ├── episode-scoring/     # 剧情与画面驱动的 BGM
-├── fighting-sfx/        # 格斗音效生成
 ├── walk-director/       # 走路/起停/转身：2D cel、3D/IK 有限落脚、跟随运镜与接触验收
 ├── motion-transfer-video/# 动作迁移短视频（抖音素材下载 + seedance 多模态参考）
 ├── beatcut-edit/        # 音乐卡点剪辑（节奏检测 + 特效栈 + 表情卡点 + 变速）
@@ -52,6 +51,11 @@ dula-skills/
 AI 在开发时应直接阅读对应目录下的 `SKILL.md` 和 `references/` 资料。
 
 ## 常用工作流
+
+制作、续集或重制动画前，读取共用标准
+[质量与制作效率](direct-animation-craft/references/production-efficiency.md)。
+通用工艺维护在对应 skill；系列圣经仅记录剧情/角色/系列风格，单集文件仅记录
+该集素材、决定和验证证据，均引用共用标准，避免复制规则后发生漂移。
 
 ### 创作新剧集
 
@@ -137,6 +141,9 @@ npx dula-render ./episodes/<episode>
 
 ## 重要约定
 
+- **音频一律火山（2026-11-05 监制令）**：配音/环境音/音效今后一律火山
+  （seed-tts-2.0 + Seed-Audio），算法合成（程序生成波形）禁止进正片——
+  原 fighting-sfx skill 与 dula-engine 程序音效链已删/废弃，历史集仅兼容保留。
 - 所有新增 skill 或开发规范统一放到 `dula-skills/`（本仓库），不要在其他仓库或根目录新建规范文档。
 - **翻车写回纪律**：任何生产事故/新发现，任务收尾时必须把教训写回对应 skill 并提交。
 - `script.story` 是唯一的时序数据源，所有配置标签的优先级：`.story` DSL > `config/choreography.json` > 硬编码默认值。

@@ -21,7 +21,6 @@ Dula 动画短片生成系统的 **AI 创作知识库**（第四层：知识层�
 | `character-modeler` | 程序化角色建模（Three.js 手绘 + sketch 手绘描边） |
 | `f5-tts-voice` | 个性化配音生成 |
 | `episode-scoring` | 语义化 BGM 生成 |
-| `fighting-sfx` | 格斗音效生成 |
 | `walk-director` | 走路/移动镜头：walk-cycle cel 选择、`walk_follow`+`motionGroup` 跟随运镜、时间线展开与抽帧验收 |
 | `pixabay-downloader` | 音频素材下载 |
 

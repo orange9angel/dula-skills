@@ -85,8 +85,9 @@ Seedream 纹理+法线派生+背景板/连续天空，几何动画不动只换�
 ## 音频通道偏好（监制 2026-10-17 明确）
 
 - **配乐**：Suno 会员通道优先（边际成本零+风格上限高），volc-song-gen 全自动兜底
-- **配音/音效/环境音**：全走火山（seed-tts-2.0 + Seed-Audio）。**不要**用
-  fighting-sfx 程序合成当正式音效（只能打样）——《星屑战壳》R2 因此整轮返工。
+- **配音/音效/环境音**：全走火山（seed-tts-2.0 + Seed-Audio）。算法合成音效
+  一律禁用（2026-11-05 起连打样工具都撤了：fighting-sfx skill 已删除、
+  引擎程序音效链 deprecated）——《星屑战壳》R2 因此整轮返工。
 - Seed-Audio 批量：逐支 prompt+`.source.json` 溯源+skip-if-exists（参考
   stardust_clad_op `tools/gen_sfx.py`）；环境底床做三道节律验收，连续性检查
   要单轨验（别量混音，歌曲尾奏回落会误判 dropout）。
