@@ -172,3 +172,63 @@ SUNO_EMAIL='you@gmail.com' SUNO_PASSWORD='***' \
 - 副产品 API 备忘：`/api/persona/get-personas/`（GET 列表）、`/api/persona/create/`
   （POST，persona_type∈['vox','legacy']）、`/api/persona/get-persona/{id}/`；
   Bearer token 抓 app 对 studio-api-prod 的任一请求头即可（user_config 必带）。
+
+## 环境音/配音能力实测（2026-10）
+
+**页面结构变了**：`/create` 现在有三个模式页签 **Songs / Speech / Sounds**
+（skill 既有脚本只覆盖 Songs）。Sounds 面板：描述框
+`textarea[placeholder="Describe the sound you want"]`，另有 Type=One-Shot/Loop、
+BPM、Key 选项，定位语是"Create short samples — effects, loops, and one-shots"。
+Speech 面板：台词框 `textarea[placeholder="Write or paste your speech"]` +
+演绎描述框 `textarea[placeholder="Describe the delivery: tone, pacing, mood and setting"]`
++ Male/Female 声线芯片。Songs 的 style 框 placeholder 变成动态示例文案
+（如 `jolly, martial, jazz-fusion, ambient pop, 432 hz`），旧选择器表里
+`Enter style tags` 已失效，`xpath=(//textarea)[2]` 仍能蒙中。
+
+**无头 Create 被 hCaptcha 拦截（硬阻断）**：无头会话点 Create 后只有
+`POST /api/c/check` 200 → `hcaptcha-endpoint-prod.suno.com/getcaptcha/...`，
+**始终不发出 `/api/generate`**，约 4 分钟后页面弹 toast "Generation failed.
+Something went wrong."（不是内容审核，是提交根本没发生）。同一 profile 换
+**headed**（带 `--disable-blink-features=AutomationControlled`）即放行：
+`POST /api/generate/v2-web/` 200，4 秒返回 2 个 clip id。结论：**生成提交必须
+headed 或走常用浏览器**，无头只剩浏览/下载可用。这与 2026-10-17 条目现象一致，
+此处补上了网络层根因证据。
+
+实验设计：3 次成功提交（每次出 2 个 clip，取第一条下载），产物与分析在
+`dula-story/tmp/suno_eval/`（gitignored；含 meta.json/分析 JSON/频谱图，
+驱动草稿 `suno_experiment.py` 同目录）。
+
+### 环境音（Sounds 模式）——能用，定位是"短样本"
+
+| 产物 | prompt 要点 | 时长 | 指标 |
+|------|------------|------|------|
+| `amb_night_wind.wav` | 夜晚荒野：冷风过草原+远处篝火噼啪+稀疏蟋蟀，no music/no voices，Type=Loop | 12.81s | 48kHz 双声道，I=-15.8 LUFS，LRA 11.3，TPK -1.6 dBFS，RMS -17.2 dB |
+| `amb_underwater.wav` | 水下：闷低频水流+慢气泡+远鲸鸣，no music/no voices，Type=Loop | 14.01s | 48kHz 双声道，I=-14.8 LUFS，LRA 12.0，TPK -1.2 dBFS，RMS -16.7 dB |
+
+- prompt 模式：全英文声景白描 + 显式 `no music, no melody, no voices, ambient bed`。
+- 频谱自查：两条都无持续谐波横线（无音乐旋律结构）；风声条全频带宽带噪声、
+  低频占优；水下条能量集中在 2kHz 以下随频率滚降、高频散在竖纹（气泡状事件）。
+  符合环境音底床形态。**听感本身未经人耳验收**。
+- **坑 1**：UI 选 WAV、走 Unlock & Download，实际落盘文件是 **MP3 192kbps**
+  （ffprobe codec=mp3，附 mjpeg 封面流）——Sounds/Speech 的"WAV"不是真 WAV，
+  与 Songs 拿到的真 48k WAV 不同，接入管线前按 MP3 处理。
+- **坑 2**：Type=Loop 的产物仍带淡入淡出（水下条末尾 M 落到 -45dB），
+  不能直接无缝循环；长夜景底床需自行交叉淡化拼接。
+- 建议用途：动画夜景/水下等短氛围底床的零成本补充来源；正式环境音主链仍是
+  build-ambience-foley/Pixabay。生成耗时：提交→clip 4s，端到端（含下载）≈45s。
+
+### 配音/说话（Speech 模式）——能产出非歌唱人声，正确性需人工试听
+
+| 产物 | 输入 | 时长 | 指标 |
+|------|------|------|------|
+| `vo_epic_line.wav` | 台词「纵使长夜漫漫，吾以残躯为炬，照见黎明。」+ delivery "Male, deep low voice, slow measured epic narration, cinematic trailer gravitas, Mandarin Chinese..." | 19.20s | 48kHz 双声道，I=-17.1 LUFS，LRA 7.0，TPK -2.3 dBFS，RMS -19.9 dB |
+
+- 频谱可见 4 个离散语音段（1.5-3.2s / 4.5-6.3s / 9.8-10.8s / 11.5-12.3s），
+  低频基频强（符合低沉男声方向），段间及尾部有低电平持续底（约 -60dB），
+  无歌唱式持续谐波旋律——**确实是非歌唱的 spoken word 产出**。
+- 19 字台词铺成 19.2s，语速不可控、段落节奏由模型自定；台词内容逐字正确性
+  **未做 ASR 验证**（本机 venv 无 whisper），需人工试听后才能入库使用。
+- Male/Female 声线芯片点击未生效（选择器未命中），本次靠 delivery 文本指定
+  男声；需要声线芯片时先 --probe 校准。
+- 建议用途：单句史诗旁白/预告片腔可用作补充；正式角色台词仍走
+  seed-tts 链（逐句可控、有 QC、声线一致性好），Suno Speech 不适合对白主力。
