@@ -168,3 +168,18 @@ rotation.x=+π/2，半径盖过最大仰角视野，透明加色水纹光斑，o
 + god ray 锥形加色薄件垂挂缓摆 + 蓝绿 Fog 压远景（雾距近=水下能见度低，
 兼当远景融合剂）。仰拍顶机位探帧验收不露平板边界。人物可读性靠正面补光
 （别一潭死蓝：hemi 1.1+ 加 top/fill 双方向光）。
+
+## 场景晨化/换时段与纹理共存（2026-11-05 星屑战壳 S1E1 R14）
+
+夜版定型的混合场景改晨景（ep 侧 morningize 类皮肤）时，两套调色会互相覆盖：
+
+- **顺序=applyHybrid 先、时段皮肤后**；皮肤层检测 `hybridApplied.length`，
+  有纹理就**跳过 floor/far/stone 的 set/multiplyScalar 压色**（applyHybrid 的乘色
+  已按纹理调定，再压=mud），只管灯光强度/雾距/天顶色。
+- **背景板筒在就不加程序化天球**（球在筒内盖住背景板）；`scene.background`
+  若被时段层覆盖，注意资产侧采样渐变兜底失效，用时段渐变顶。
+- **资产侧夜景提亮会吹白晨版背景板**：applyHybrid 里 `brightness(1.4~1.45)`
+  是给夜景图定的；ep 侧同口径 redraw 压回（canvas filter brightness ≈0.72 后
+  重包 CanvasTexture 换 `sourceMap` uniform），zenithColor uniform 换时段色。
+- **夜用剪影带/加色叠层**：剪影带（远景层次件）晨雾里太黑要提亮进霾；
+  夜用加色（AdditiveBlending）沙痕层晨景必吹白，压 opacity 留形。
