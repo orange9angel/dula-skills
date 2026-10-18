@@ -300,3 +300,20 @@ Three.js 是执行环境，基础几何体是建模选择；两者不要混为�
   "首渲染滞后" → 最小触发矩阵定位；调试页用完即删。
 - **重写时 phase 分支别把旁观角色写成 invisible**：考核官入场段三人被误设
   visible=false（凭空消失违反退场纪律）——静立目送也是表演，排面是对比出来的。
+- **viewer 链新集三件套=viewer.html+viewer.js+render.mjs**（2026-11-05 S1E2 实录）：
+  init 脚手架拒绝非空目录后手工拷链，漏拷 viewer.html → 页面静默 404，ready 永不置位、
+  无任何报错输出（渲染端只见 waitForFunction 超时）。页面挂起先查 viewer.html 在不在。
+- **相机构造器参数错位会渲染成"竖缝"**：`new PerspectiveCamera(44,W,H,.05,200)` 少写
+  `/H` → aspect=W、near=H、far=.05，夜戏黑场里以为相机进了几何体，实为投影全错。
+  探针法：`page.evaluate` dump `camera.fov/camera.aspect` 两行直接定案。
+- **FX/道具可见性初值=false + 每帧 update**（同轮）：FX builder 只在命中窗口内调用，
+  其初始态（可见、停在原点）会在顺序渲染里裸奔成画面焦点；而 seek 倒序先访问过窗口
+  又把它们隐藏——顺序/倒序就此分叉。纪律：特效件创建即 visible=false，builder 的
+  update 每帧都调（自管窗口外隐藏）；同理 setState（如 setMarkGlow）必须先于 update(t)
+  调用，顺序反了=状态滞后一帧，数值探针抓不到、像素 seek 抓得到。
+- **走拍守卫形态又复发**：`if(w<1)` 在 w=0（未到起步时刻）也挂 walk 标志 → gait 探针
+  抓到 0.05m/s 假 bout。全库起手式按 `0<a<1` 审（R13 已写回的"后写块踩走拍"是姊妹形态）。
+- **clad_fit 窗口落静立域子窗**：撞击/承压极端帧的甲件嵌入是物理本体；贴身断言窗口
+  挪到段内平稳子窗即绿（不改阈值）。怪兽 assets：剪影优先（拉长躯干+肩峰+楔头），
+  动作集=潜行拖步/扑击前伸/肩撞立压/倒地侧翻/逃窜，位移靠根不走连续四足步态；
+  接触帧锚点（爪尖/肩/背中/颈纹）挂 body 子 Object3D 供探针活取。
