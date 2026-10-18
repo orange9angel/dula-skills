@@ -82,6 +82,13 @@ Create acting first and audio processing second. Preserve a believable native vo
 
 ## 2026-10-14：中文请求与时长缓存
 
+- 用户否决声线“呆板”时，要重新选择原生角色音色；在同一清冷声线上增加音量或
+  统一 happy 标签不能代替换演员。保留平静/情绪点的 A/B 干声，按上下文分配演绎。
+  如果执行环境不支持音频输入，明确写未听审；目录气质、ASR、F0 和时长只能支持
+  暂定接片，不能记录为盲听通过。用户已授权自主制作时继续出可听的版本供复评。
+- 复用逐字 DTW 与视素实现时直接调用 `dula-assets/lib/audio/`，避免复制另一集的
+  口型代码。换声后重建最终 PCM、逐字对齐、静音门控和分轨摘要；只换音乐无需重合成对白。
+
 - Windows 旧 PowerShell 的 here-string 管道到 `python -` 可能把中文变为 `?`。
   S1E4 的 Seed-Audio 因此返回 `TTSInvalidText:ReadableTextRatioTooLow`，并非服务没开通。
   中文脚本通过文件补丁写入 UTF-8 后直接执行；发送前检查请求文本没有成串 `???`，
@@ -91,3 +98,17 @@ Create acting first and audio processing second. Preserve a believable native vo
   最终分轨口型；不截断词尾或悄悄给 QC 增大实际不存在的窗口。
 - viewer 自有声音链可以从最终放置的 PCM 分轨做 10ms 能量口型，检查静默阈值及
   非说话窗内口型为零。记录这是能量开合，不是音素视素或戏感验收。
+
+## 声线重铸轮施工流程（2026-10-18 星屑战壳 R12：整集升到 9章 水准）
+
+- **重铸≠全盲换**：已在水准线上的声线不动（文本+声线+演绎未变的句子缓存复用，
+  tag 含 text|speaker|delivery 三元组，改任一才重录）；只重录换声线/换演绎档的句。
+- **逐句演绎档用 seed-tts 原生控件**：`speech_rate`（-50..100）+ `context`（TTS 2.0
+  自然语言演绎指令，如「冷冽宣告终结技，压迫感」「全力呐喊出招名，高声压炸场」）——
+  喊招档 rate +10~15、冷傲档 rate −5；别用后期 atempo 调速充演绎。
+- **克隆音色（ICL_*）可直接挂 seed-tts-2.0 resource 合成**（R12 实测 rexueshaonian/
+  aomanjiaosheng 直出成功，沿用 youmodaye 先例）；新克隆音色入集先跑一句小样本。
+- **响度统一在进混音前做**：逐句峰一化 .5 → 再进 voice_gain/喊招增益；喊招顶格后
+  若整体归一触发属预期（上限 −2.2dBFS 保 AAC ≤0.8）。
+- 时长随声线/演绎全变：重录后必须重测末字时刻回推压拍摆点（喊招末字压接触帧）、
+  重排对白窗、重派生口型包络轨，视频随包络重渲。
