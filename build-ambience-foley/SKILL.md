@@ -73,3 +73,12 @@ Make the world audible without narrating every visible motion. Use picture, dial
 - Do not alter dialogue performance, voice timing, or music composition.
 - Do not compensate for a weak visual edit by filling every gap with sound.
 - Respect the director plan's priority: dialogue, then story-critical SFX, then ambience, then music.
+
+## 踩坑记录
+
+- **稀疏底床（晨风/安静环境）循环接缝 dip（2026-10-18 stardust_clad_s1e1）**：
+  篝火/嘈杂底床内容密，1s 交叉淡化接缝不会跌破连续性阈；晨风类稀疏底床
+  源文件自身就有风息低谷（1s 块 RMS 掉到均值 42%），铺排叠化和半周期双层
+  都治不好。正法：源内折尾做无缝环（尾部 1.5s 折进头部再平铺）+ 慢 AGC
+  （增益域 0.8-2.2、1s 平滑防泵浦）抬平低谷。AGC 平滑用 uniform_filter1d，
+  别用 np.convolve 全核（O(n·sr)，75s×48k 直接挂起）。
