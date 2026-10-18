@@ -204,6 +204,11 @@ Open the screenshots in `episodes/<name>_showcase/storyboard/` (or the path the 
 
 ## 踩坑记录
 
+- **发型加件的材质工艺必须与底发一致（2026-10-18 stardust_clad_op R8 阿箸）**：
+  animatedHead（bioarmor 正本）底发是 unlit `MeshBasicMaterial` 顶点色；episode 侧
+  加发壳/发缕时若用 toon 材质深色件，夜景阴影里读成纯黑"眼罩带"，与底发撕成两截。
+  加件用同工艺 Basic + 同色阶（底发 #503a3b→#423037 渐变，加件 #47343a/#3a2b31）
+  即融合；发色想压黑也要跟着底发色阶走，不要直接上 #17 级纯黑。
 - **新角色辨识度（2026-10-14 S1E4）**：独立参数表并不证明画面能区分角色。
   用户再次否决女主与男主过像后，实际同时改了下颌/眼形、长发外轮廓、领口和裙装，
   并在原机位双人画面复核。共享绑定可以保留；角色设计不能仅靠换色或小幅缩放。
