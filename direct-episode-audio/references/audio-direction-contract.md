@@ -192,3 +192,10 @@ a squeaking door or a wind bed that resembles thunder, but may also overstate ce
 or claim synchronization without seeing picture. Keep the audio hash, prompt, observation
 and its limits. Recheck the corrected source and its mixed context rather than treating
 transcription accuracy or a positive model verdict as artistic approval.
+
+In a later opening-dialogue review, the audio model described sub-second pauses where
+the measured schedule contained several seconds, and denied a music layer that was
+present in the exported stem. Reject those claims as timing/mix evidence. Keep the raw
+response with a reliability note; measure silence from the actual PCM and judge its
+dramatic purpose against picture. Rephrasing the prompt until the model approves is
+not a substitute for this check.
