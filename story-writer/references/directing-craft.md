@@ -5,6 +5,17 @@ disciplines that can each be checked as pass/fail. Use this reference
 together with `writing-quality.md`: that file makes an episode competent,
 this file makes it directed.
 
+## Scope by format
+
+Choose the series tone and format before applying these patterns. The warmth,
+balance-ending and short-runtime prescriptions below describe the healing short
+format; they are not requirements for every genre. A battle serial can sustain
+danger, unresolved conflict and consecutive advancement episodes. Use
+[连载战斗剧导演工艺](serial-battle-direction.md) for that mode: each episode owes
+a meaningful change, while a fight, moral dispute or journey may remain open.
+The audience may lead, follow or share a character's knowledge when the chosen
+point of view warrants it; record the difference instead of imposing one order.
+
 ## 1. Structure As Meaning
 
 Choose the telling order because of what it means, not for novelty.
@@ -137,8 +148,9 @@ Map intensity per beat before drafting. Rules:
 2. **候选对比要打分不要拍脑袋**：两个候选大纲按统一维度（赌注/因果/角色弧/
    可拍性/系列负载）1-5 打分，任何维度 <3 直接否；赢家也先过对抗式批评 pass
    （找"谷底不够底""反扑没挣到"这类结构伤）再落剧本。
-3. **必杀技是挣到的不是摆设**：角色先用各自缺陷连输三次（无脑冲/过度计算/蛮力），
-   谷底把缺陷认领为战术，合体招才有情感重量；招名卡只给挣到的招。
+3. **必杀技是挣到的不是摆设**：该次案例以三人的缺陷造成三次失败，再转为协作。
+   复用的是“失败提供信息，选择改变打法”的因果，不是固定失败三次或必用合体招。
+   连载中的其他战斗可用撤退、营救、谈判或承担损失完成变化。
 4. **谷底空镜+眼神特写是结构件**：最静拍（空镜）紧挨转折前；眼神特写
    ≥3 处（谷底动摇→咬住 / 对手认可 / 结尾看火）各管一个转折，不是装饰。
 5. **对白按合成实测时长重排谱面**：写完的对白先生成一轮量时长，超窗句用

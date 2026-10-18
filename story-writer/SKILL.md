@@ -22,6 +22,7 @@ Read only the references needed for the task:
 - Read [references/story-format.md](references/story-format.md) before authoring or changing `.story` syntax.
 - Read [references/writing-quality.md](references/writing-quality.md) before outlining, writing comedy, adapting research, or running the critic pass.
 - Read [references/directing-craft.md](references/directing-craft.md) before outlining. It defines the structural disciplines (structure as meaning, information asymmetry, the empty beat, emotional rhythm, balance endings) that the outline and critic pass are checked against.
+- For serialized battles, palace journeys, or fights spanning episodes, read [references/serial-battle-direction.md](references/serial-battle-direction.md). It connects beliefs, readable tactics, performance, sound, and lasting consequences without requiring a fixed episode length.
 
 Discover the current engine vocabulary instead of copying a stale list:
 
@@ -33,7 +34,7 @@ The catalog includes official registrations, animation source groups, reachable 
 
 ## Workflow
 
-1. **Resolve the brief.** Extract theme, audience, tone, target duration, cast, episode directory, and whether the request is a new story or a rewrite. Infer noncritical omissions from repository context. Default to a concise 60-120 second episode when duration is not specified.
+1. **Resolve the brief.** Extract theme, audience, tone, target duration, cast, episode directory, and whether the request is a new story or a rewrite. Infer noncritical omissions from repository context. For a standalone short with no duration brief, default to 60-120 seconds. For a requested serial, follow its dramatic beats and continuity; do not compress it into the short-form default or assume every conflict must end this episode.
 2. **Inspect the target.** Read its existing `script.story`, `bootstrap.js`, relevant config keys, and nearby episode conventions. Run `catalog` before selecting visual tags.
 3. **Research when useful.** Use available web search/fetch tools when the user requests internet research, facts may be current, or canon/cultural context affects the premise. Prefer primary or authoritative sources. Record a compact fact list and source URLs in working context; do not paste citations into dialogue. If web tools are unavailable, say so and avoid invented facts.
 4. **Build story candidates.** Form at least two compact beat approaches with different comic or thematic engines. Select the stronger one using the rubric in `writing-quality.md`; do not merely combine both.

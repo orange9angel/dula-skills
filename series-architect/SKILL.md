@@ -14,6 +14,19 @@ The series bible in the content repository (e.g.
 skill maintains: worldview locks, the foreshadow registry, and the
 information ledger. Read the target series bible before any planning.
 
+## Choose the series mode
+
+The single-event closure, warm hidden layer and texture/advancement alternation
+below are defaults for the healing short format. For a requested battle serial,
+read [连载战斗剧导演工艺](../story-writer/references/serial-battle-direction.md).
+Preserve episode integrity through a local result or relationship change;
+the fight and journey can span episodes. Consecutive advancement is allowed.
+Track injuries, damaged equipment, positions, obligations and knowledge across
+episode boundaries. Use the long-arc cooldown rules for registered foreshadowing,
+not immediate tactical clues, and choose who leads the information gap per scene.
+Do not impose one palace per episode or lengthen an episode merely to match a
+television slot.
+
 ## Core Rules
 
 - **Episode integrity is untouchable.** Every episode must satisfy a

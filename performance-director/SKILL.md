@@ -16,6 +16,15 @@ description: Optimize facial expressions and body actions in a Dula script.story
 具体做法见 [格斗表演与正片接入](../direct-animation-craft/references/fight-performance.md)。
 下文角色和动作仅作标签流程示例；应用时沿用用户当前剧集、人物与既有资产。
 
+## 连载战斗剧的表演入口
+
+处理信念冲突、闯关连载、招式破解或跨集战斗时，先读
+[连载战斗剧导演工艺](../story-writer/references/serial-battle-direction.md)。
+为关键台词和出手标记“注意对象—潜台词—决定—主动作—听者反应”，把观察破绽、
+迟疑、承担风险和战后疼痛落实到实际表演。大招、表情和对白应服务同一个决定。
+此资料不扩大本技能的自动改写边界；若因果、集界或台词本身需要重写，转交
+`story-writer`，在用户已授权的剧本修改范围内执行。音轨联动由声音总导演负责。
+
 ## 定位
 
 ```
