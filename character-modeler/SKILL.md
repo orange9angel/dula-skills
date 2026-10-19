@@ -16,6 +16,7 @@ Keep the skill in `dula-skills/character-modeler/`. New characters live in `dula
 - For an existing procedural character, retain its working performance and improve the relevant silhouette, anatomy, face or material; use the workflow below.
 - For text-to-image followed by Tripo or another image-to-mesh backend, use [build-image-to-3d](../build-image-to-3d/SKILL.md). This skill still owns the character design and acceptance. Skip primitive-only construction instructions for an imported mesh.
 - For continuous limbs, joint deformation and shot-specific correction, use [direct-animation-craft](../direct-animation-craft/SKILL.md). A static attractive model is not proof of a usable speaking character.
+- For armor that reads as folded paper or disappears from behind, read [animated metal armor](../hybrid-craft-scene/references/animated-metal-armor.md): distinguish reflective shading from wraparound shell volume, inspect inner walls and rims, and retain the working equipment contact anchors.
 - Identify the real integration target first: `CharacterBase` or an episode's self-contained viewer. Preserve the selected target's pose, face, readiness and equipment contracts.
 
 For a generated candidate, review front/side/back and hands, hair and clothing separation; then test one line with gaze change, an arm lift or grasp, and a step. Report static appearance, rig presence, deformation and face support separately. Do not replace an accepted environment as a side effect of changing a character.
