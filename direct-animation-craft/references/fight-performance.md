@@ -111,5 +111,12 @@ R15 的脸发精修不能证明该表演分支也被使用。证据为本集
 - 蓄力期的反派自救必须有镜头覆盖。剧本写了拆扣，连续数秒只拍主角喊招，
   观众仍会看到对手停等；在出招前插入腕扣特写和双方同框。
 
-共享实现入口：`dula-assets/lib/craft3d/combat-light.js`。已完成的数值与抽帧检查
-属于特定剧集证据，不能据此宣称该积木已获得用户的审美认可。
+共享实现入口：`dula-assets/lib/craft3d/combat-light.js`；姿势与圣衣接口见
+`dula-assets/characters/stardust/README.md`。
+
+2026-10-19，用户对 `stardust_clad_s1e2` 的R19《焰阶宫·盾与暗链》反馈
+“效果好了非常多”，并要求同步文档、skill与Git。复用基线为该集213秒正片
+`output/stardust_clad_s1e2_palace_r19.mp4`：保留独立宫域、双人圣衣结构区别、
+命中点声光与对手自救镜头。认可及成片哈希记录在该集
+`storyboard/palace_r19/user_feedback.json`。这是特定成片的改进认可；换场景或
+角色仍复核接触及轮廓，数值检查本身不能替代用户反馈。

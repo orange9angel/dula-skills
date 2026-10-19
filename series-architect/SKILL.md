@@ -25,7 +25,9 @@ Track injuries, damaged equipment, positions, obligations and knowledge across
 episode boundaries. Use the long-arc cooldown rules for registered foreshadowing,
 not immediate tactical clues, and choose who leads the information gap per scene.
 Do not impose one palace per episode or lengthen an episode merely to match a
-television slot.
+television slot. When the user explicitly requests one territory and one story
+per episode, preserve that structure and distribute the cast accordingly;
+the permission to span episodes must not override their chosen format.
 
 ## Core Rules
 
