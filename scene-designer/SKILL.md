@@ -17,6 +17,12 @@ Translate dramatic intent into a validated visual contract and Dula runtime impl
 
 ## Load Context
 
+- 宫门后仍透出天空时，检查真实门洞、侧壁、顶板和后墙。深色面片不能代替有深度的
+  遮挡；用正面和斜机位的穿门射线确认命中内殿实体，并复查新增墙体是否挡住结尾镜头。
+- 入退场穿环境且角色检查已过时，沿用
+  [环境路径覆盖复盘](../direct-animation-craft/references/environment-path-audit.md)。
+  `cameraObstacles` 不自动等于人物碰撞；contract 必须有实际消费它的运行检查。
+
 - For an accepted text-to-image background plus interactive 3D geometry, keep [hybrid-craft-scene](../hybrid-craft-scene/SKILL.md). A successful character generation trial is not a reason to rebuild the location.
 - If a specific prop or building needs a generated mesh, use [build-image-to-3d](../build-image-to-3d/SKILL.md) for that asset, then validate scene scale, walkability, camera coverage and contacts here. A single room image does not establish a complete navigable room.
 
