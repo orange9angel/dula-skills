@@ -118,3 +118,11 @@ Visually inspect every generated shot. For critical shots, verify the exact cont
 - **浏览器 probe 脚本的 /tmp 路径坑（2026-10-07 bio_armor_academy_s1e2）**：Git Bash
   的 /tmp 与原生 Windows Python 的 /tmp 解析不同——probe 脚本放 episode tmp/ 或
   仓库根，别用 /tmp 中转，否则 bash 建的文件 Python 找不到。
+- **改成各宫独立故事要更换空间机制**（2026-10-19）：重命名旧总坛或换背景
+  不能满足“各自地盘”。为本宫设置独立路径、地形签名、生活用途和关键交互物，
+  同步更新演员实例化名单与系列分集安排；旧全员群战入口保留作历史文件。
+- **viewer 编译事件与 SceneBase 回调分开声明**：`Beat/Cue/Act` 可能由单集编译器
+  生成配置后被 viewer 消费，不能为了让通用 scene_tool 转绿而添加无效回调。
+  保存编译器、产物、消费入口映射；运行 JSON Schema、story catalog、全时间轴
+  viewer 检查，并明确通用回调验证尚未覆盖这一模式。不可把 schema 通过写成
+  scene_tool 全项通过。
