@@ -470,6 +470,12 @@ def main():
             log('--style 或 --style-file 必填')
             return 2
 
+        # The persistent create page may reopen in Speech or Sounds. Select the
+        # actual product mode before looking for the song's Advanced editor.
+        songs = page.get_by_role('tab', name='Songs', exact=True)
+        if songs.count() and songs.first.is_visible():
+            songs.first.click()
+            page.wait_for_timeout(800)
         # Advanced 模式：已在 Advanced 就别再点（再点会切回 Simple，字段消失）
         LYRICS_PROBE = 'div.lyrics-editor-content[contenteditable="true"], textarea[placeholder*="Start writing" i], textarea[placeholder*="Describe your lyrics" i]'
         try:

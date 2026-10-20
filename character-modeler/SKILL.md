@@ -21,6 +21,12 @@ Keep the skill in `dula-skills/character-modeler/`. New characters live in `dula
 
 For a generated candidate, review front/side/back and hands, hair and clothing separation; then test one line with gaze change, an arm lift or grasp, and a step. Report static appearance, rig presence, deformation and face support separately. Do not replace an accepted environment as a side effect of changing a character.
 
+When adapting an accepted procedural character, inspect its final appearance
+composition, not just its base class. If custom shading uses `onBeforeCompile`
+and `customProgramCacheKey`, verify those hooks after cloning a material for a
+new palette. A copied color can silently lose the accepted shading; compare the
+actual head and hair at the same camera before extending the change.
+
 For a textured imported face that blinks and speaks but still feels lifeless, read
 [Imported face performance](references/imported-face-performance.md). Separate acting timing
 from rig limitations, and compare a short dialogue shot before extending the change to an episode.

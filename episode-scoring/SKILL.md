@@ -12,6 +12,10 @@ Score the story rather than every line. Make music support the emotional arc whi
 1. Read the complete context.
    - Read `script.story`, `config/audio_direction.json` when present, the active visual timeline, dialogue direction, ambience/SFX plan, existing music cues, and current mix config.
    - Identify scene-level arc, turns, reveals, action peaks, punchlines, and moments that should remain exposed.
+   - 在本工作区，新集音乐遵循
+     [逐集创作约束](../direct-animation-craft/references/production-efficiency.md)：
+     按本集重新选曲/作曲；保留当前单集已认可配乐的纪律，不授权复制上一集整曲。
+     判断复用要查实际来源与摘要，文件名和本集目录不能证明是新曲。
 
 2. Respect the shared direction.
    - `policies.musicMode=directed`: use the reviewed `music` cues.
