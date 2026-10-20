@@ -48,6 +48,10 @@ This workflow has two existing looks. Follow the user's established choice; clar
 
 ## Load Context
 
+- 头发像粗管、厚叶片或头套，或用户要求上网学习绘制技巧时，读
+  [图形化发型学习与试样](references/layered-hair-study.md)。先核对轮廓、发流、
+  分层与底壳覆盖，再实现；薄片、细发丝或两档明暗本身都不保证造型改善。
+
 - 需要主动发现角色问题或用户反复补漏时，先用
   [character-attention-review](../character-attention-review/SKILL.md) 组织维度、
   证据覆盖与漏检回测；以下人物审美参考提供结构关系和具体历史案例。
