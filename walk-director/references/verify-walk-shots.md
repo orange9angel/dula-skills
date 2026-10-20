@@ -33,7 +33,10 @@ ffmpeg -y -i ./episodes/<episode>/output/walk_10-18.mp4 -ss 0.75 -frames:v 1 /tm
 
 ## 逐镜头验收清单
 
-每段走路至少抽 3 帧（起点、一次 A→B 切换两侧、终点前），核对：
+以下是 2D cel 的基础检查项。几个相位的静帧只用于初筛，不能独自证明动态自然度。
+主代理还须主动检查完整起步、换脚和收步过程，具体方法见
+[直接审片与迭代](../../direct-animation-craft/references/embodied-character-performance.md#由主代理直接审片并推动修改)。
+抽帧应覆盖起点、一次 A→B 切换两侧和终点前，核对：
 
 - **换腿可读**：相邻抽帧腿部相位明确不同（哪条腿在前、哪只脚跟离地，
   指名核对，不接受"好像在动"）。背影镜头放宽不得——读不出就是 cel
@@ -77,4 +80,5 @@ python ../dula-skills/walk-director/scripts/validate_walk.py ./episodes/<episode
 python ../dula-skills/walk-director/scripts/validate_walk.py ./episodes/<episode> --strict   # warning 也算失败
 ```
 
-结构验证通过只是入场券；以上抽帧清单全过才算走路镜头验收完成。
+结构验证和以上 cel 检查通过后，仍需主代理检查身体的承重、肩胯协调与起停衔接。
+记录实际查看方式和覆盖范围；稀疏相位图不能据此宣布走路自然度验收完成。
