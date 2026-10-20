@@ -48,6 +48,10 @@ This workflow has two existing looks. Follow the user's established choice; clar
 
 ## Load Context
 
+- 耳朵像白色饰件、同心环或贴纸，读
+  [耳廓简化与头部连接](references/drawn-ear-study.md)。先看耳的朝向、耳根和
+  脸部肤色，再决定结构线；不要以“耳朵可见”代替结构正确。
+
 - 头发像粗管、厚叶片或头套，或用户要求上网学习绘制技巧时，读
   [图形化发型学习与试样](references/layered-hair-study.md)。先核对轮廓、发流、
   分层与底壳覆盖，再实现；薄片、细发丝或两档明暗本身都不保证造型改善。
