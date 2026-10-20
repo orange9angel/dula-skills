@@ -1,0 +1,4 @@
+interface:
+  display_name: "角色注意力巡检"
+  short_description: "按造型、表情和动作维度主动发现角色问题，用实片复验并从漏检案例持续改进"
+  default_prompt: "使用 $character-attention-review 主动检查当前角色和连续动作，记录各维度证据与缺陷，推进已授权修复，并把后来发现的漏检写回检查方法。"

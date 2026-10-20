@@ -42,6 +42,9 @@ This workflow has two existing looks. Follow the user's established choice; clar
 
 ## Load Context
 
+- 需要主动发现角色问题或用户反复补漏时，先用
+  [character-attention-review](../character-attention-review/SKILL.md) 组织维度、
+  证据覆盖与漏检回测；以下人物审美参考提供结构关系和具体历史案例。
 - 用户要求人物更好看、更像原画或积累审美经验时，先读
   [人物审美判断](references/character-aesthetics.md)：先执行其中“多维度问题发现”，
   用独立原画与当前整图列出主要差距、证据、可见范围和优先级，再决定修什么。

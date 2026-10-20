@@ -18,6 +18,7 @@ dula-skills/
 ├── performance-director/# 表情/动作表演优化
 ├── scene-designer/      # 场景设计与实现规范
 ├── character-modeler/   # 程序化角色建模（Three.js 手绘 + sketch 描边 + 手部造型纪律）
+├── character-attention-review/ # 主代理按注意力维度主动发现角色问题、复验修复并从漏检学习
 ├── direct-animation-craft/# 动画作画监督：手脚造型、四肢曲线、关键姿势、变形与逐镜修型
 ├── cel-look/            # 二维画面整理：稳定轮廓/可选速写、色块阴影、脸部图形、曝光节奏
 ├── build-continuous-story-images/# 跨模型的连续分镜生图与角色锁定
@@ -61,10 +62,12 @@ AI 在开发时应直接阅读对应目录下的 `SKILL.md` 和 `references/` �
 
 本工作区由当前主代理直接承担视觉判断。用户要求评价、对标或迭代视频时，先读取
 实际画面与动作过程，运用自己的视觉判断发现问题；动态评价困难本身不构成寻找
-外部评分模型的理由。不要要求用户逐张截图替代主动审查。按任务联用
-`direct-animation-craft`、`walk-director` 等既有 skill，不另建重复的评价体系。
+外部评分模型的理由。不要要求用户逐张截图替代主动审查。角色审片、对标、自主
+迭代以及“用户提醒后才看见”的问题，先用
+[character-attention-review](character-attention-review/SKILL.md) 组织注意力巡检
+和漏检学习，再联用 `direct-animation-craft`、`walk-director` 等进行具体修复。
 每轮留下所看片段、具体缺陷、修改和复看结果；未修改或未观察的项目如实标明。
-执行细节见 [直接审片与迭代](direct-animation-craft/references/embodied-character-performance.md#由主代理直接审片并推动修改)。
+执行细节见上述 skill；每次后来发现漏项，保留原判断并回写有效的注意提示。
 这些要求用于约束执行，不代表加载 skill 就会自动审片或保证审美达标。
 
 ### 创作新剧集
