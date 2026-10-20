@@ -83,6 +83,11 @@ boil/随机时钟、共面几何或描边内漏、透明裁切阈值、亚像素
   头发的亮面随束面组织，统一高度的横亮带容易像发箍。精修对照应包含上一版，
   具体眼型、发束框架和挂点问题见 [曲面角色工艺](../character-modeler/references/craft3d-drawn-characters.md)。
   色彩改善不等于领口、袖根语义边界已经修好。
+- **整体明暗被误做成球壳明暗（2026-10-20 S1E3 R6）**：去除逐束管状高光后，
+  候选用头壳径向量着色，并按固定高度增加亮带。侧后面仍像帽壳，横带又跨过
+  不同束面。主束转折、交叠暗部和整团明暗需同时成立；先看实际亮面形状再查
+  shader。此轮为用户指出后的诊断，尚未修复，见
+  [发型多角度复核](../character-modeler/references/layered-hair-study.md)。
 
 - sketchify 的 boil 必须由渲染时间驱动（`BoilSystem.update(time)`），
   用 wall clock 会破坏离线渲染的确定性（V17 已验证同帧逐字节一致）。
