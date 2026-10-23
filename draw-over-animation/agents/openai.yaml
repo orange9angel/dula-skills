@@ -1,0 +1,4 @@
+interface:
+  display_name: "二维作画与表演修正"
+  short_description: "在三维动画底稿上逐镜重画表情与关键姿势，处理曝光、遮挡和连续性"
+  default_prompt: "使用 $draw-over-animation，在现有动画底稿上制作逐镜二维表情和动作修正，先验证代表性短片。"

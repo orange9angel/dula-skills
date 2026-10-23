@@ -21,6 +21,7 @@ dula-skills/
 ├── character-attention-review/ # 主代理按注意力维度主动发现角色问题、复验修复并从漏检学习
 ├── direct-animation-craft/# 动画作画监督：手脚造型、四肢曲线、关键姿势、变形与逐镜修型
 ├── cel-look/            # 二维画面整理：稳定轮廓/可选速写、色块阴影、脸部图形、曝光节奏
+├── draw-over-animation/ # 3D底稿上的逐镜二维作画：表情、肢体/整人物原画替换、曝光与遮挡
 ├── build-continuous-story-images/# 跨模型的连续分镜生图与角色锁定
 ├── direct-episode-audio/# 配音、环境音、音效、配乐的声音总导演
 ├── build-character-voice/# 标准配音工艺链（选声→逐句演绎→缓存三元组→后期→QC→口型；火山-only）

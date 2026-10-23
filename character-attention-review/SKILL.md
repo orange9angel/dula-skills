@@ -114,6 +114,7 @@ next_action/evidence`。状态为 `open/in_progress/fixed/deferred/disproven`；
 | 起步、换脚、停步、转身 | [walk-director](../walk-director/SKILL.md) |
 | 注意对象、台词意图与表情时点 | [performance-director](../performance-director/SKILL.md)，先确认实际执行层 |
 | 明暗、轮廓与二维画面组织 | [cel-look](../cel-look/SKILL.md) |
+| 模型限制下的逐镜表情/肢体/整人物重画 | [draw-over-animation](../draw-over-animation/SKILL.md) |
 | 发力人声、Foley与声画配合 | [direct-episode-audio](../direct-episode-audio/SKILL.md)，保留已认可对白和音乐 |
 
 复看目标缺陷是否减轻、是否过修、是否伤及相邻部位和已认可性质；最后返回完整
