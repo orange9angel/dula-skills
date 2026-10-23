@@ -155,6 +155,10 @@ npx dula-render ./episodes/<episode>
 
 ## 重要约定
 
+- **动态视觉特效统一用粒子（用户明确要求）**：招式、锁链火焰、命中及场景火把、
+  炉火、烟、火星、余烬均执行 [粒子特效规则](direct-animation-craft/references/particle-effects.md)。
+  禁止菱形/星形闪光、几何火舌、光环、折线光束等非粒子替代。
+
 - **音频一律火山（2026-11-05 监制令）**：配音/环境音/音效今后一律火山
   （seed-tts-2.0 + Seed-Audio），算法合成（程序生成波形）禁止进正片——
   原 fighting-sfx skill 与 dula-engine 程序音效链已删/废弃，历史集仅兼容保留。

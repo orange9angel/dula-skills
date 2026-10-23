@@ -16,7 +16,7 @@ export function timelineBounds(file){
  if(!spans.length||spans.some((s,i)=>s[1]<=s[0]||(i&&s[0]!==spans[i-1][1])))throw Error(`Invalid or non-contiguous timeline: ${file}`);
  return{start:spans[0][0],end:spans.at(-1)[1]};
 }
-function puppeteerFor(root){
+export function puppeteerFor(root){
  try{return createRequire(path.join(root,'package.json'))('puppeteer');}catch{}
  for(let dir=root;;dir=path.dirname(dir)){
   const pkg=path.join(dir,'node_modules/dula-engine/package.json');

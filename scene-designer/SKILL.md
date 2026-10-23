@@ -91,6 +91,10 @@ Visually inspect every generated shot. For critical shots, verify the exact cont
 
 ## Non-Negotiable Runtime Rules
 
+- 动态视觉特效遵守[粒子特效规则](../direct-animation-craft/references/particle-effects.md)：
+  招式、锁链附焰和场景火把/炉火/火盆、烟与余烬都必须是粒子；禁止非粒子图形替代。
+  contract 中记录发射器的场景锚点、遮挡、启停和照明关系，并检查实际渲染入口。
+
 - Custom `{Event:RevealCake}` dispatches to `revealCake()` with no options. Do not rely on custom event parameters unless the engine explicitly handles that event.
 - A prop animated in world coordinates must be parented to the scene, reparented with `scene.attach()`, or explicitly converted into parent-local coordinates.
 - Hiding a character is a story state: record `offstage`, `onstage`, or `concealed`, the concealing prop, and the later reveal/exit.

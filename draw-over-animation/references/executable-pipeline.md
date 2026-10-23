@@ -122,11 +122,34 @@ const [x,y]=controls.deform(celId,imageX,imageY,authoredDx,authoredDy);
 烘焙→渲染→打包→检查：7 个动作采样、6 个输出帧、5 次确定性检查通过。
 这是可移植性验证，不是第二集的艺术验收。
 
+完整绘画导出曾在切镜边界出现一次PNG字节不等；独立顺序/跳转复现仅47个像素
+相差1色阶。不能直接删除失败检查或报告“全部像素相同”。可用
+`scripts/review_seek_tolerance.py --episode <episode> --config <review.json>` 对保存的
+无损图对按显式上限复核；配置给 `exact_report,output,tolerance,pairs`，每对给
+`t,sequential,seek`。原报告必须保留，复核报告明确图对是重新采集而非原导出缓冲。
+该工具不自动发现失败原因，也不允许用宽松阈值掩盖位置、形变或状态变化。
+
 跨帧率夹具曾暴露并排打包继承原片帧率的问题；现明确将两路对齐到试片 fps，并按
 输出帧数检查。已有服务也可能不识别 `.mjs` 的 MIME；浏览器模块使用 `.js` 后验证。
 完整多角度动画、自动 clean plate、自动骨架识别和走路原画生成均不在已验证能力内。
 
 ## 粒子与场景接合
+
+`particle-effects-stage.js` 将资产库 `particleCloud` / `combustionBurst` / `hearthFire`
+合成到二维镜头，提供 `drawFire(ctx,t,view,defs)`、`drawStream(ctx,t,view,spec)` 和
+`drawBurst(ctx,t,view,events)`。发射器锚点、起止和颜色由单集传入；三类都使用真实
+粒子寿命和绝对时钟，无几何火焰兜底。背景火源须传背景自己的摄影变换，不能误用
+人物层的推近。读取[粒子规则](../../direct-animation-craft/references/particle-effects.md)。
+
+真实3D参考导出入口：
+
+```powershell
+node <skill>/scripts/capture_references.mjs --episode <episode> --config config/reference_capture.json
+```
+
+配置包含 `url,adapter,width,height,output,samples`，每个sample有唯一 `id` 和参考
+时刻；适配器导出 `async capture(sample,config)`，在浏览器中返回 `{image,state}`，
+`image` 是PNG base64。这只负责采集，是否保留骨架姿势与角色身份仍需在作画后比较。
 
 用户保留二维人物、但偏好原有发光粒子时，复用原资产效果，而非强迫所有图层使用
 同一平涂画法。[particle-stage.js](../assets/particle-stage.js) 接受 `THREE`、`renderer`、
