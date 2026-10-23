@@ -6,7 +6,7 @@
 需要 Node、Puppeteer、Python+numpy、ffmpeg/ffprobe，以及当前 episode 的静态服务。
 Puppeteer 从指定 episode 的依赖或上级工作区的 dula-engine 依赖解析。
 
-## 一条入口，五个步骤
+## 一条入口，按需要选择步骤
 
 ```powershell
 node <skill>/scripts/pipeline.mjs --episode <episode> --config config/draw_over.json --step prepare
@@ -14,6 +14,8 @@ node <skill>/scripts/pipeline.mjs --episode <episode> --config config/draw_over.
 node <skill>/scripts/pipeline.mjs --episode <episode> --config config/draw_over.json --step render --render
 node <skill>/scripts/pipeline.mjs --episode <episode> --config config/draw_over.json --step package
 node <skill>/scripts/pipeline.mjs --episode <episode> --config config/draw_over.json --step probe
+# 已授权把试片接回正片时
+node <skill>/scripts/pipeline.mjs --episode <episode> --config config/draw_over.json --step integrate
 ```
 
 `render` 不带 `--render` 时仅导出配置中的代表帧与构建记录。窗口由试片 `.story`
@@ -123,3 +125,38 @@ const [x,y]=controls.deform(celId,imageX,imageY,authoredDx,authoredDy);
 跨帧率夹具曾暴露并排打包继承原片帧率的问题；现明确将两路对齐到试片 fps，并按
 输出帧数检查。已有服务也可能不识别 `.mjs` 的 MIME；浏览器模块使用 `.js` 后验证。
 完整多角度动画、自动 clean plate、自动骨架识别和走路原画生成均不在已验证能力内。
+
+## 粒子与场景接合
+
+用户保留二维人物、但偏好原有发光粒子时，复用原资产效果，而非强迫所有图层使用
+同一平涂画法。[particle-stage.js](../assets/particle-stage.js) 接受 `THREE`、`renderer`、
+`makeAura`、画幅和像素/米比例。`makeAura` 当前适配
+`dula-assets/lib/craft3d/combustion-particles.js` 的 `combustionAura` 返回结构，包含
+`group/flame/smoke/embers/update`；不是任意粒子工厂都能直接接入。
+
+每帧用 `stage.update(t,{view,base,power,start,height,color})` 对齐二维镜头，按
+`stage.draw(ctx,'back') → 人物 → stage.draw(ctx,'front')` 合成。粒子以相对于人物画面
+平面的 Z 中心分组，前层默认减弱，保留脸和动作。它不替代复杂多人物深度遮挡。
+烟使用普通透明叠加，发光火焰/火星使用加亮；把二者一次性按普通 alpha 叠到背景，
+此次试作的发光明显发灰。原粒子绝对时钟和固定种子继续保留，反向取帧仍需检查。
+
+[cel-integration.js](../assets/cel-integration.js) 提供软接触影、简单方向投影和角色 alpha
+范围内的轻微环境色。`drawGroundContact(ctx,{x,y,radiusX,radiusY,opacity,cast})` 使用
+原画脚点，调用方先应用与人物相同的摄影变换。`createCelIntegration({width,height})`
+返回的 `draw(ctx,celImage,{warmPoint,warmRadius,firePoint,firePower,time})` 保留原轮廓，
+用 `source-atop` 限定着色区域。投影是有限画面的绘制近似，不能称为物理阴影通过。
+
+原画已获认可时，先小幅调整光色和接触关系；只靠大范围模糊会损伤线稿。把“原画
+文件哈希未变”“未启用新模式时像素回归一致”与主代理对实际画面的判断分别记录。
+
+## 将同长窗口接回正片
+
+配置添加 `integration: {output, report, crf?}`，由
+[replace_window.py](../scripts/replace_window.py) 执行。窗口沿用 `pilot.timeline`，输出
+为新文件。要求试片与正片同画幅、同帧率且长度严格匹配，端点落在整数帧。
+执行器按帧裁切原画面、插入试片、接回后段；完整音轨直接从原片复制。
+
+检查总帧数、替换边界/中点、完整音频包哈希与解码 PCM 哈希。图像需要重新编码，
+窗口外来自原片不等于逐像素无变化；边界图像误差记录在报告。另抽出切镜前后帧列
+检查叙事衔接，技术通过不能消除两套画风之间的风格差异。首次实际集成验证为
+213 秒、6390 帧中的 163–174 秒，音频包与 PCM 均与原片完全一致。

@@ -52,8 +52,8 @@ export async function runPipeline({episode,config,step,render=false}){
   write(manifest,next);
  }
  if(step==='prepare'){console.log(JSON.stringify({prepared:cfg.runtime?.directory??null}));return;}
- if(step==='package'){
-  const script=fileURLToPath(new URL('./package_pilot.py',import.meta.url));
+ if(step==='package'||step==='integrate'){
+  const script=fileURLToPath(new URL(step==='package'?'./package_pilot.py':'./replace_window.py',import.meta.url));
   const proc=spawn('python',[script,'--episode',root,'--config',configFile],{stdio:'inherit',windowsHide:true});
   const [code]=await once(proc,'close');if(code!==0)throw Error(`Packaging exited ${code}`);return;
  }
@@ -114,6 +114,6 @@ export async function runPipeline({episode,config,step,render=false}){
 
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const args=process.argv.slice(2),value=k=>{const i=args.indexOf(k);if(i<0||!args[i+1])throw Error(`Missing ${k}`);return args[i+1];};
- if(args.includes('--help'))console.log('node pipeline.mjs --episode PATH --config CONFIG.json --step prepare|bake|render|package|probe [--render]');
+ if(args.includes('--help'))console.log('node pipeline.mjs --episode PATH --config CONFIG.json --step prepare|bake|render|package|probe|integrate [--render]');
  else await runPipeline({episode:value('--episode'),config:value('--config'),step:value('--step'),render:args.includes('--render')});
 }
