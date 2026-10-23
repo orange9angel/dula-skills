@@ -41,6 +41,9 @@ description: 走路、后退、起停与转身的制作和验收。用于 2D 换
   [references/keyframe-walk-shots.md](references/keyframe-walk-shots.md)（**动手前必读**）。
 - cel 相位生成顺序与逐张验收清单：读
   [build-continuous-story-images/references/walk-cycles.md](../build-continuous-story-images/references/walk-cycles.md)。
+- 整人物二维原画需要限定机位的局部腿控制时，复用
+  [draw-over-animation 的腿层与支撑目标](../draw-over-animation/references/full-episode-direction.md)。
+  先分离腿与披风/手臂，检查新露出区域；目标锁定不代替实际鞋底连续帧验收。
 - 3D 管线（`Event:Move`、跟走运镜选型、步速匹配公式、平滑 Follow 模板）：读
   [references/story-dsl-walk.md](references/story-dsl-walk.md)。
 - 剧集自有程序角色、IK 或独立 viewer：读

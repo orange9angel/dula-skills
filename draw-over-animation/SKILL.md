@@ -29,6 +29,9 @@ description: 在已有三维或三渲二动画上制作逐镜二维作画层，�
 - 实现跟踪、遮挡、曝光、导出或检查能力缺口：读[Dula接入](references/dula-integration.md)。
 - 烘焙动作、导出试片、跨集复用控制器：读[共享执行工具](references/executable-pipeline.md)。
   通用代码在本 skill 的 `scripts/` 和 `assets/`；不从另一集复制整套 tools。
+- 将已认可方案覆盖整片，或同时补全身表情、发梢和支撑关系：读
+  [整集作画与局部控制](references/full-episode-direction.md)。用户明确要求整片时，
+  用完整时轴验收覆盖；把一个新窗口接回旧片不等于完成整片改造。
 
 ## 在现有流程中的位置
 
