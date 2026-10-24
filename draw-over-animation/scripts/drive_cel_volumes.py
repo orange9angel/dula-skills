@@ -72,6 +72,8 @@ def main():
     args=ap.parse_args();root=args.episode;cfg=json.loads((root/args.config).read_text(encoding='utf-8'))
     base=json.loads((root/cfg['layersConfig']).read_text(encoding='utf-8'))
     out=root/cfg['output'];out.mkdir(parents=True,exist_ok=True)
+    rgba_dir=root/cfg['rgbaDirectory'] if cfg.get('rgbaDirectory') else None
+    if rgba_dir:rgba_dir.mkdir(parents=True,exist_ok=True)
     for folder in ['frames','revised','layers']:(out/folder).mkdir(exist_ok=True)
     w,h=base['size'];yy,xx=np.mgrid[:h,:w].astype('float32');grid=(yy,xx)
     layerdir=root/base['output']/'layers'
@@ -200,6 +202,7 @@ def main():
         rgba=over(warped[3],over(warped[2],over(warped[0],warped[1])))
         rgb=np.uint8(np.clip((rgba[:,:,:3]+bg*(1-rgba[:,:,3:4]))*255,0,255))
         name=f"{row['i']:04d}.png";Image.fromarray(rgb).save(out/'revised'/name)
+        if rgba_dir:save_rgba(rgba_dir/name,rgba)
         before=Image.open(root/cfg['beforeFrames']/name).convert('RGB')
         pair=Image.new('RGB',(w*2,h+74),'#18212f');pair.paste(before,(0,44));pair.paste(Image.fromarray(rgb),(w,44));draw=ImageDraw.Draw(pair)
         for j,label in enumerate(cfg['labels']):draw.text((j*w+12,10),label,font=font,fill='white')
