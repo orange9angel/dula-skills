@@ -101,6 +101,14 @@ python ../dula-skills/character-attention-review/scripts/review_record.py check 
 `coverage_complete` 只描述所声明角色与时窗的记录覆盖，不能推广为全角色、全片
 或所有角度均已验收。局部试跑可保留缺口，实际修片任务仍须主动补足相关证据。
 
+记录的硬性校验规则（违反会 record_valid=false）：
+
+- `issues[].subject` 必须是 `scope.subjects` 里的单一角色，不能写"both/两人"，
+  共有问题按角色拆成两条（事实可互相引用）。
+- `finding` 状态的 check 必须链接至少一个**同角色同 dimension** 的 issue；
+  跨维度归因写在 issue 的 hypothesis 里，不要跨维度链接。
+- `evidence[].at` 的秒数必须落在所声明 `window` 的起止内；窗口不够就新增窗口。
+
 每个 `evidence` 元素使用 `path`、实际文件的 `sha256`、`window`（所声明时窗的 ID）、
 `at`（原片秒数列表）、`method`。`method` 取 `still`、`ordered_frames`、`realtime`、
 `slow_motion`、`audio_listening` 或 `audiovisual`，按实际输入填写。

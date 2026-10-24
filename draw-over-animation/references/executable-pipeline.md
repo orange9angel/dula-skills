@@ -66,6 +66,16 @@ node <skill>/scripts/pipeline.mjs --episode <episode> --config config/draw_over.
 `window.renderAt(t) → {image: PNG的base64, state: 可选诊断数据}`。原 viewer 返回 JPEG 时
 需为试片提供 PNG 入口；改扩展名无效。静态服务的启动方式仍沿用各集入口。
 
+试片 viewer 的两条实拍教训（2026-10-24《半拍晴天》hybrid 试片）：
+
+- **不要用 `fetch()` 探测 cel 文件是否存在**：Chromium 对 404 也发 console error，
+  pipeline 把 console error 一律当页面错误 throw。改用显式清单（如
+  `assets/cels/manifest.json`）登记已落盘文件，viewer 只加载清单内文件，
+  缺失路径零请求、进 `state.missingAssets`。
+- **`cel-stage.place` 的 `view.roll` 绕画面中心变换**：给单个角色加转身摆动时会把
+  角色甩向屏中央。整人定帧后的自身旋转用 `rotation` 参数（绕 cel 自身锚点），
+  `view` 只承载真正的镜头取景。
+
 烘焙适配器导出 `capture(t, {width,height})`，检查适配器导出 `probe()`；二者在浏览器
 页面上下文执行，函数体不能依赖 Node 闭包或模块外局部变量。可以读取页面暴露的
 运行态，不能假设不同剧集的骨架和 `__dbg` 名称相同。
