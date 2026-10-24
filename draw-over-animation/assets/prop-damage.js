@@ -1,9 +1,10 @@
 // A persistent surface-space damage drawing, independent of shot distance.
-export function drawPropCracks(ctx,{center,axisX,axisY},level=1){
+export function drawPropCracks(ctx,{center,axisX,axisY,widthRatio=.052,minWidth=1.4,jagged=false},level=1){
  if(level<=0)return;
  const point=([u,v])=>[center[0]+axisX[0]*u+axisY[0]*v,center[1]+axisX[1]*u+axisY[1]*v];
- const cracks=[[[0,1],[-.09,.88],[-.06,.76],[-.14,.63],[-.07,.53],[-.03,.43]],[[.68,.72],[.49,.58],[.51,.49],[.35,.37],[.38,.25],[.25,.12]],[[-.72,.69],[-.65,.56],[-.53,.49],[-.57,.41],[-.44,.33]]];
- const width=Math.max(1.4,Math.hypot(...axisX)*.052)*(level>1?1.2:1);
+ let cracks=[[[0,1],[-.09,.88],[-.06,.76],[-.14,.63],[-.07,.53],[-.03,.43]],[[.68,.72],[.49,.58],[.51,.49],[.35,.37],[.38,.25],[.25,.12]],[[-.72,.69],[-.65,.56],[-.53,.49],[-.57,.41],[-.44,.33]]];
+ if(jagged)cracks=cracks.map((ps,k)=>ps.flatMap((a,i)=>{if(i===ps.length-1)return[a];const b=ps[i+1];return Array.from({length:5},(_,j)=>{const t=j/5,n=Math.sin((i*5+j)*13.17+k*7.9)*.014*Math.sin(t*Math.PI);return[a[0]+(b[0]-a[0])*t+n,a[1]+(b[1]-a[1])*t+n*.3];});}));
+ const width=Math.max(minWidth,Math.hypot(...axisX)*widthRatio)*(level>1?1.2:1);
  ctx.save();ctx.globalCompositeOperation='source-atop';ctx.lineJoin='miter';ctx.lineCap='butt';
  for(const [i,points]of cracks.entries()){
   ctx.beginPath();points.map(point).forEach((p,j)=>j?ctx.lineTo(...p):ctx.moveTo(...p));ctx.strokeStyle='#33272b';ctx.lineWidth=width;ctx.stroke();
