@@ -23,7 +23,7 @@ export function createParticleEffectsStage({THREE,renderer,particleCloud,combust
   for(const def of defs){
    let f=fires.get(def.id);
    if(!f){const root=new THREE.Group();scene.add(root);const effect=hearthFire(root,new THREE.Vector3());const clouds=[];effect.group.traverse(o=>{if(o.isInstancedMesh)clouds.push({mesh:o,kind:o.name.endsWith('smoke')?'smoke':'fire'});});f={group:root,effect,clouds};fires.set(def.id,f);}
-   f.group.visible=true;f.group.position.set(def.base[0]/ppu,-def.base[1]/ppu,0);f.group.scale.setScalar(def.scale??1);f.group.updateMatrixWorld(true);
+   f.group.visible=true;f.group.position.set(def.base[0]/ppu,-def.base[1]/ppu,0);const s=def.scale??1;f.group.scale.set(s*(def.widthScale??1),s,s);f.group.updateMatrixWorld(true);
    f.effect.update(t+(def.seed??0),camera,def.power??1);visibleClouds.push(...f.clouds);
   }
   render(ctx);

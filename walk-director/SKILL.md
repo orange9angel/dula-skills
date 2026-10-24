@@ -30,6 +30,10 @@ description: 走路、后退、起停与转身的制作和验收。用于 2D 换
 
 ## Boundaries
 
+“后退保持警戒”与“转身离开”是不同剧情动作。替换旧3D行走前核对原镜头的转向
+时点和意图；已有侧视步态不能靠负方向/倒播代替转背。转身原画、左右换脚与根
+位移分段驱动，见[混合绘画连续性](../draw-over-animation/references/story-continuity.md)。
+
 - 走路 cel 的**通用生图流程**（参考链管理、provider 细节、锁定区贴回）归
   `build-continuous-story-images`，本 skill 复用其 [walk-cycles.md](../build-continuous-story-images/references/walk-cycles.md)。
   **换腿专用的 prompt 控制写法**（viewer 视角、等幅反相、分离度量化）归本

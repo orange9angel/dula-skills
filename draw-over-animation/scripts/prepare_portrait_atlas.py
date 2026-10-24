@@ -33,7 +33,17 @@ def main():
         opened=np.uint8(np.clip(base*(1-blend[:,:,None])+aligned*blend[:,:,None],0,255))
         pivot=spec['upperLipY'];map_y=yy+(pivot+(yy-pivot)/.58-yy)*blend
         half_donor=cv2.remap(opened,xx,map_y,cv2.INTER_CUBIC,borderMode=cv2.BORDER_REPLICATE)
-        half=np.uint8(np.clip(base*(1-blend[:,:,None])+half_donor*blend[:,:,None],0,255))
+        half_blend=blend.copy()
+        if spec.get('halfPolygon'):
+            # A rectangular destination lock alone cannot protect a jaw edge:
+            # remapping may sample hair/collar pixels from outside that lock.
+            safe=np.zeros((h,w),np.uint8)
+            cv2.fillPoly(safe,[np.array(spec['halfPolygon'],np.int32)],255)
+            dist=cv2.distanceTransform(safe,cv2.DIST_L2,3)
+            half_blend*=np.clip(dist/2,0,1)
+            source_safe=cv2.remap(safe,xx,map_y,cv2.INTER_NEAREST,borderMode=cv2.BORDER_CONSTANT)
+            half_blend*=source_safe/255
+        half=np.uint8(np.clip(base*(1-half_blend[:,:,None])+half_donor*half_blend[:,:,None],0,255))
         outside=blend==0
         for name,im in [('closed',base),('half',half),('open',opened)]:
             assert np.array_equal(im[outside],base[outside]);Image.fromarray(im).save(out/f'{actor}_{name}.png')
@@ -52,7 +62,7 @@ def main():
             overlay=blink.copy();overlay[:,:,3]=np.uint8(eye_blend*base[:,:,3]);Image.fromarray(overlay).save(out/f'{actor}_blink_overlay.png')
             composed=np.uint8(base*(1-eye_blend[:,:,None])+blink*eye_blend[:,:,None]);assert np.array_equal(composed[eye_blend==0],base[eye_blend==0]);Image.fromarray(composed).save(out/f'{actor}_blink_preview.png')
             blink_report={'registrationScore':bs,'warp':bw.tolist(),'eyeWindows':spec['eyeWindows'],'outsideWindowMaxDifference':0}
-        reports.append({'actor':actor,'size':[w,h],'registrationScore':score,'warp':warp.tolist(),'mouthWindow':spec['mouthWindow'],'outsideWindowMaxDifference':0,'blink':blink_report})
+        reports.append({'actor':actor,'size':[w,h],'registrationScore':score,'warp':warp.tolist(),'mouthWindow':spec['mouthWindow'],'outsideWindowMaxDifference':0,'halfDomainGuarded':bool(spec.get('halfPolygon')),'blink':blink_report})
     (out/'registration.json').write_text(json.dumps({'config':cfg,'actors':reports},indent=2),encoding='utf-8');print(json.dumps(reports))
 
 
