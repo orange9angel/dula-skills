@@ -96,8 +96,10 @@ export async function runPipeline({episode,config,step,render=false}){
    if(render){
     if(sha(fs.readFileSync(abs(cfg.source.video)))!==cfg.source.sha256)throw Error('Accepted source video changed');
     const output=abs(p.output);fs.mkdirSync(path.dirname(output),{recursive:true});
-    const audio=p.audioCopy?['-c:a','copy']:['-c:a','aac','-b:a','192k'];
-    const enc=spawn('ffmpeg',['-y','-v','error','-f','image2pipe','-framerate',String(fps),'-vcodec','png','-i','pipe:0','-ss',String(r.start),'-t',String(r.end-r.start),'-i',abs(cfg.source.video),'-map','0:v:0','-map','1:a:0','-c:v','libx264','-preset','medium','-crf',String(p.crf??17),'-pix_fmt','yuv420p',...audio,'-t',String(r.end-r.start),'-movflags','+faststart',output],{stdio:['pipe','inherit','inherit'],windowsHide:true});
+    const audio=p.silent?['-an']:p.audioCopy?['-c:a','copy']:['-c:a','aac','-b:a','192k'];
+    const audioInput=p.silent?[]:['-ss',String(r.start),'-t',String(r.end-r.start),'-i',abs(cfg.source.video)];
+    const audioMap=p.silent?[]:['-map','1:a:0'];
+    const enc=spawn('ffmpeg',['-y','-v','error','-f','image2pipe','-framerate',String(fps),'-vcodec','png','-i','pipe:0',...audioInput,'-map','0:v:0',...audioMap,'-c:v','libx264','-preset','medium','-crf',String(p.crf??17),'-pix_fmt','yuv420p',...audio,'-t',String(r.end-r.start),'-movflags','+faststart',output],{stdio:['pipe','inherit','inherit'],windowsHide:true});
     const done=once(enc,'close'),frames=new Map();
     try{
      for(let i=0;i<r.frames;i++){const t=r.start+i/fps,a=await capture(t);if(!enc.stdin.write(a.b))await once(enc.stdin,'drain');if(i%(p.hashEvery??15)===0||i===r.frames-1)frames.set(t,sha(a.b));if(i%(fps*2)===0)console.log(`${i}/${r.frames}`);}

@@ -23,6 +23,10 @@ description: 文生图纹理/背景板注入程序化 3D 场景的混合工艺�
 颗粒或抖动制造“手绘感”。整幅近景背景板会限制绕拍和地面视差，必须在实际镜头
 检查脚地关系与遮挡，不能继续声称保留了原三维的全部摄影自由度。
 
+只换场景、恢复原3D人物的固定机位实验，可复用
+[绘画底图与3D人物分离](../draw-over-animation/references/sprite-atlas-trials.md#先换场景保留原人物)
+中的共享模块；人物表演、底图绘画、阴影与遮挡分别验收。
+
 **参考实现**：`dula-story/episodes/bio_armor_academy_s1e2/`（`tools/gen_textures.py` +
 `scenes/RuinsDuskScene.js` 的 `applyHybrid()`，2026-10-08 R4 验证）。
 
