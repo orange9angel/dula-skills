@@ -60,3 +60,40 @@
 相关执行入口与失败证据要求见[混合路线实验](hybrid-character-routes.md)、
 [角色注意力巡检](../../character-attention-review/SKILL.md)及
 [步态制作](../../walk-director/SKILL.md)。
+
+## 腰胯连续画形与有限体积投影
+
+后续用户仍指出胯部抖动和纸片感，R3不再作为推荐方案。局部胸身稳定没有解决
+八张腰胯画形切换；重定向又保留了胸部旋转，却丢掉源骨盆方向。先修动作参考，
+再让同一腰胯画形随骨盆运动，避免继续以背景光影掩盖身体自身的问题。
+
+`scripts/drive_cel_volumes.py`是**限定机位的实验工具**：读取`drive_cel_body.py`
+导出的`full_body.png`、各cel的`*_near.png`/`*_far.png`，以显式蒙版取腿层；
+由捕获的胸/胯角度分别驱动浅曲面投影，腰腹作连续过渡。`depthProfile`每行是
+`[y,centerX,radius,depth]`，单位为原画像素；这是有界的2.5D近似，不是人物三维重建。
+腿和手臂仍保留已有原画姿势，不能据此宣称自动中间画、自然接地或转面已解决。
+
+```powershell
+python scripts/drive_cel_body.py --episode <episode> --config config/walk_layers.json
+python scripts/drive_cel_volumes.py --episode <episode> --config config/walk_volumes.json
+```
+
+第二份配置以`layersConfig`引用第一份，另提供同画幅`beforeFrames`、`output`、
+`depthProfile`、`chestY/pelvisY/pivot`、`followEndY/footLockY`、身体及腿层过渡区、
+大腿根配准区和四个角度增益。实际示例在S1E2的`config/walk_cel_r5_volumes.json`；
+换角色需重新定蒙版与像素坐标，不复制参数当自动适配。源捕获必须显式启用
+[骨盆方向保留](../../walk-director/references/mocap-study.md)。
+
+本轮有用的修正：
+
+- 大腿根配准只读取腿层，不能把武器、手臂或原腰甲算进宽度。
+  `rootProfile:per_row`逐行匹配根部轮廓，再渐退到原有膝腿；单行宽度仿射会在
+  过腿时留下向外突出的尖角。接缝补完仍须重看真实人体曲线。
+- 武器蒙版须包含暗色杆身和描边。按紫色筛选会漏掉暗边，移到独立运动层后
+  原来被叠盖的缺口才暴露。`weaponOverrides`接受整轮廓多边形。
+- 相邻部件运动不同会露出此前被遮住的区域。当前`clothUnderlayY`仅按同一腿行
+  的暗色裤料补小范围遮挡底色，不会生成新衣褶或轮廓；明显露新面须补画。
+- 报告中的投影误差、逆映射残差只检验数值执行，不能用作动作自然度分数。
+
+本试片腰甲换形减少，但原8格的摆臂、腿势和武器尺寸仍跳变；尚未完成实际场景
+接触和正常速度观感验收。共享工具可复用，不代表这条路线已通过生产验收。

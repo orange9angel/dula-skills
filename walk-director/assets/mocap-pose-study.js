@@ -2,7 +2,7 @@
 // entry/exit blending and weapon-aware arms have NOT passed production review.
 // Bounded Acclaim-joint retargeting. The episode supplies scale, path, clock,
 // target dimensions and the existing pose setter; this is not a universal rig.
-export function installMocapPoseStudy({THREE,actor,data,getTime,rootAt,start,end,dims,alongScale=.64,crossScale=.75,verticalScale=1.20,sourceStart=.05,kneeForward=false}){
+export function installMocapPoseStudy({THREE,actor,data,getTime,rootAt,start,end,dims,alongScale=.64,crossScale=.75,verticalScale=1.20,sourceStart=.05,kneeForward=false,pelvisMotion=false}){
  const old=actor.setPose.bind(actor),frames=data.frames,V=p=>new THREE.Vector3(...p),obj=v=>({x:v.x,y:v.y,z:v.z});
  actor.mesh.updateMatrixWorld(true);
  const soles={};for(const side of ['left','right']){const root=actor.feet[side],inverse=root.matrixWorld.clone().invert(),points=[];root.traverseVisible(mesh=>{if(!mesh.isMesh)return;const matrix=new THREE.Matrix4().multiplyMatrices(inverse,mesh.matrixWorld),a=mesh.geometry.attributes.position;for(let i=0;i<a.count;i++)points.push(new THREE.Vector3().fromBufferAttribute(a,i).applyMatrix4(matrix));});soles[side]=points;}
@@ -21,6 +21,12 @@ export function installMocapPoseStudy({THREE,actor,data,getTime,rootAt,start,end
   const t=getTime();if(!(t>=start&&t<end)){old(p);return;}
   const root=rootAt(t),distance=(root.x-from.x)*forward.x+(root.z-from.z)*forward.z,{f,index}=sample(distance);
   const hip=f.lhipjoint.clone().add(f.rhipjoint).multiplyScalar(.5),lateral=-(hip.x-sourceOrigin)*crossScale;
+  // Source hip orientation was previously discarded while the chest rotated.
+  // Keep this opt-in: retargeted sole contact still requires independent review.
+  const hipAxis=f.lhipjoint.clone().sub(f.rhipjoint).normalize();
+  const pelvisYaw=Math.atan2(hipAxis.z,hipAxis.x),pelvisRoll=-Math.atan2(hipAxis.y,Math.hypot(hipAxis.x,hipAxis.z));
+  const hipOffsets={};for(const [side,sign] of [['left',-1],['right',1]])hipOffsets[side]=pelvisMotion?
+   new THREE.Vector3(sign*hipAxis.x,-sign*hipAxis.y,-sign*hipAxis.z).multiplyScalar(dims.hipHalf):new THREE.Vector3(sign*dims.hipHalf,0,0);
   p.rootX=root.x+right.x*lateral;p.rootZ=root.z+right.z*lateral;p.yaw=heading;
   let hipY=0;
   const feet={};
@@ -44,9 +50,9 @@ export function installMocapPoseStudy({THREE,actor,data,getTime,rootAt,start,end
   for(const [side,short,sign] of [['left','l',-1],['right','r',1]]){
    const upper=f[short+'hipjoint'].clone().sub(f[short+'femur']).normalize(),lower=f[short+'tibia'].clone().sub(f[short+'femur']).normalize();
    const reach2=dims.legA**2+dims.legB**2-2*dims.legA*dims.legB*upper.dot(lower),foot=feet[side];
-   hipY=Math.max(hipY,foot.y+Math.sqrt(Math.max(.01,reach2-(foot.x-sign*dims.hipHalf)**2-foot.z**2)));
+   const offset=hipOffsets[side];hipY=Math.max(hipY,foot.y-offset.y+Math.sqrt(Math.max(.01,reach2-(foot.x-offset.x)**2-(foot.z-offset.z)**2)));
   }
-  for(const [side,sign] of [['left',-1],['right',1]]){const foot=feet[side];hipY=Math.min(hipY,foot.y+Math.sqrt(Math.max(.01,(dims.legA+dims.legB-.004)**2-(foot.x-sign*dims.hipHalf)**2-foot.z**2)));}
+  for(const side of ['left','right']){const foot=feet[side],offset=hipOffsets[side];hipY=Math.min(hipY,foot.y-offset.y+Math.sqrt(Math.max(.01,(dims.legA+dims.legB-.004)**2-(foot.x-offset.x)**2-(foot.z-offset.z)**2)));}
   // Retarget whole-body timing: source shoulder/hip axes drive counter-rotation.
   const shoulderAxis=f.lclavicle.clone().sub(f.rclavicle),torso=f.thorax.clone().sub(hip);
   const yaw=clamp(Math.atan2(shoulderAxis.z,shoulderAxis.x),-.14,.14);
@@ -56,7 +62,7 @@ export function installMocapPoseStudy({THREE,actor,data,getTime,rootAt,start,end
   const translation=new THREE.Vector3(0,hipY,0).sub(new THREE.Vector3(0,dims.hipIdle,0).applyQuaternion(q));
   p.bob=hipY-dims.hipIdle;p.lean=0;p.torsoQuaternion=q;p.torsoPosition=translation;
   for(const [side,short,sign] of [['left','l',-1],['right','r',1]]){
-   const h=new THREE.Vector3(sign*dims.hipHalf,hipY,0),e=feet[side],axis=e.clone().sub(h),length=axis.length();
+   const h=hipOffsets[side].clone().add(new THREE.Vector3(0,hipY,0)),e=feet[side],axis=e.clone().sub(h),length=axis.length();
    // Bone lengths alone cannot prevent a backwards knee after retargeting.
    // The optional straight-walk pole uses actor-local +Z; this is not a
    // universal pole for turns, crouches or an arbitrary character forward axis.
@@ -71,7 +77,7 @@ export function installMocapPoseStudy({THREE,actor,data,getTime,rootAt,start,end
    const elbow=shoulder.clone().addScaledVector(upper,dims.armA),wrist=elbow.clone().addScaledVector(lower,dims.armB);
    p[side+'Arm']=[shoulder,elbow,wrist].map(obj);
   }
-  old(p);last={t,sourceFrame:index,hipY,torso:{pitch,yaw,roll},pose:structuredClone(p)};
+  old(p);last={t,sourceFrame:index,hipY,torso:{pitch,yaw,roll},pelvis:{enabled:pelvisMotion,yaw:pelvisMotion?pelvisYaw:0,roll:pelvisMotion?pelvisRoll:0},pose:structuredClone(p)};
  };
  return {get last(){return last;},dispose(){actor.setPose=old;}};
 }

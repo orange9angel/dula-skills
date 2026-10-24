@@ -102,6 +102,7 @@ def main():
     head = premultiply(Image.open(root/plate_cfg['headReference']).convert('RGBA'))
     weight = np.clip((plate_cfg['headEnd']-yy)/(plate_cfg['headEnd']-plate_cfg['headStart']), 0, 1)[:, :, None]
     torso = head*weight + torso*(1-weight)
+    save_rgba(out/'layers/full_body.png', torso)
     # Keep the authored pelvis and its leg connections. The clean chest ends
     # across the waist overlap, not across the thigh silhouettes.
     torso *= np.clip((cfg['torsoEndY']-yy)/(cfg['torsoEndY']-cfg['torsoFadeY']), 0, 1)[:, :, None]
@@ -157,6 +158,7 @@ def main():
         prepared[key]=over(prepared[key],original[key]*patch[:,:,None])
         save_rgba(out/'assembled'/(key+'.png'), prepared[key])
         save_rgba(out/'layers'/(key+'_near.png'), front)
+        save_rgba(out/'layers'/(key+'_far.png'), far)
     capture = json.loads((root/cfg['capture']).read_text(encoding='utf-8'))
     raw, projection_error = project_motion(capture, cfg['camera'])
     smooth = fit_periodic(raw, cfg.get('harmonics', 2)); center = smooth.mean(axis=0)
