@@ -68,6 +68,7 @@ def warp(image, motion, cfg, part, grid, cache):
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--episode',type=Path,required=True);ap.add_argument('--config',required=True)
+    ap.add_argument('--frames',type=int,nargs='+',help='Render only these exposure indices for a scoped visual trial')
     args=ap.parse_args();root=args.episode;cfg=json.loads((root/args.config).read_text(encoding='utf-8'))
     base=json.loads((root/cfg['layersConfig']).read_text(encoding='utf-8'))
     out=root/cfg['output'];out.mkdir(parents=True,exist_ok=True)
@@ -120,8 +121,14 @@ def main():
         xs=np.flatnonzero(counts>=3)+lo_roi
         if len(xs)<10:raise ValueError('No thigh-root support for '+key)
         lo,hi=float(xs[0]),float(xs[-1]);target_lo,target_hi=cfg['rootTarget']
+        source_width=np.sum(lower[:,:,3]>.5,axis=1)
         strength=1-smoothstep((yy-cfg['rootBlendStartY'])/(cfg['rootBlendEndY']-cfg['rootBlendStartY']))
-        if cfg.get('rootProfile') == 'per_row':
+        if cfg.get('rootProfile') == 'translate':
+            # A linear shear adjusts the hip attachment without squeezing the
+            # row width or adding curvature to straight authored thigh axes.
+            strength=np.clip((cfg['rootBlendEndY']-yy)/(cfg['rootBlendEndY']-cfg['rootBlendStartY']),0,1)
+            ideal=xx+(lo+hi-target_lo-target_hi)*.5
+        elif cfg.get('rootProfile') == 'per_row':
             row_y=[];row_lo=[];row_hi=[]
             for y in range(cfg['legStartY']+cfg['legBlend'],cfg['rootBlendEndY']+1):
                 support=np.flatnonzero(lower[y,:,3]>.7)
@@ -134,10 +141,21 @@ def main():
             ideal=(xx-target_lo)/(target_hi-target_lo)*(hi-lo)+lo
         mx=xx+(ideal-xx)*strength
         lower=np.clip(cv2.remap(lower,mx.astype('float32'),yy,cv2.INTER_CUBIC),0,1)
+        result_width=np.sum(lower[:,:,3]>.5,axis=1)
+        probe=(np.arange(h)>=cfg['rootBlendStartY']+2)&(np.arange(h)<cfg['rootBlendEndY'])&(source_width>10)
+        ratios=result_width[probe]/source_width[probe]
         back=premultiply(Image.open(layerdir/(key+'_far.png')).convert('RGBA'))
-        layers[key]=(lower,front,back)
+        fitted_body=body
+        if 'bodySupportY' in cfg:
+            # The clean plate's trouser hem must not overhang the actual thigh.
+            # This range must start below every rigid armor tip in this view.
+            start,end=cfg['bodySupportY']
+            blend=smoothstep((yy-start)/(end-start))
+            fitted_body=body*(1-blend*(1-lower[:,:,3]))[:,:,None]
+        layers[key]=(lower,front,back,fitted_body)
         save_rgba(out/'layers'/(key+'_legs.png'),lower)
-        profile_report.append({'id':key,'sourceRoot':[lo,hi],'targetRoot':cfg['rootTarget'],'occludedClothPixels':filled})
+        profile_report.append({'id':key,'sourceRoot':[lo,hi],'targetRoot':cfg['rootTarget'],'occludedClothPixels':filled,
+                               'occupiedRowWidthRatio':{'min':float(ratios.min()),'max':float(ratios.max()),'mean':float(ratios.mean())} if len(ratios) else None})
     capture=json.loads((root/base['capture']).read_text(encoding='utf-8'))
     raw,projection_error=project_motion(capture,base['camera'])
     bodytrack=fit_periodic(raw,cfg['harmonics']);center=bodytrack.mean(axis=0)
@@ -153,14 +171,15 @@ def main():
     bg=np.asarray(base.get('background',[128,136,144]),dtype='float32')/255
     records=[];residuals=[]
     for row,track,angle in zip(exposure,bodytrack,angles):
+        if args.frames is not None and row['i'] not in args.frames:continue
         key=base.get('aliases',{}).get(row['key'],row['key'])
         motion={'dx':float((track[0]-center[0])*cfg['lateralGain']), 'dy':float(track[1]-center[1]),
                 'lean':float(((track[2]-track[0])-(center[2]-center[0]))/(center[1]-center[3])),
                 'hipYaw':float(angle[0]*cfg['hipYawGain']),'hipRoll':float(angle[1]*cfg['hipRollGain']),
                 'chestYaw':float(angle[2]*cfg['chestYawGain']),'chestRoll':float(angle[3]*cfg['chestRollGain'])}
-        lower,front,back=layers[key]
+        lower,front,back,cel_body=layers[key]
         warped=[];cache={}
-        for im,part in [(lower,'legs'),(back,'arms'),(body,'body'),(front,'arms')]:
+        for im,part in [(lower,'legs'),(back,'arms'),(cel_body,'body'),(front,'arms')]:
             result,residual=warp(im,motion,cfg,part,grid,cache);warped.append(result);residuals.append(residual)
         rgba=over(warped[3],over(warped[2],over(warped[0],warped[1])))
         rgb=np.uint8(np.clip((rgba[:,:,:3]+bg*(1-rgba[:,:,3:4]))*255,0,255))
@@ -172,7 +191,8 @@ def main():
         pair.save(out/'frames'/name)
         if row['i'] in cfg.get('samples',[]):save_rgba(out/'layers'/('body_'+str(row['i'])+'.png'),warped[2])
         records.append({'i':row['i'],'key':key,**motion})
-    report={'config':cfg,'motion':records,'rootRegistration':profile_report,'projectionMaxError':projection_error,
+    if not records:raise ValueError('No exposure frames selected')
+    report={'config':cfg,'selectedFrames':args.frames,'motion':records,'rootRegistration':profile_report,'projectionMaxError':projection_error,
             'inverseResidualMaxPx':max(residuals),'scope':'Bounded chest/pelvis curved-surface motion. Original leg/arm pose changes and world contact remain independent review items.'}
     (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps({'frames':len(records),'inverseResidualMaxPx':max(residuals),'hipYawRangeDegrees':float(np.rad2deg(np.ptp(angles[:,0])))}))
