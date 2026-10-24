@@ -55,6 +55,8 @@ description: 走路、后退、起停与转身的制作和验收。用于 2D 换
   朝向、有限步数、起停与转身。不要假定该管线会执行 `Event:Move` 或共享 Walk。
 - 可执行步态引擎：有限落脚步态已晋升为共享资产 `dula-assets/lib/craft3d/locomotion.js`
   （`createLocomotion(params)` 参数化，默认值=S1E2 验收值；换角色需重测比例、落脚与重心）。
+- 探索人体动作数据作参考时，读[重定向实验](references/mocap-study.md)。共享ASF/AMC
+  转换器已试跑；绑定适配仍是未通过接触/起停验收的实验，不能默认替换有限落脚。
 - 手脚以外的接触（手-门/桌/道具、进食送嘴）与防穿模数值断言：读
   [direct-animation-craft/references/contact-and-hands.md](../direct-animation-craft/references/contact-and-hands.md)。
 - 验收方法（短渲抽帧、dula-verify 盲区）：读
