@@ -2,7 +2,7 @@
 // entry/exit blending and weapon-aware arms have NOT passed production review.
 // Bounded Acclaim-joint retargeting. The episode supplies scale, path, clock,
 // target dimensions and the existing pose setter; this is not a universal rig.
-export function installMocapPoseStudy({THREE,actor,data,getTime,rootAt,start,end,dims,alongScale=.64,crossScale=.75,verticalScale=1.20,sourceStart=.05}){
+export function installMocapPoseStudy({THREE,actor,data,getTime,rootAt,start,end,dims,alongScale=.64,crossScale=.75,verticalScale=1.20,sourceStart=.05,kneeForward=false}){
  const old=actor.setPose.bind(actor),frames=data.frames,V=p=>new THREE.Vector3(...p),obj=v=>({x:v.x,y:v.y,z:v.z});
  actor.mesh.updateMatrixWorld(true);
  const soles={};for(const side of ['left','right']){const root=actor.feet[side],inverse=root.matrixWorld.clone().invert(),points=[];root.traverseVisible(mesh=>{if(!mesh.isMesh)return;const matrix=new THREE.Matrix4().multiplyMatrices(inverse,mesh.matrixWorld),a=mesh.geometry.attributes.position;for(let i=0;i<a.count;i++)points.push(new THREE.Vector3().fromBufferAttribute(a,i).applyMatrix4(matrix));});soles[side]=points;}
@@ -57,8 +57,10 @@ export function installMocapPoseStudy({THREE,actor,data,getTime,rootAt,start,end
   p.bob=hipY-dims.hipIdle;p.lean=0;p.torsoQuaternion=q;p.torsoPosition=translation;
   for(const [side,short,sign] of [['left','l',-1],['right','r',1]]){
    const h=new THREE.Vector3(sign*dims.hipHalf,hipY,0),e=feet[side],axis=e.clone().sub(h),length=axis.length();
-   // Retargeted proportions use IK for fixed lengths, with the captured knee plane.
-   const sourcePole=f[short+'femur'].clone().sub(f[short+'hipjoint']);sourcePole.set(-sourcePole.x,sourcePole.y,sourcePole.z);axis.normalize();
+   // Bone lengths alone cannot prevent a backwards knee after retargeting.
+   // The optional straight-walk pole uses actor-local +Z; this is not a
+   // universal pole for turns, crouches or an arbitrary character forward axis.
+   const sourcePole=kneeForward?new THREE.Vector3(0,0,1):f[short+'femur'].clone().sub(f[short+'hipjoint']);if(!kneeForward)sourcePole.x*=-1;axis.normalize();
    const pole=sourcePole.addScaledVector(axis,-sourcePole.dot(axis)).normalize();
    const reach=clamp(length,Math.abs(dims.legA-dims.legB)+1e-5,dims.legA+dims.legB-1e-5),along=(dims.legA**2-dims.legB**2+reach**2)/(2*reach);
    const knee=h.clone().addScaledVector(axis,along).addScaledVector(pole,Math.sqrt(Math.max(0,dims.legA**2-along**2)));
