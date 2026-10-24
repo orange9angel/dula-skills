@@ -80,7 +80,7 @@ python scripts/drive_cel_volumes.py --episode <episode> --config config/walk_vol
 
 第二份配置以`layersConfig`引用第一份，另提供同画幅`beforeFrames`、`output`、
 `depthProfile`、`chestY/pelvisY/pivot`、`followEndY/footLockY`、身体及腿层过渡区、
-大腿根配准区和四个角度增益。实际示例在S1E2的`config/walk_cel_r5_volumes.json`；
+大腿根配准区和四个角度增益。当前示例在S1E2的`config/walk_cel_r6_volumes.json`；
 换角色需重新定蒙版与像素坐标，不复制参数当自动适配。源捕获必须显式启用
 [骨盆方向保留](../../walk-director/references/mocap-study.md)。
 
@@ -112,3 +112,7 @@ python scripts/drive_cel_volumes.py --episode <episode> --config config/walk_vol
 
 本试片腰甲换形减少，但原8格的摆臂、腿势和武器尺寸仍跳变；尚未完成实际场景
 接触和正常速度观感验收。共享工具可复用，不代表这条路线已通过生产验收。
+
+R6交付后，用户于2026-10-24反馈“基本可以了”。该固定朝向步态已获得用户的
+基本认可，后续制作以R6姿势与形体为比较基线。该反馈与上述agent观察范围分别
+保存；不能继续把R5当推荐配置，也不能扩大成跨视角、接地或整片自动通过。
