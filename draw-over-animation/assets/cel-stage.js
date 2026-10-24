@@ -26,15 +26,17 @@ export function createCelStage({THREE,renderer,width,height}){
   mesh.frustumCulled=false;scene.add(mesh);cells.set(key,{image,texture,geo,mesh,dynamic,head,hair});
  }
  function begin(){for(const c of cells.values())c.mesh.visible=false;}
- function place(key,{x,y,height:drawHeight,scaleX=1,rotation=0,order=1,view={cx:width/2,cy:height/2,z:1,roll:0},time=0,breath=0,lean=0,headTilt=0,hair=0,compress=0,motion=[0,0],warp=null}){
+ function place(key,{x,y,height:drawHeight,scaleX=1,rotation=0,order=1,view={cx:width/2,cy:height/2,z:1,roll:0},time=0,breath=0,lean=0,headTilt=0,hair=0,compress=0,motion=[0,0],warp=null,rigid=false}){
   const c=cells.get(key);if(!c)throw Error(`Unknown cel ${key}`);const pos=c.geo.attributes.position,uv=c.geo.attributes.uv,scale=drawHeight/c.image.height,w=c.image.width*scale,h=drawHeight;
   c.mesh.visible=true;c.mesh.renderOrder=order;if(c.dynamic)c.texture.needsUpdate=true;
   const cr=Math.cos(rotation),sr=Math.sin(rotation),cv=Math.cos(view.roll||0),sv=Math.sin(view.roll||0);
   for(let i=0;i<pos.count;i++){
    const u=uv.getX(i),v=1-uv.getY(i),upper=1-ease((v-.5)/.48),hw=weight(u,v,c.head),fw=weight(u,v,c.hair);
-   const warped=warp?warp(u,v):[0,0];let px=(u-.5)*w*scaleX+warped[0],py=(v-1)*h+warped[1];
-   px+=upper*(lean+motion[0])+hw*headTilt*(v-c.head[1])*h+fw*hair;
-   py+=upper*(compress+breath*Math.sin(time*2.4)+motion[1])+fw*hair*.22;
+   const warped=!rigid&&warp?warp(u,v):[0,0];let px=(u-.5)*w*scaleX+warped[0],py=(v-1)*h+warped[1];
+   // Painted armor and fixed-view heads must not inherit Gaussian sheet motion.
+   // Coherent acting remains available through x/y/rotation and authored cels.
+   if(!rigid){px+=upper*(lean+motion[0])+hw*headTilt*(v-c.head[1])*h+fw*hair;
+   py+=upper*(compress+breath*Math.sin(time*2.4)+motion[1])+fw*hair*.22;}
    const dx=(x+px*cr-py*sr-view.cx)*view.z,dy=(y+px*sr+py*cr-view.cy)*view.z;
    pos.setXYZ(i,width/2+dx*cv-dy*sv,height/2+dx*sv+dy*cv,0);
   }pos.needsUpdate=true;

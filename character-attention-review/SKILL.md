@@ -42,6 +42,9 @@ description: 主动发现动画角色的造型与表演问题，按注意力维�
    同一动作按预备→执行→接触/转折→恢复追踪；也检查倾听者与动作发起者的关系。
 4. **镜头中的整体效果**：回到完整人物和实际画幅，查遮挡、大小、剪影、效果与
    声画配合。漂亮局部、光效或正确脚点不能抵消人物僵硬。
+   跨镜连续性同时追踪装备各部件的损伤、持物/支撑、台词情绪、身体比例和摄影；
+   用[部件与事件矩阵](../draw-over-animation/references/story-continuity.md#检查层次)
+   补查同一状态下一次重新可见，不能只验证已配置的一个道具状态。
 5. **开放复查**：暂时放下清单，再看完整片段。记录清单外的不协调、相邻部位
    之间的矛盾，以及“所有局部都正常但组合不好看”的情况，不为凑数量强找缺陷。
 
@@ -66,6 +69,11 @@ description: 主动发现动画角色的造型与表演问题，按注意力维�
 
 在 episode 的 `storyboard/character_attention/` 保存记录，避免只在对话里记住。
 以下工具只初始化与校验覆盖记录，**不分析画面，不判定美丑，也不调用外部模型**：
+
+取有序帧可用 `scripts/extract_review_frames.py --source VIDEO --config JSON --output DIR`。
+配置为 `groups: {名称: {times: [秒数], columns?, width?, crop?}}`；短片可用
+`timeOffset` 保留整集时间。工具按真实帧率换算帧号，保存PNG、带时间的拼图和来源
+摘要。只有实际查看后才能把这些文件登记成观察证据，导出成功不算已经审片。
 
 ```powershell
 python ../dula-skills/character-attention-review/scripts/review_record.py init `

@@ -135,6 +135,13 @@ const [x,y]=controls.deform(celId,imageX,imageY,authoredDx,authoredDy);
 
 ## 粒子与场景接合
 
+原画的布局准备可运行 `scripts/prepare_cel_crops.py --episode PATH --config FILE`。
+配置 `items` 指定 `source/output`，可选像素 `crop`、`size`、`canvas/position`；
+`report` 保存每个输入/输出摘要和透明边界。`luminanceAlpha` 仅用于显式裁好的
+表面伤痕提取（`ceiling/range/feather`），不识别人脸或人体。缩放、锚点和姿态采用
+仍由实际画面决定。`compose_cel_regions.py` 默认保护原透明边；改变姿态轮廓时可
+显式 `preserveAlpha:false`，此时必须检查旧手臂残片、腰部接缝和整体剪影。
+
 `particle-effects-stage.js` 将资产库 `particleCloud` / `combustionBurst` / `hearthFire`
 合成到二维镜头，提供 `drawFire(ctx,t,view,defs)`、`drawStream(ctx,t,view,spec)` 和
 `drawBurst(ctx,t,view,events)`。发射器锚点、起止和颜色由单集传入；三类都使用真实

@@ -10,3 +10,25 @@ export async function checkStoryContracts({sample,contracts,cues}){
   }}
  }return{passed:checks.every(c=>c.passed),checks,note:'Runtime story contracts do not certify artwork, visibility, or natural acting.'};
 }
+
+// Inspect independent dimensions across a complete ordered trace, including cuts.
+// A missing component is a failure unless the caller explicitly selects visible
+// samples. Hidden armor is not evidence of an intact or damaged visible surface.
+export function checkContinuityTraces({samples,rules}){
+ const get=(x,key)=>key.split('.').reduce((v,k)=>v?.[k],x),checks=[];
+ for(const rule of rules){
+  const selected=samples.filter(s=>(rule.start===undefined||s.t>=rule.start)&&(rule.end===undefined||s.t<rule.end));
+  if(selected.length<2){checks.push({id:rule.id,passed:false,reason:'Insufficient trace samples'});continue;}
+  let previous=null;
+  for(const s of selected){const value=get(s,rule.field);let passed=value!==undefined&&value!==null,reason=passed?'':'Missing field';
+   if(previous&&passed){
+    if(rule.nondecreasing&&!(typeof value==='number'&&value>=previous.value)){passed=false;reason='State regressed';}
+    if(rule.maxStep!==undefined&&!(typeof value==='number'&&Math.abs(value-previous.value)<=rule.maxStep)){passed=false;reason='Step exceeded';}
+    if(rule.transitions&&value!==previous.value&&!rule.transitions.some(p=>p[0]===previous.value&&p[1]===value)){passed=false;reason='Undeclared transition';}
+   }
+   checks.push({id:rule.id,t:s.t,previous:previous?.value??null,value:value??null,passed,reason});
+   previous={value};
+  }
+ }
+ return{passed:checks.every(c=>c.passed),checks,note:'Trace consistency only; artwork and semantic performance require separate visible evidence.'};
+}
