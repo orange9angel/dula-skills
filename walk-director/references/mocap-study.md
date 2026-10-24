@@ -11,6 +11,14 @@ XYZ轴、常规root顺序、完全采样AMC格式；不是任意Acclaim方言读
 python scripts/convert_acclaim.py --asf <source.asf> --amc <source.amc> --fps 120 --scale 0.056444 --output <walk.json>
 ```
 
+需要头部独立朝向时加`--orientation-bones head upperneck thorax`。输出增加与
+`frames`逐帧对应的`orientations`世界旋转矩阵；缺省调用保持旧数据结构及位置。
+关节位置不能恢复绕骨轴转动，不要从头颈一条连线估计完整yaw/pitch/roll。
+消费者须按实际源帧插值旋转，并转换源轴、角色朝向与相机坐标；身体已经继承的
+转动不能叠加两次。S1E2 R7验证了旧位置完全一致、旋转正交、同机位头部独立投影；
+未因此完成源头部到任意角色头模的通用绑定。执行入口见
+[头部有限投影](../../draw-over-animation/references/hybrid-character-production.md)。
+
 源文件、URL、数据条款、归属与摘要随剧集保存。使用的是
 [CMU动作数据库](http://mocap.cs.cmu.edu/)的07/01片段；网站允许各类使用，但不允许
 直接转卖动作数据（包括格式转换后）。单位说明见[官方FAQ](http://mocap.cs.cmu.edu/faqs.php)。

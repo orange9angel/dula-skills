@@ -8,7 +8,7 @@ def rotation(angles):
     cx,sx,cy,sy,cz,sz=math.cos(x),math.sin(x),math.cos(y),math.sin(y),math.cos(z),math.sin(z)
     return np.array([[cz,-sz,0],[sz,cz,0],[0,0,1]]) @ np.array([[cy,0,sy],[0,1,0],[-sy,0,cy]]) @ np.array([[1,0,0],[0,cx,-sx],[0,sx,cx]])
 
-def convert(asf,amc,fps,scale):
+def convert(asf,amc,fps,scale,orientation_bones=()):
     bones={}; section=''; bone=None; parents={}
     for line in asf.read_text().splitlines():
         a=line.strip().split()
@@ -32,7 +32,9 @@ def convert(asf,amc,fps,scale):
             current={}
         else:current[a[0]]=list(map(float,a[1:]))
     if current:frames.append(current)
-    baked=[]
+    unknown=set(orientation_bones)-set(bones)-{'root'}
+    if unknown:raise ValueError('Unknown orientation bones: '+', '.join(sorted(unknown)))
+    baked=[]; orientations=[]
     for f in frames:
         positions={'root':np.array(f['root'][:3])*scale}; matrices={'root':rotation(f['root'][3:6])}
         def solve(name):
@@ -44,8 +46,16 @@ def convert(asf,amc,fps,scale):
             matrices[name]=m;positions[name]=positions[parent]+m @ (np.array(b['direction'])*b['length']*scale)
         for name in bones:solve(name)
         baked.append({name:np.round(p,7).tolist() for name,p in positions.items()})
-    return {'fps':fps,'frames':baked,'bones':bones,'parents':parents,'source':{str(p.name):hashlib.sha256(p.read_bytes()).hexdigest() for p in [asf,amc]},'scale':scale}
+        if orientation_bones:
+            orientations.append({name:np.round(matrices[name],9).tolist() for name in orientation_bones})
+    result={'fps':fps,'frames':baked,'bones':bones,'parents':parents,'source':{str(p.name):hashlib.sha256(p.read_bytes()).hexdigest() for p in [asf,amc]},'scale':scale}
+    if orientation_bones:
+        result['orientations']=orientations
+        result['orientationSpace']='world rotation matrices, same axes as frames'
+    return result
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--asf',type=Path,required=True);p.add_argument('--amc',type=Path,required=True);p.add_argument('--fps',type=float,required=True);p.add_argument('--scale',type=float,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
-    out=convert(a.asf,a.amc,a.fps,a.scale);a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(out,separators=(',',':')),encoding='utf-8');print(json.dumps({'frames':len(out['frames']),'fps':a.fps,'seconds':len(out['frames'])/a.fps}))
+    p=argparse.ArgumentParser();p.add_argument('--asf',type=Path,required=True);p.add_argument('--amc',type=Path,required=True);p.add_argument('--fps',type=float,required=True);p.add_argument('--scale',type=float,required=True);p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--orientation-bones',nargs='+',default=[],help='Optional world rotations; joint positions alone cannot recover head twist')
+    a=p.parse_args()
+    out=convert(a.asf,a.amc,a.fps,a.scale,a.orientation_bones);a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(out,separators=(',',':')),encoding='utf-8');print(json.dumps({'frames':len(out['frames']),'fps':a.fps,'seconds':len(out['frames'])/a.fps,'orientationBones':a.orientation_bones}))

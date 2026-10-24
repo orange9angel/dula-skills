@@ -77,6 +77,14 @@ def main():
     layerdir=root/base['output']/'layers'
     body=premultiply(Image.open(layerdir/'full_body.png').convert('RGBA'))
     body*=(1-smoothstep((yy-cfg['bodyFadeStartY'])/(cfg['bodyFadeEndY']-cfg['bodyFadeStartY'])))[:,:,None]
+    head=None
+    if 'head' in cfg:
+        from rigid_cel_head import RigidCelHead, head_track
+        head=RigidCelHead(body,cfg['head'],grid)
+        body=head.body
+        save_rgba(out/'layers'/'head.png',head.head)
+        save_rgba(out/'layers'/'body_without_head.png',body)
+        Image.fromarray(np.uint8((head.depth-cfg['head']['depthRange'][0])/np.ptp(cfg['head']['depthRange'])*255)).save(out/'layers'/'head_depth.png')
     layers={};profile_report=[]
     for cel in base['cels']:
         key=cel['id'];source=premultiply(Image.open(root/cel['file']).convert('RGBA'))
@@ -157,6 +165,7 @@ def main():
         profile_report.append({'id':key,'sourceRoot':[lo,hi],'targetRoot':cfg['rootTarget'],'occludedClothPixels':filled,
                                'occupiedRowWidthRatio':{'min':float(ratios.min()),'max':float(ratios.max()),'mean':float(ratios.mean())} if len(ratios) else None})
     capture=json.loads((root/base['capture']).read_text(encoding='utf-8'))
+    head_matrices,head_report=head_track(root,cfg['head'],capture,base['camera']) if head else (None,None)
     raw,projection_error=project_motion(capture,base['camera'])
     bodytrack=fit_periodic(raw,cfg['harmonics']);center=bodytrack.mean(axis=0)
     angles=[]
@@ -181,6 +190,13 @@ def main():
         warped=[];cache={}
         for im,part in [(lower,'legs'),(back,'arms'),(cel_body,'body'),(front,'arms')]:
             result,residual=warp(im,motion,cfg,part,grid,cache);warped.append(result);residuals.append(residual)
+        head_frame=None
+        if head:
+            ax,ay=cfg['head']['anchor']
+            tx,ty=volume_points(np.asarray(ax),np.asarray(ay),motion,cfg,'body')
+            head_image=head.render(head_matrices[row['i']],(tx-ax,ty-ay))
+            warped[2]=over(warped[2],head_image) # collar stays in front of neck/rear hair
+            head_frame=head.last_report
         rgba=over(warped[3],over(warped[2],over(warped[0],warped[1])))
         rgb=np.uint8(np.clip((rgba[:,:,:3]+bg*(1-rgba[:,:,3:4]))*255,0,255))
         name=f"{row['i']:04d}.png";Image.fromarray(rgb).save(out/'revised'/name)
@@ -190,10 +206,11 @@ def main():
         draw.text((12,h+49),f"{row['t']:.3f}s / {key} / "+cfg['footer'],font=small,fill='#ffcf8a')
         pair.save(out/'frames'/name)
         if row['i'] in cfg.get('samples',[]):save_rgba(out/'layers'/('body_'+str(row['i'])+'.png'),warped[2])
-        records.append({'i':row['i'],'key':key,**motion})
+        records.append({'i':row['i'],'key':key,**motion,**({'head':head_frame} if head_frame else {})})
     if not records:raise ValueError('No exposure frames selected')
     report={'config':cfg,'selectedFrames':args.frames,'motion':records,'rootRegistration':profile_report,'projectionMaxError':projection_error,
             'inverseResidualMaxPx':max(residuals),'scope':'Bounded chest/pelvis curved-surface motion. Original leg/arm pose changes and world contact remain independent review items.'}
+    if head:report['head']=head_report
     (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps({'frames':len(records),'inverseResidualMaxPx':max(residuals),'hipYawRangeDegrees':float(np.rad2deg(np.ptp(angles[:,0])))}))
 
