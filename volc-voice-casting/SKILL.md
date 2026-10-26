@@ -312,3 +312,15 @@ F0 中位数与 P10-P90 只报告不判定（气声/嘶吼的 F0 跟踪不稳定
 `seedtts_say.py`（V3 HTTP 合成）与 `seedaudio_gen.py`（Seed-Audio 生成）
 的**正本在本 skill 内**。历史上它们散落在各 episode tools/（9 份/7 份
 私有拷贝互相漂移），新工作一律引用本目录版本；旧拷贝不删，逐集替换。
+
+### 翻车记录（2026-11 borrowed_moonlight P6）
+
+- **萌丫头 2.0（zh_female_mengyatou）偶发整词崩坏**：「我也常常一个人」首轮被读成
+  「我也藏藏一個卵」（拼音 57% ❌），同参重抽一次即恢复 93%。女童音色单句务必过拼音
+  QC 红线再入库，不能因"上一句好"免检。
+- **唐僧 2.0（zh_male_tangseng）语速方差大**：speech_rate -5→7.42s、-2 反而 8.62s、
+  +8→7.08s（同一 30 字句）。慢速音色下 speech_rate 只是倾向不是保证，超窗句要按实测
+  迭代档位，别假设单调。
+- **sad emotion 的拖腔停顿会把长句拖超窗**：e17（61 字，带"……"）rate -3+sad scale2
+  =13.92s 超窗 2.5s；摘下 emotion（哭腔改由 context_texts 承担）+rate 25 → 9.82s ✅。
+  时长敏感的长句优先用 context 演情绪，emotion 标签留给短句。
