@@ -86,7 +86,7 @@ export async function runPipeline({episode,config,step,render=false}){
    if(report.passed!==true)throw Error('Episode motion/anchor probe failed');
   }else{
    fs.mkdirSync(board,{recursive:true});
-   const capture=async t=>{const a=await page.evaluate(t=>window.renderAt(t),t);if(errors.length)throw Error(errors.join('\n'));if(!a?.image)throw Error('renderAt must return a base64 PNG image');const b=Buffer.from(a.image,'base64');if(b.subarray(1,4).toString()!=='PNG')throw Error('Lossless PNG output required');return{b,state:a.state??{t}};};
+   const capture=async t=>{const a=await page.evaluate((t,settle)=>{if(settle)window.stepAt(t);return window.renderAt(t);},t,p.settleBeforeCapture===true);if(errors.length)throw Error(errors.join('\n'));if(!a?.image)throw Error('renderAt must return a base64 PNG image');const b=Buffer.from(a.image,'base64');if(b.subarray(1,4).toString()!=='PNG')throw Error('Lossless PNG output required');return{b,state:a.state??{t}};};
    const samples=[];
    for(const t of p.samples??[]){if(t<r.start||t>=r.end)throw Error(`Sample outside pilot: ${t}`);const a=await capture(t);fs.writeFileSync(path.join(board,`t${String(t).replace('.','_')}.png`),a.b);samples.push({...a.state,sha256:sha(a.b)});}
    write(path.join(board,'samples.json'),samples);
