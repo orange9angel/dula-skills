@@ -16,7 +16,14 @@ export async function createFeatheredVariantFace(spec){
   const d=q.getImageData(0,0,w,h), islands=v.islands??[[x+w/2,y+h/2,w/2,h/2]],f=v.feather??.24;
   for(let py=0;py<h;py++)for(let px=0;px<w;px++){
    let a=0;
-   for(const [cx,cy,rx,ry] of islands){const r=Math.hypot((px+x-cx)/rx,(py+y-cy)/ry);a=Math.max(a,smooth((1-r)/f));}
+   if(v.cores){
+    // Opaque feature union, feather only outside it. Smile corners and raised
+    // eyelids must not survive underneath the falloff of a smaller new shape.
+    for(const [cx,cy,cw,ch,pad] of v.cores){
+     const dx=Math.max(cx-(px+x),0,px+x-(cx+cw)),dy=Math.max(cy-(py+y),0,py+y-(cy+ch));
+     a=Math.max(a,smooth(1-Math.hypot(dx,dy)/pad));
+    }
+   }else for(const [cx,cy,rx,ry] of islands){const r=Math.hypot((px+x-cx)/rx,(py+y-cy)/ry);a=Math.max(a,smooth((1-r)/f));}
    d.data[(py*w+px)*4+3]*=a*smooth(Math.min(px,py,w-1-px,h-1-py)/2);
   }
   q.putImageData(d,0,0);patches[key]={canvas:c,x,y};
@@ -27,8 +34,10 @@ export async function createFeatheredVariantFace(spec){
   g.clearRect(0,0,canvas.width,canvas.height);g.drawImage(base,0,0);
   if(expressionCel)paste(expressionCel);
   if(mouthCel!=='closed')paste(spec.mouth?.[mouthCel]);
-  if(blink>.52)paste(spec.blink);
-  return{jaw,emotion,blink,mouthCel,expressionCel:expressionCel??'base'};
+  const bank=spec.blinkByExpression?.[expressionCel]??spec.blink;
+  const blinkCel=typeof bank==='object'?(blink>.80?bank.closed:blink>.18?bank.half:null):(blink>.52?bank:null);
+  if(blinkCel)paste(blinkCel);
+  return{jaw,emotion,blink,mouthCel,blinkCel,expressionCel:expressionCel??'base'};
  }
  paint();return{canvas,paint,spec,patches};
 }

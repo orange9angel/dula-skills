@@ -117,6 +117,20 @@ Create acting first and audio processing second. Preserve a believable native vo
 
 ## 年龄与辅助听审的证据边界（borrowed_moonlight R3）
 
+### 长句被窗口挤快后的修复（borrowed_moonlight R5）
+
+用户指出月亮夫人最长句失去感动、语速太快。该句长台词被放进9.4秒发声窗，
+实际9.096秒；`.story`原演绎rate=-8，实际生成配置已变为0。修复采用同一火山声线、
+原生rate=-25和分句停顿指令，重录为12.6秒；将该镜头从10秒延长为14秒，接续空镜
+保留2秒，整集时长及后续接触点不变。不得先固定短窗再强行提速并把时长QC当成戏感通过。
+
+局部改一条对白可以调用
+`direct-episode-audio/scripts/replace_dialogue_clip.py --episode EP --config RECIPE`：
+recipe声明源mix摘要、孤立窗口、原分轨、新voice、位置、距离filter和duck幅度；替换该窗口
+内唯一对白，音乐和环境床只施加新旧压低包络之差，其他PCM逐样本保留。确认窗口内没有
+其他对白后使用；声音重叠、总时长变化仍回到完整调度/混音。由最终放置PCM重建口型，
+机器检查转写/电平/时长与“演绎感人”分开，不冒称实际听审。
+
 - 目录中的“软萌”“少女”等标签不保证学龄儿童听感。角色年龄被指出错误时，重新
   生成同句匿名候选，优先原生年龄匹配，不用后期升调制造童声。
 - 音频模型复核属于辅助观察，不能记为人工盲听通过；年龄范围也可能漂移。它还可能
