@@ -3,6 +3,9 @@ from pathlib import Path
 from fractions import Fraction
 import argparse
 import json
+import os
+import subprocess
+import tempfile
 from package_pilot import bounds, probe, sha
 from replace_window import audio_hash
 
@@ -32,6 +35,21 @@ def main():
         'audio_packets_identical': audio_hash(source, True) == audio_hash(output, True),
         'audio_pcm_identical': audio_hash(source, False) == audio_hash(output, False),
     }
+    if pilot.get('audio'):
+        # 音轨来源是显式混音总线（wav）：重混后源片音轨已过期属正常——验收口径改为
+        # 输出解码 PCM == "同参 AAC 编码的 pilot.audio 切片" 解码 PCM（同机同编码器确定性）。
+        # borrowed_moonlight R2：音频侧重混 mixed.wav 到位而 3D 基线片不重渲时使用。
+        with tempfile.NamedTemporaryFile(suffix='.m4a', delete=False) as tmp:
+            tmp_path = Path(tmp.name)
+        try:
+            subprocess.run(['ffmpeg', '-y', '-v', 'error', '-ss', str(start), '-t', str(end - start),
+                            '-i', str(root / pilot['audio']), '-c:a', 'aac', '-b:a', '192k', str(tmp_path)],
+                           check=True)
+            ref_pcm = audio_hash(tmp_path, False)
+        finally:
+            os.unlink(tmp_path)
+        del checks['audio_packets_identical'], checks['audio_pcm_identical']
+        checks['audio_pcm_matches_pilot_audio'] = audio_hash(output, False) == ref_pcm
     deterministic = json.loads((board / 'determinism.json').read_text(encoding='utf-8'))
     checks['deterministic'] = deterministic['passed']
     acting = json.loads((root / cfg['probe']['output']).read_text(encoding='utf-8'))

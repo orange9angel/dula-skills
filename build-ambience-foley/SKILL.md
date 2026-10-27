@@ -89,3 +89,14 @@ Make the world audible without narrating every visible motion. Use picture, dial
   都治不好。正法：源内折尾做无缝环（尾部 1.5s 折进头部再平铺）+ 慢 AGC
   （增益域 0.8-2.2、1s 平滑防泵浦）抬平低谷。AGC 平滑用 uniform_filter1d，
   别用 np.convolve 全核（O(n·sr)，75s×48k 直接挂起）。
+
+- **走拍脚步逐 stance 对位（2026-11 borrowed_moonlight R2a）**：连续踩雪 excerpt 摆进
+  走拍窗会被听出"脚步不沾地"。正法：从素材 onset 分组（<0.35s 同一次踩雪）切单步片，
+  按 bake planted false→true 接触时刻逐点摆放（LCG 轮换切片+增益抖动 0.8-1.0 防机枪感）。
+  cel-cinema 管线里 bake 的 planted 表就是画面真值（走拍相位由 bake 距离驱动），
+  不要从成片帧反推接触。参考实现 `borrowed_moonlight/tools/build_footsteps.py`。
+
+- **画面事件核对的帧差陷阱（同上）**：全帧 diff 扫描会被镜头切换淹没（切镜帧 diff 远大
+  于粒子/微光事件），事件对位要 ROI 裁剪到小区域再做差分/亮度扫描，并用 5fps 瓦片网格
+  目检兜底；2D 底图管线里有些"事件"画面根本不动（如画死的门），声效是画外叙事承担，
+  核对时要区分"画面事件帧"与"叙事需要点"。
