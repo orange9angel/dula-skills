@@ -48,7 +48,7 @@ baked-cel-clip/particle-stage/story-state 等，prepare 步骤自动同步）。
 
 ## 画面纪律（两条参考路线的翻车沉淀，细则见各自 skill）
 
-- 骨架学 `stardust_clad_s1e2` art_pass（唯一整集交付先例）：镜表驱动、姿势类别复用、
+- 骨架参考 `stardust_clad_s1e2` art_pass：镜表驱动、姿势类别复用、
   近景"整肖像当镜头"、jaw 三态接 voice_envs.json 能量包络。
 - 纪律学 `cat_leads_cafe_musical/hybrid`：整拍冻结（运动来自换画）、支撑脚锚定、
   相似变换配准（多朝向禁分区 remap）、同图表情变体（禁整脸贴片）、
@@ -76,6 +76,11 @@ baked-cel-clip/particle-stage/story-state 等，prepare 步骤自动同步）。
   左上角天空色，tint 错色而不自知）。凡"修正了但只差一点"的回归，先怀疑修正量被吞。
 
 ## 验收门禁
+
+重复渲染同一时刻一致不等于连续播放稳定；嘴眼裁区通过也不覆盖人物整体波动或画面
+抖动。此类反馈需独立记录、以连续画面核查，见
+[R5稳定性漏检](../character-attention-review/references/miss-learning.md#局部嘴眼通过不代表连续画面稳定borrowed_moonlight-r5)。
+用户接受但明确暂不修改的问题标为保留项，记录成片摘要，不当成已修复或自动启动新一轮。
 
 镜表时轴无缝 → manifest 显式登记（missingAssets=0）→ probe 断言 →
 verify_full_episode（顺序/seek 逐帧一致、音轨 PCM 相同）→ 主代理逐幕审片 →
