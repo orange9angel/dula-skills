@@ -62,6 +62,11 @@ node <skill>/scripts/pipeline.mjs --episode <episode> --config config/draw_over.
 `layout` 如 `4x4`，`width` 默认 384。使用解码帧序号选择而非 fps 重采样，避免把切镜
 提前到图上时间标签之前。并排对照会把原片重采样到试片帧率，不改变独立试片。
 
+音轨（2026-10-28《借走月光》A3 新增）：`pilot.audio` 显式指定音轨文件（如
+`assets3d/mixed.wav`），按窗口 `-ss/-t` 切片；缺省沿用 `source.video` 的音轨。
+`audioCopy: true` 是流拷贝，仅当音轨源是已编码的 mp4 时可用；给 wav 混音总线时
+不要开（PCM 拷不进 mp4），走缺省 AAC 192k 编码。
+
 查看器在初始化完成后提供 `window.ready=true`，提供绝对时间函数
 `window.renderAt(t) → {image: PNG的base64, state: 可选诊断数据}`。原 viewer 返回 JPEG 时
 需为试片提供 PNG 入口；改扩展名无效。静态服务的启动方式仍沿用各集入口。
@@ -95,6 +100,18 @@ node <skill>/scripts/pipeline.mjs --episode <episode> --config config/draw_over.
   camera: {position: [x,y,z], quaternion: [x,y,z,w], fov: number}
 }
 ```
+
+**projected 的数值稳定性（2026-10-27《借走月光》A0 实录）**：相机平面后方
+（viewZ ≥ -0.1）或 NDC |x|,|y|>2 的远画外点，投影对相机参数 1e-6 量级舍入
+超敏（不可见角色驻留点实测像素差被放大到 7470px），且不参与构图——适配器应记
+`projected: null`（不可投影），指纹比对跳过。保留窗口内点的重建误差可做到
+≤0.01px（世界坐标 5 位小数 + 相机 8 位小数的精度预算；近景 macro 下 0.1mm
+世界舍入 ≈ 0.3px，是最大误差源）。
+
+试片 viewer 的 renderAt 实现（同 A0 实录）：**必须先 draw 再 toDataURL**——
+`{image: canvas.toDataURL(...), state: draw(t)}` 的对象字面量求值顺序会先抓图，
+拿到的是**上一帧**画布，帧画面与标签错一位（并排对照里表现为整图偏移）。
+正确写法：`const state = draw(t); return {image: canvas.toDataURL(...), state}`。
 
 烘焙自动包含窗口末端边界。`null` 接触不作为通过；源文件摘要失效、非有限坐标、
 查看器错误和空素材均显式失败。`probe()` 返回包含 `passed` 的证据对象：选实际发生
@@ -149,6 +166,13 @@ const [x,y]=controls.deform(celId,imageX,imageY,authoredDx,authoredDy);
 输出帧数检查。已有服务也可能不识别 `.mjs` 的 MIME；浏览器模块使用 `.js` 后验证。
 完整多角度动画、自动 clean plate、自动骨架识别和走路原画生成均不在已验证能力内。
 
+整集渲染运营教训（2026-10-28《借走月光》A4，14340 帧单次全长）：后台渲染必须
+`> log 2>&1` 直写日志文件——接 `| tail` 会被管道缓冲憋住全部进度输出；build.json 的
+sourceFiles 指纹在渲染启动时固定，**渲染中途改任何源文件都会让 verify 的
+render_sources_current 变红**（页面内容是启动时载入的旧版，指纹却是新文件），正确顺序=
+全部改完 → 无 --render 采样快检（改代码后最先暴露 pageerror）→ probe → 整渲；选角表类
+JSON 配置追加键前先 grep 同名键（JSON 重复键静默后者胜，前键永不生效，探针不会报错）。
+
 ## 粒子与场景接合
 
 原画的布局准备可运行 `scripts/prepare_cel_crops.py --episode PATH --config FILE`。
@@ -191,6 +215,19 @@ node <skill>/scripts/capture_references.mjs --episode <episode> --config config/
 原画脚点，调用方先应用与人物相同的摄影变换。`createCelIntegration({width,height})`
 返回的 `draw(ctx,celImage,{warmPoint,warmRadius,firePoint,firePower,time})` 保留原轮廓，
 用 `source-atop` 限定着色区域。投影是有限画面的绘制近似，不能称为物理阴影通过。
+
+[locked-variant-face.js](../assets/locked-variant-face.js)（2026-10-28《借走月光》A3 入库）
+是 image-lipsync 锁区工艺的合成页形态：base 肖像 + 一组"框外与底图逐像素一致"的
+锁回变体（嘴 half/open、眨眼、表情），`paint({jaw,emotion,blink})` 按 jaw 三态选嘴窗、
+按表情选整层、blink 阈 .60 选眨眼窗，全部 drawImage 同位贴窗，不做溶接
+（水墨轮廓是离散画，溶解=两张脸）。嘴窗贴到表情层之上时，嘴部表情取底图中性——
+跨变体共享同一底图画形是前提，不是跨图移植窗口的豁免。
+
+3D 粒子系统整组重宿主到二维合成页的模式（同 A3）：把装配函数拆成
+"活体 world 构建 + 系统装配核心"两层（装配核心只依赖锚点接口：Object3D 或
+`fn(t,out)`，ParticleSystem 原生两种都吃），合成页用 bake 逐帧世界坐标的 fn 锚点
+重建 world，静态场景件用一次性快照 JSON（捕两份不同时刻验证零漂移）。
+反馈光 PointLight 在 2D 无受光面，合成页以同包络径向辉光承担，别硬搬灯光对象。
 
 原画已获认可时，先小幅调整光色和接触关系；只靠大范围模糊会损伤线稿。把“原画
 文件哈希未变”“未启用新模式时像素回归一致”与主代理对实际画面的判断分别记录。

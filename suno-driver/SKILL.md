@@ -101,6 +101,15 @@ SUNO_EMAIL='you@gmail.com' SUNO_PASSWORD='***' \
   --style "..." --instrumental --out ... --count 2
 ```
 
+### 2026-10-27：--download-id 的 Download 菜单改点击展开
+
+- `--download-id` 授权下载分支原用 `hover()` 展开 Download 子菜单，现行 UI 悬停不再
+  展开（headed/headless 均超时），**点击** Download 后出现 WAV menuitem，再走
+  Unlock & Download。已修 `scripts/suno_generate.py` 该分支（与主生成流程的
+  点击路径对齐）。佐证了既有条目"以当前快照里的对话框状态为准"。
+- 同轮确认：Songs 的 WAV 下载落盘仍为 **MP3 48kHz**（codec=mp3 + mjpeg 封面），
+  接入管线一律以 ffprobe 实测容器为准；title 输入框选择器仍失效（Suno 自动命名）。
+
 ## 与其他通道的关系
 
 - 全自动正式 API：`volc-song-gen`（火山 GenSong，经 veFaaS 中转）——优先用

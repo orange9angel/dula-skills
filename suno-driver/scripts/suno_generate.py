@@ -396,13 +396,24 @@ def main():
                 # protected player media. Unlock consumes the account's download allowance.
                 try:
                     page.get_by_role('button',name='More options',exact=True).first.click()
-                    page.get_by_role('menuitem',name='Download',exact=True).hover()
-                    dialog=page.get_by_role('dialog').filter(has_text='Download').first
-                    dialog.wait_for(state='visible',timeout=10000)
-                    dialog.get_by_role('button',name='WAV',exact=True).click()
-                    confirm=dialog.get_by_role('button',name=re.compile(r'^(Unlock & Download|Download)$')).first
+                    # 2026-10-27: Download 子菜单必须点击展开（hover 无效），
+                    # 与主流程下载路径一致；WAV 可能以 menuitem 或按钮出现。
+                    page.get_by_role('menuitem',name='Download',exact=True).click()
+                    page.wait_for_timeout(1200)
+                    wav=page.locator('[role="menuitem"]:has-text("WAV"), button:has-text("WAV"), div[role="button"]:has-text("WAV")').first
+                    wav.wait_for(state='visible',timeout=10000)
+                    wav.click()
+                    page.wait_for_timeout(800)
+                    confirm=None
+                    for csel in ('button:has-text("Unlock & Download")','button:has-text("Unlock and Download")',
+                                 'div.fixed.inset-0 button:has-text("Download")','[role="dialog"] button:has-text("Download")'):
+                        cl=page.locator(csel).last
+                        if cl.count() and cl.is_visible():confirm=csel;break
                     with page.expect_download(timeout=max(120000,args.timeout*1000)) as pending:
-                        confirm.click()
+                        if confirm:
+                            page.locator(confirm).last.click()
+                        else:
+                            wav.click()
                     dl=pending.value
                     target=args.out/((args.title or args.download_id)+'.wav');dl.save_as(str(target))
                     if dl.failure():raise RuntimeError(dl.failure())

@@ -17,10 +17,19 @@ def log(m):
     print(f'[suno-login] {m}', flush=True)
 
 def main():
+    if sys.argv[1:]==['--store-credentials']:
+        from suno_credentials import store
+        store()
+        return
     email, password = os.environ.get('SUNO_EMAIL'), os.environ.get('SUNO_PASSWORD')
+    if not email or not password:
+        from suno_credentials import load
+        saved=load()
+        email=email or saved.get('email')
+        password=password or saved.get('password')
     headless = os.environ.get('SUNO_HEADLESS') == '1'
     if not email or not password:
-        sys.exit('需要 SUNO_EMAIL / SUNO_PASSWORD 环境变量')
+        sys.exit('需要环境变量凭据，或经用户授权运行 suno_credentials.py --store 保存本地加密凭据')
     from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
         ctx = p.chromium.launch_persistent_context(
