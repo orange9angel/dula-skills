@@ -273,6 +273,13 @@ Open the screenshots in `episodes/<name>_showcase/storyboard/` (or the path the 
   节奏——骨盆（衔接腿根）→ 收腰 → 胸扩 → 肩斜（斜方肌收窄）→ 颈根小圈；
   等宽椭圆管正面读成纸板。早期独立肩球在 R19 改为袖根接入胸廓，避免球形接头；
   腿部按大腿、膝、小腿和踝安排粗细变化，段数不能替代实际轮廓检查。
+- **ringsGeometry 环列 y 必须升序（2026-11 borrowed_moonlight P2）**：裙摆环列从腰到膝
+  按降序写（[.80…]→[.32…]）→ 三角绕序翻转、法线朝内，整件裙子只吃 toon ramp 阴影阶
+  （米白裙渲成深紫灰），BackSide 描边壳跟着翻面。环列永远自下而上排列再检查法线。
+- **pose spec 漏字段=整头静默消失（同轮）**：headYaw/headPitch 未在 spec 兜底时
+  `headGroup.rotation.set(undefined,…)` → matrixWorld 全 NaN，头部子树整体不渲染但
+  无脚本异常（shape-and-deformation「pivot 字段 NaN」的姊妹篇；几何/纹理/可见性探针
+  全部正常，只有 localToWorld 出 NaN 才现形）。求解器出口一律 `??0` 兜底。
   外套类轮廓件要包住新胸廓（胸宽过背板会从侧面穿出）。
 - **走路上身必须接入实际变换（R18→R21）**：重心侧摆后重新换算脚部局部坐标，
   躯干、肩根和手目标共用变换，头部按表演适量稳定。起停、转身与最后收脚共同

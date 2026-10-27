@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-09-26T16:42:45+08:00",
+  "fetched_at": "2026-10-11T23:44:58+08:00",
   "resource_id": "seed-tts-2.0",
   "total": 445,
   "category_counts": {
@@ -72,8 +72,8 @@
       "Preview": true,
       "Emoji": "💐",
       "BidirectionalUnsupport": false,
-      "Requests": 77513358,
-      "TextLength": 20918181877,
+      "Requests": 116122532,
+      "TextLength": 31160571135,
       "Heat": 99,
       "category": "其他"
     },
@@ -128,9 +128,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7118217,
-      "TextLength": 144087375,
-      "Heat": 79,
+      "Requests": 26764670,
+      "TextLength": 403237570,
+      "Heat": 88,
       "category": "其他"
     },
     {
@@ -170,9 +170,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 432007,
-      "TextLength": 47186348,
-      "Heat": 55,
+      "Requests": 332646,
+      "TextLength": 39833061,
+      "Heat": 53,
       "category": "其他"
     },
     {
@@ -212,9 +212,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 193456,
-      "TextLength": 9832125,
-      "Heat": 48,
+      "Requests": 146833,
+      "TextLength": 6669658,
+      "Heat": 47,
       "category": "演绎"
     },
     {
@@ -254,9 +254,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 52970,
-      "TextLength": 1885658,
-      "Heat": 37,
+      "Requests": 65558,
+      "TextLength": 3653921,
+      "Heat": 41,
       "category": "其他"
     },
     {
@@ -298,8 +298,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 311662,
-      "TextLength": 38192000,
+      "Requests": 295385,
+      "TextLength": 31561989,
       "Heat": 52,
       "category": "其他"
     },
@@ -352,9 +352,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 109036,
-      "TextLength": 8660935,
-      "Heat": 43,
+      "Requests": 75550,
+      "TextLength": 3752695,
+      "Heat": 42,
       "category": "其他"
     },
     {
@@ -406,8 +406,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1246095,
-      "TextLength": 40756337,
+      "Requests": 1259590,
+      "TextLength": 54007402,
       "Heat": 64,
       "category": "其他"
     },
@@ -460,8 +460,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 610187,
-      "TextLength": 18276202,
+      "Requests": 638537,
+      "TextLength": 18204984,
       "Heat": 58,
       "category": "其他"
     },
@@ -514,9 +514,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1014690,
-      "TextLength": 54338024,
-      "Heat": 62,
+      "Requests": 680601,
+      "TextLength": 36712896,
+      "Heat": 59,
       "category": "其他"
     },
     {
@@ -568,9 +568,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 614000,
-      "TextLength": 25831426,
-      "Heat": 58,
+      "Requests": 562089,
+      "TextLength": 175525006,
+      "Heat": 57,
       "category": "其他"
     },
     {
@@ -618,9 +618,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 54252,
-      "TextLength": 1446935,
-      "Heat": 37,
+      "Requests": 47847,
+      "TextLength": 1388941,
+      "Heat": 38,
       "category": "演绎"
     },
     {
@@ -663,9 +663,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 27335,
-      "TextLength": 780977,
-      "Heat": 32,
+      "Requests": 10984,
+      "TextLength": 716385,
+      "Heat": 27,
       "category": "其他"
     },
     {
@@ -707,9 +707,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 12846,
-      "TextLength": 446705,
-      "Heat": 26,
+      "Requests": 8896,
+      "TextLength": 712275,
+      "Heat": 25,
       "category": "其他"
     },
     {
@@ -753,8 +753,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 473550,
-      "TextLength": 20317146,
+      "Requests": 494465,
+      "TextLength": 21273780,
       "Heat": 56,
       "category": "其他"
     },
@@ -797,9 +797,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 56096,
-      "TextLength": 1641822,
-      "Heat": 38,
+      "Requests": 87855,
+      "TextLength": 5629062,
+      "Heat": 43,
       "category": "其他"
     },
     {
@@ -839,9 +839,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 42797,
-      "TextLength": 1256050,
-      "Heat": 36,
+      "Requests": 199378,
+      "TextLength": 1970829,
+      "Heat": 49,
       "category": "其他"
     },
     {
@@ -881,9 +881,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 499419,
-      "TextLength": 20783435,
-      "Heat": 56,
+      "Requests": 5236026,
+      "TextLength": 101519685,
+      "Heat": 75,
       "category": "其他"
     },
     {
@@ -926,9 +926,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 82547,
-      "TextLength": 2102287,
-      "Heat": 41,
+      "Requests": 54124,
+      "TextLength": 2705026,
+      "Heat": 39,
       "category": "其他"
     },
     {
@@ -971,9 +971,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 77311,
-      "TextLength": 3180443,
-      "Heat": 40,
+      "Requests": 51407,
+      "TextLength": 2376152,
+      "Heat": 39,
       "category": "演绎"
     },
     {
@@ -1013,9 +1013,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 24778,
-      "TextLength": 734081,
-      "Heat": 31,
+      "Requests": 32430,
+      "TextLength": 1218788,
+      "Heat": 35,
       "category": "其他"
     },
     {
@@ -1055,9 +1055,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 24179,
-      "TextLength": 702614,
-      "Heat": 31,
+      "Requests": 20211,
+      "TextLength": 980588,
+      "Heat": 32,
       "category": "其他"
     },
     {
@@ -1103,9 +1103,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 407985,
-      "TextLength": 10821515,
-      "Heat": 55,
+      "Requests": 291527,
+      "TextLength": 10975325,
+      "Heat": 52,
       "category": "演绎"
     },
     {
@@ -1151,9 +1151,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 615264,
-      "TextLength": 14966699,
-      "Heat": 58,
+      "Requests": 502601,
+      "TextLength": 11412599,
+      "Heat": 57,
       "category": "其他"
     },
     {
@@ -1193,9 +1193,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 17459,
-      "TextLength": 554112,
-      "Heat": 28,
+      "Requests": 15072,
+      "TextLength": 1059976,
+      "Heat": 29,
       "category": "其他"
     },
     {
@@ -1227,9 +1227,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 126891,
-      "TextLength": 6080613,
-      "Heat": 45,
+      "Requests": 97612,
+      "TextLength": 5161361,
+      "Heat": 44,
       "category": "其他"
     },
     {
@@ -1275,9 +1275,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 174561,
-      "TextLength": 4577347,
-      "Heat": 47,
+      "Requests": 424373,
+      "TextLength": 8605257,
+      "Heat": 55,
       "category": "其他"
     },
     {
@@ -1317,9 +1317,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 19826,
-      "TextLength": 643952,
-      "Heat": 29,
+      "Requests": 107656,
+      "TextLength": 2636898,
+      "Heat": 44,
       "category": "其他"
     },
     {
@@ -1365,9 +1365,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 14266,
-      "TextLength": 496237,
-      "Heat": 26,
+      "Requests": 13369,
+      "TextLength": 892589,
+      "Heat": 28,
       "category": "其他"
     },
     {
@@ -1407,9 +1407,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 593856,
-      "TextLength": 21295220,
-      "Heat": 58,
+      "Requests": 482709,
+      "TextLength": 19253291,
+      "Heat": 56,
       "category": "其他"
     },
     {
@@ -1449,8 +1449,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 549773,
-      "TextLength": 22006400,
+      "Requests": 569844,
+      "TextLength": 21384297,
       "Heat": 57,
       "category": "其他"
     },
@@ -1491,9 +1491,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 100216,
-      "TextLength": 2916412,
-      "Heat": 43,
+      "Requests": 142153,
+      "TextLength": 4155088,
+      "Heat": 47,
       "category": "其他"
     },
     {
@@ -1533,9 +1533,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 448684,
-      "TextLength": 14792382,
-      "Heat": 55,
+      "Requests": 443817,
+      "TextLength": 13274447,
+      "Heat": 56,
       "category": "其他"
     },
     {
@@ -1575,9 +1575,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 229818,
-      "TextLength": 10945825,
-      "Heat": 50,
+      "Requests": 133155,
+      "TextLength": 7285940,
+      "Heat": 46,
       "category": "其他"
     },
     {
@@ -1625,8 +1625,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 426331,
-      "TextLength": 31318750,
+      "Requests": 417837,
+      "TextLength": 32907704,
       "Heat": 55,
       "category": "其他"
     },
@@ -1675,9 +1675,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 8726201,
-      "TextLength": 2654189829,
-      "Heat": 80,
+      "Requests": 12250272,
+      "TextLength": 3572786694,
+      "Heat": 81,
       "category": "其他"
     },
     {
@@ -1719,9 +1719,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 46568,
-      "TextLength": 1654089,
-      "Heat": 36,
+      "Requests": 49728,
+      "TextLength": 1534371,
+      "Heat": 38,
       "category": "其他"
     },
     {
@@ -1769,9 +1769,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 114741,
-      "TextLength": 3315049,
-      "Heat": 44,
+      "Requests": 69518,
+      "TextLength": 2232760,
+      "Heat": 41,
       "category": "其他"
     },
     {
@@ -1813,9 +1813,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 124452,
-      "TextLength": 5243270,
-      "Heat": 44,
+      "Requests": 164208,
+      "TextLength": 8414968,
+      "Heat": 48,
       "category": "其他"
     },
     {
@@ -1859,9 +1859,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 38727,
-      "TextLength": 1439980,
-      "Heat": 35,
+      "Requests": 46001,
+      "TextLength": 1816011,
+      "Heat": 38,
       "category": "其他"
     },
     {
@@ -1904,9 +1904,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 13724,
-      "TextLength": 447767,
-      "Heat": 26,
+      "Requests": 48334,
+      "TextLength": 1208439,
+      "Heat": 38,
       "category": "其他"
     },
     {
@@ -1949,9 +1949,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 14345,
-      "TextLength": 749947,
-      "Heat": 26,
+      "Requests": 19128,
+      "TextLength": 919267,
+      "Heat": 31,
       "category": "其他"
     },
     {
@@ -1994,9 +1994,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 10264,
-      "TextLength": 359973,
-      "Heat": 24,
+      "Requests": 9702,
+      "TextLength": 710377,
+      "Heat": 26,
       "category": "其他"
     },
     {
@@ -2039,9 +2039,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 32654,
-      "TextLength": 1067737,
-      "Heat": 33,
+      "Requests": 38277,
+      "TextLength": 1592771,
+      "Heat": 36,
       "category": "演绎"
     },
     {
@@ -2084,8 +2084,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 92256,
-      "TextLength": 3100508,
+      "Requests": 75791,
+      "TextLength": 2695097,
       "Heat": 42,
       "category": "其他"
     },
@@ -2129,9 +2129,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 10784,
-      "TextLength": 406998,
-      "Heat": 24,
+      "Requests": 23890,
+      "TextLength": 1003234,
+      "Heat": 33,
       "category": "其他"
     },
     {
@@ -2174,9 +2174,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 14156,
-      "TextLength": 567131,
-      "Heat": 26,
+      "Requests": 11471,
+      "TextLength": 805027,
+      "Heat": 27,
       "category": "其他"
     },
     {
@@ -2220,9 +2220,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 34854,
-      "TextLength": 1002830,
-      "Heat": 34,
+      "Requests": 20108,
+      "TextLength": 970872,
+      "Heat": 32,
       "category": "其他"
     },
     {
@@ -2266,9 +2266,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 47239,
-      "TextLength": 1043162,
-      "Heat": 36,
+      "Requests": 43516,
+      "TextLength": 1277379,
+      "Heat": 37,
       "category": "其他"
     },
     {
@@ -2312,9 +2312,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 62433,
-      "TextLength": 3261656,
-      "Heat": 39,
+      "Requests": 46810,
+      "TextLength": 2116105,
+      "Heat": 38,
       "category": "其他"
     },
     {
@@ -2357,9 +2357,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 29065,
-      "TextLength": 968926,
-      "Heat": 32,
+      "Requests": 42007,
+      "TextLength": 1452497,
+      "Heat": 37,
       "category": "其他"
     },
     {
@@ -2403,9 +2403,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 13687,
-      "TextLength": 452315,
-      "Heat": 26,
+      "Requests": 44077,
+      "TextLength": 1232773,
+      "Heat": 38,
       "category": "演绎"
     },
     {
@@ -2445,9 +2445,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 37057,
-      "TextLength": 1356624,
-      "Heat": 34,
+      "Requests": 67328,
+      "TextLength": 2263392,
+      "Heat": 41,
       "category": "其他"
     },
     {
@@ -2487,9 +2487,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 79360,
-      "TextLength": 2561109,
-      "Heat": 41,
+      "Requests": 98336,
+      "TextLength": 2602891,
+      "Heat": 44,
       "category": "其他"
     },
     {
@@ -2529,9 +2529,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 826827,
-      "TextLength": 68194315,
-      "Heat": 60,
+      "Requests": 514804,
+      "TextLength": 15727627,
+      "Heat": 57,
       "category": "其他"
     },
     {
@@ -2571,9 +2571,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 23366,
-      "TextLength": 631387,
-      "Heat": 30,
+      "Requests": 37496,
+      "TextLength": 1181937,
+      "Heat": 36,
       "category": "其他"
     },
     {
@@ -2623,9 +2623,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 72145,
-      "TextLength": 2343096,
-      "Heat": 40,
+      "Requests": 65564,
+      "TextLength": 2242748,
+      "Heat": 41,
       "category": "演绎"
     },
     {
@@ -2669,9 +2669,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 57581,
-      "TextLength": 1814199,
-      "Heat": 38,
+      "Requests": 50780,
+      "TextLength": 2066972,
+      "Heat": 39,
       "category": "其他"
     },
     {
@@ -2711,9 +2711,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 139859,
-      "TextLength": 20248751,
-      "Heat": 45,
+      "Requests": 167970,
+      "TextLength": 20761914,
+      "Heat": 48,
       "category": "其他"
     },
     {
@@ -2753,9 +2753,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 26211,
-      "TextLength": 1075938,
-      "Heat": 31,
+      "Requests": 20531,
+      "TextLength": 1023462,
+      "Heat": 32,
       "category": "其他"
     },
     {
@@ -2799,9 +2799,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 30007,
-      "TextLength": 1159052,
-      "Heat": 33,
+      "Requests": 61193,
+      "TextLength": 1769683,
+      "Heat": 40,
       "category": "其他"
     },
     {
@@ -2841,9 +2841,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 14257,
-      "TextLength": 452621,
-      "Heat": 26,
+      "Requests": 57469,
+      "TextLength": 1444664,
+      "Heat": 40,
       "category": "其他"
     },
     {
@@ -2883,9 +2883,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 120793,
-      "TextLength": 2457452,
-      "Heat": 44,
+      "Requests": 1062948,
+      "TextLength": 28701651,
+      "Heat": 62,
       "category": "其他"
     },
     {
@@ -2925,9 +2925,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 92882,
-      "TextLength": 1822345,
-      "Heat": 42,
+      "Requests": 107572,
+      "TextLength": 2526578,
+      "Heat": 44,
       "category": "其他"
     },
     {
@@ -2971,9 +2971,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 19390,
-      "TextLength": 679442,
-      "Heat": 29,
+      "Requests": 9146,
+      "TextLength": 809144,
+      "Heat": 26,
       "category": "其他"
     },
     {
@@ -3016,9 +3016,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 70430,
-      "TextLength": 1532626,
-      "Heat": 40,
+      "Requests": 111915,
+      "TextLength": 2419728,
+      "Heat": 45,
       "category": "其他"
     },
     {
@@ -3062,9 +3062,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 60145,
-      "TextLength": 2079652,
-      "Heat": 38,
+      "Requests": 89173,
+      "TextLength": 3859092,
+      "Heat": 43,
       "category": "演绎"
     },
     {
@@ -3108,9 +3108,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 59415,
-      "TextLength": 1238347,
-      "Heat": 38,
+      "Requests": 245171,
+      "TextLength": 5825825,
+      "Heat": 51,
       "category": "其他"
     },
     {
@@ -3155,9 +3155,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 40903,
-      "TextLength": 1846852,
-      "Heat": 35,
+      "Requests": 29001,
+      "TextLength": 1771100,
+      "Heat": 34,
       "category": "其他"
     },
     {
@@ -3201,9 +3201,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 87219,
-      "TextLength": 3452088,
-      "Heat": 41,
+      "Requests": 87748,
+      "TextLength": 3179421,
+      "Heat": 43,
       "category": "其他"
     },
     {
@@ -3247,8 +3247,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 21864,
-      "TextLength": 689477,
+      "Requests": 15637,
+      "TextLength": 889519,
       "Heat": 30,
       "category": "其他"
     },
@@ -3289,9 +3289,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 16920,
-      "TextLength": 678927,
-      "Heat": 28,
+      "Requests": 21020,
+      "TextLength": 1059104,
+      "Heat": 32,
       "category": "其他"
     },
     {
@@ -3331,9 +3331,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 21194,
-      "TextLength": 874730,
-      "Heat": 30,
+      "Requests": 31227,
+      "TextLength": 1328232,
+      "Heat": 35,
       "category": "其他"
     },
     {
@@ -3373,9 +3373,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 36849,
-      "TextLength": 1200535,
-      "Heat": 34,
+      "Requests": 48251,
+      "TextLength": 1585628,
+      "Heat": 38,
       "category": "其他"
     },
     {
@@ -3415,9 +3415,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 136154,
-      "TextLength": 3222950,
-      "Heat": 45,
+      "Requests": 100780,
+      "TextLength": 3010153,
+      "Heat": 44,
       "category": "其他"
     },
     {
@@ -3457,9 +3457,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 948144,
-      "TextLength": 27449556,
-      "Heat": 62,
+      "Requests": 788129,
+      "TextLength": 25079702,
+      "Heat": 60,
       "category": "其他"
     },
     {
@@ -3499,8 +3499,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 413334,
-      "TextLength": 12538091,
+      "Requests": 396726,
+      "TextLength": 5116116,
       "Heat": 55,
       "category": "其他"
     },
@@ -3541,9 +3541,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 198256,
-      "TextLength": 8512888,
-      "Heat": 48,
+      "Requests": 182742,
+      "TextLength": 7605542,
+      "Heat": 49,
       "category": "其他"
     },
     {
@@ -3583,9 +3583,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 495496,
-      "TextLength": 31419052,
-      "Heat": 56,
+      "Requests": 372052,
+      "TextLength": 18623846,
+      "Heat": 54,
       "category": "其他"
     },
     {
@@ -3625,9 +3625,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 608114,
-      "TextLength": 21036150,
-      "Heat": 58,
+      "Requests": 551278,
+      "TextLength": 16734847,
+      "Heat": 57,
       "category": "其他"
     },
     {
@@ -3667,9 +3667,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 844110,
-      "TextLength": 86606367,
-      "Heat": 61,
+      "Requests": 539418,
+      "TextLength": 64649149,
+      "Heat": 57,
       "category": "其他"
     },
     {
@@ -3709,9 +3709,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1235297,
-      "TextLength": 49961797,
-      "Heat": 64,
+      "Requests": 1134735,
+      "TextLength": 49380848,
+      "Heat": 63,
       "category": "其他"
     },
     {
@@ -3751,9 +3751,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 742455,
-      "TextLength": 33118824,
-      "Heat": 60,
+      "Requests": 722034,
+      "TextLength": 28474000,
+      "Heat": 59,
       "category": "其他"
     },
     {
@@ -3793,8 +3793,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 8506135,
-      "TextLength": 306054095,
+      "Requests": 9685398,
+      "TextLength": 365904843,
       "Heat": 80,
       "category": "其他"
     },
@@ -3835,8 +3835,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 68979,
-      "TextLength": 2278991,
+      "Requests": 59557,
+      "TextLength": 2272083,
       "Heat": 40,
       "category": "其他"
     },
@@ -3877,9 +3877,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1556947,
-      "TextLength": 57872736,
-      "Heat": 66,
+      "Requests": 1291189,
+      "TextLength": 46498610,
+      "Heat": 64,
       "category": "其他"
     },
     {
@@ -3919,9 +3919,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 475718,
-      "TextLength": 15172492,
-      "Heat": 56,
+      "Requests": 418213,
+      "TextLength": 14392058,
+      "Heat": 55,
       "category": "其他"
     },
     {
@@ -3961,9 +3961,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 52593,
-      "TextLength": 2709474,
-      "Heat": 37,
+      "Requests": 167753,
+      "TextLength": 4049602,
+      "Heat": 48,
       "category": "其他"
     },
     {
@@ -4003,8 +4003,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5961,
-      "TextLength": 95179,
+      "Requests": 4631,
+      "TextLength": 129436,
       "Heat": 20,
       "category": "其他"
     },
@@ -4045,9 +4045,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1156,
-      "TextLength": 45742,
-      "Heat": 9,
+      "Requests": 15181,
+      "TextLength": 471715,
+      "Heat": 29,
       "category": "其他"
     },
     {
@@ -4106,9 +4106,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 3468,
-      "TextLength": 215365,
-      "Heat": 16,
+      "Requests": 6901,
+      "TextLength": 390443,
+      "Heat": 23,
       "category": "其他"
     },
     {
@@ -4161,9 +4161,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1610,
-      "TextLength": 195953,
-      "Heat": 10,
+      "Requests": 3562,
+      "TextLength": 602378,
+      "Heat": 19,
       "category": "其他"
     },
     {
@@ -4222,9 +4222,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 250681,
-      "TextLength": 11081150,
-      "Heat": 50,
+      "Requests": 140099,
+      "TextLength": 3404830,
+      "Heat": 47,
       "category": "其他"
     },
     {
@@ -4289,9 +4289,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1033,
-      "TextLength": 112934,
-      "Heat": 8,
+      "Requests": 1402,
+      "TextLength": 192407,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -4344,9 +4344,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1021,
-      "TextLength": 130526,
-      "Heat": 8,
+      "Requests": 1012,
+      "TextLength": 124838,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -4405,9 +4405,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 3230,
-      "TextLength": 271024,
-      "Heat": 15,
+      "Requests": 1177,
+      "TextLength": 152175,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -4449,9 +4449,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5940,
-      "TextLength": 101435,
-      "Heat": 20,
+      "Requests": 1374,
+      "TextLength": 68019,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -4493,9 +4493,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5326,
-      "TextLength": 89953,
-      "Heat": 19,
+      "Requests": 917,
+      "TextLength": 38686,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -4537,9 +4537,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6237,
-      "TextLength": 108226,
-      "Heat": 20,
+      "Requests": 5286,
+      "TextLength": 276570,
+      "Heat": 21,
       "category": "其他"
     },
     {
@@ -4581,9 +4581,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6314,
-      "TextLength": 111604,
-      "Heat": 20,
+      "Requests": 2771,
+      "TextLength": 64353,
+      "Heat": 17,
       "category": "其他"
     },
     {
@@ -4625,9 +4625,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6114,
-      "TextLength": 115169,
-      "Heat": 20,
+      "Requests": 1231,
+      "TextLength": 39798,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -4669,9 +4669,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 27106,
-      "TextLength": 529050,
-      "Heat": 32,
+      "Requests": 8815,
+      "TextLength": 241371,
+      "Heat": 25,
       "category": "其他"
     },
     {
@@ -4713,9 +4713,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5168,
-      "TextLength": 84262,
-      "Heat": 18,
+      "Requests": 800,
+      "TextLength": 33367,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -4757,9 +4757,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6105,
-      "TextLength": 90814,
-      "Heat": 20,
+      "Requests": 8894,
+      "TextLength": 275803,
+      "Heat": 25,
       "category": "其他"
     },
     {
@@ -4801,9 +4801,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4954,
-      "TextLength": 80804,
-      "Heat": 18,
+      "Requests": 1133,
+      "TextLength": 42137,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -4845,9 +4845,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5253,
-      "TextLength": 92490,
-      "Heat": 19,
+      "Requests": 1646,
+      "TextLength": 57864,
+      "Heat": 13,
       "category": "其他"
     },
     {
@@ -4889,9 +4889,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7534,
-      "TextLength": 147537,
-      "Heat": 21,
+      "Requests": 1885,
+      "TextLength": 101890,
+      "Heat": 14,
       "category": "其他"
     },
     {
@@ -4933,9 +4933,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6382,
-      "TextLength": 163418,
-      "Heat": 20,
+      "Requests": 3842,
+      "TextLength": 128478,
+      "Heat": 19,
       "category": "其他"
     },
     {
@@ -4977,9 +4977,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7283,
-      "TextLength": 309653,
-      "Heat": 21,
+      "Requests": 1675,
+      "TextLength": 133952,
+      "Heat": 13,
       "category": "其他"
     },
     {
@@ -5021,9 +5021,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5130,
-      "TextLength": 83829,
-      "Heat": 18,
+      "Requests": 1291,
+      "TextLength": 49760,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -5065,9 +5065,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7075,
-      "TextLength": 185471,
-      "Heat": 21,
+      "Requests": 4453,
+      "TextLength": 233658,
+      "Heat": 20,
       "category": "其他"
     },
     {
@@ -5109,9 +5109,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6002,
-      "TextLength": 102128,
-      "Heat": 20,
+      "Requests": 1566,
+      "TextLength": 51597,
+      "Heat": 13,
       "category": "其他"
     },
     {
@@ -5153,9 +5153,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5194,
-      "TextLength": 86918,
-      "Heat": 19,
+      "Requests": 647,
+      "TextLength": 25431,
+      "Heat": 8,
       "category": "其他"
     },
     {
@@ -5197,9 +5197,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 75122,
-      "TextLength": 2034593,
-      "Heat": 40,
+      "Requests": 76085,
+      "TextLength": 2136866,
+      "Heat": 42,
       "category": "其他"
     },
     {
@@ -5241,9 +5241,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5286,
-      "TextLength": 91848,
-      "Heat": 19,
+      "Requests": 4375,
+      "TextLength": 144973,
+      "Heat": 20,
       "category": "其他"
     },
     {
@@ -5285,9 +5285,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 37910,
-      "TextLength": 1215041,
-      "Heat": 34,
+      "Requests": 8744,
+      "TextLength": 161811,
+      "Heat": 25,
       "category": "其他"
     },
     {
@@ -5329,9 +5329,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 26128,
-      "TextLength": 566240,
-      "Heat": 31,
+      "Requests": 21829,
+      "TextLength": 497626,
+      "Heat": 32,
       "category": "其他"
     },
     {
@@ -5373,9 +5373,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 13022,
-      "TextLength": 386883,
-      "Heat": 26,
+      "Requests": 7953,
+      "TextLength": 246722,
+      "Heat": 24,
       "category": "其他"
     },
     {
@@ -5417,9 +5417,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 70791,
-      "TextLength": 1904538,
-      "Heat": 40,
+      "Requests": 69133,
+      "TextLength": 1461560,
+      "Heat": 41,
       "category": "其他"
     },
     {
@@ -5461,9 +5461,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 12382,
-      "TextLength": 230500,
-      "Heat": 25,
+      "Requests": 7924,
+      "TextLength": 193176,
+      "Heat": 24,
       "category": "其他"
     },
     {
@@ -5505,9 +5505,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 9266,
-      "TextLength": 254674,
-      "Heat": 23,
+      "Requests": 46404,
+      "TextLength": 375121,
+      "Heat": 38,
       "category": "其他"
     },
     {
@@ -5549,9 +5549,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 28291,
-      "TextLength": 1321950,
-      "Heat": 32,
+      "Requests": 25397,
+      "TextLength": 1210969,
+      "Heat": 33,
       "category": "其他"
     },
     {
@@ -5593,9 +5593,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5061,
-      "TextLength": 83712,
-      "Heat": 18,
+      "Requests": 753,
+      "TextLength": 31742,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -5637,9 +5637,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 16418,
-      "TextLength": 275828,
-      "Heat": 28,
+      "Requests": 2960,
+      "TextLength": 95460,
+      "Heat": 17,
       "category": "其他"
     },
     {
@@ -5681,9 +5681,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 31118,
-      "TextLength": 856428,
-      "Heat": 33,
+      "Requests": 8018,
+      "TextLength": 432643,
+      "Heat": 25,
       "category": "其他"
     },
     {
@@ -5725,9 +5725,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5533,
-      "TextLength": 126495,
-      "Heat": 19,
+      "Requests": 787,
+      "TextLength": 47473,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -5769,9 +5769,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6605,
-      "TextLength": 120735,
-      "Heat": 20,
+      "Requests": 1640,
+      "TextLength": 119549,
+      "Heat": 13,
       "category": "其他"
     },
     {
@@ -5813,9 +5813,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 254452,
-      "TextLength": 4912670,
-      "Heat": 51,
+      "Requests": 166803,
+      "TextLength": 3349160,
+      "Heat": 48,
       "category": "其他"
     },
     {
@@ -5864,9 +5864,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4368,
-      "TextLength": 292530,
-      "Heat": 17,
+      "Requests": 1245,
+      "TextLength": 118724,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -5915,9 +5915,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 10863,
-      "TextLength": 716865,
-      "Heat": 24,
+      "Requests": 6591,
+      "TextLength": 442062,
+      "Heat": 23,
       "category": "其他"
     },
     {
@@ -5966,9 +5966,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 21301,
-      "TextLength": 507404,
-      "Heat": 30,
+      "Requests": 8591,
+      "TextLength": 267387,
+      "Heat": 25,
       "category": "其他"
     },
     {
@@ -6017,9 +6017,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 2466,
-      "TextLength": 62073,
-      "Heat": 13,
+      "Requests": 727,
+      "TextLength": 24706,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -6068,9 +6068,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 2290,
-      "TextLength": 47222,
-      "Heat": 13,
+      "Requests": 790,
+      "TextLength": 36611,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -6129,9 +6129,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7309,
-      "TextLength": 226107,
-      "Heat": 21,
+      "Requests": 849,
+      "TextLength": 96810,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -6184,9 +6184,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1493,
-      "TextLength": 150533,
-      "Heat": 10,
+      "Requests": 1444,
+      "TextLength": 138840,
+      "Heat": 13,
       "category": "其他"
     },
     {
@@ -6245,9 +6245,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7899,
-      "TextLength": 404958,
-      "Heat": 22,
+      "Requests": 2702,
+      "TextLength": 181105,
+      "Heat": 17,
       "category": "其他"
     },
     {
@@ -6306,9 +6306,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 769,
-      "TextLength": 99439,
-      "Heat": 7,
+      "Requests": 839,
+      "TextLength": 107003,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -6367,9 +6367,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": true,
-      "Requests": 538,
-      "TextLength": 54526,
-      "Heat": 5,
+      "Requests": 921,
+      "TextLength": 123451,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -6428,9 +6428,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1077,
-      "TextLength": 109600,
-      "Heat": 8,
+      "Requests": 825,
+      "TextLength": 100238,
+      "Heat": 9,
       "category": "演绎"
     },
     {
@@ -6489,9 +6489,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4877,
-      "TextLength": 193806,
-      "Heat": 18,
+      "Requests": 3676,
+      "TextLength": 160895,
+      "Heat": 19,
       "category": "其他"
     },
     {
@@ -6550,9 +6550,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1296,
-      "TextLength": 63454,
-      "Heat": 9,
+      "Requests": 1330,
+      "TextLength": 68852,
+      "Heat": 12,
       "category": "演绎"
     },
     {
@@ -6611,9 +6611,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5412,
-      "TextLength": 99463,
-      "Heat": 19,
+      "Requests": 4089,
+      "TextLength": 92360,
+      "Heat": 20,
       "category": "其他"
     },
     {
@@ -6672,9 +6672,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7818,
-      "TextLength": 117331,
-      "Heat": 22,
+      "Requests": 3269,
+      "TextLength": 73968,
+      "Heat": 18,
       "category": "其他"
     },
     {
@@ -6727,9 +6727,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1074,
-      "TextLength": 146685,
-      "Heat": 8,
+      "Requests": 856,
+      "TextLength": 105503,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -6782,9 +6782,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 733,
-      "TextLength": 102476,
-      "Heat": 6,
+      "Requests": 813,
+      "TextLength": 101355,
+      "Heat": 9,
       "category": "演绎"
     },
     {
@@ -6843,9 +6843,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": true,
-      "Requests": 681,
-      "TextLength": 59652,
-      "Heat": 6,
+      "Requests": 534,
+      "TextLength": 56015,
+      "Heat": 7,
       "category": "其他"
     },
     {
@@ -6904,9 +6904,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 906,
-      "TextLength": 119241,
-      "Heat": 7,
+      "Requests": 1029,
+      "TextLength": 108498,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -6965,9 +6965,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 2140,
-      "TextLength": 165830,
-      "Heat": 12,
+      "Requests": 5322,
+      "TextLength": 175127,
+      "Heat": 22,
       "category": "其他"
     },
     {
@@ -7020,9 +7020,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 26345,
-      "TextLength": 833432,
-      "Heat": 31,
+      "Requests": 25137,
+      "TextLength": 431255,
+      "Heat": 33,
       "category": "其他"
     },
     {
@@ -7075,9 +7075,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 856,
-      "TextLength": 83339,
-      "Heat": 7,
+      "Requests": 1019,
+      "TextLength": 80624,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -7130,9 +7130,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1551,
-      "TextLength": 136014,
-      "Heat": 10,
+      "Requests": 1220,
+      "TextLength": 131704,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -7191,9 +7191,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": true,
-      "Requests": 468,
-      "TextLength": 41279,
-      "Heat": 5,
+      "Requests": 427,
+      "TextLength": 37387,
+      "Heat": 6,
       "category": "演绎"
     },
     {
@@ -7252,9 +7252,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": true,
-      "Requests": 29040,
-      "TextLength": 1772256,
-      "Heat": 32,
+      "Requests": 26739,
+      "TextLength": 1786479,
+      "Heat": 34,
       "category": "其他"
     },
     {
@@ -7307,9 +7307,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1429,
-      "TextLength": 119014,
-      "Heat": 10,
+      "Requests": 1416,
+      "TextLength": 128425,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -7368,9 +7368,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1530,
-      "TextLength": 128163,
-      "Heat": 10,
+      "Requests": 846,
+      "TextLength": 81425,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -7429,9 +7429,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1077,
-      "TextLength": 95575,
-      "Heat": 8,
+      "Requests": 1101,
+      "TextLength": 97603,
+      "Heat": 11,
       "category": "演绎"
     },
     {
@@ -7490,9 +7490,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 28400,
-      "TextLength": 327565,
-      "Heat": 32,
+      "Requests": 7041,
+      "TextLength": 379590,
+      "Heat": 24,
       "category": "其他"
     },
     {
@@ -7551,9 +7551,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 2304,
-      "TextLength": 193701,
-      "Heat": 13,
+      "Requests": 1113,
+      "TextLength": 92260,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -7612,8 +7612,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4713,
-      "TextLength": 192081,
+      "Requests": 3243,
+      "TextLength": 128709,
       "Heat": 18,
       "category": "其他"
     },
@@ -7673,9 +7673,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1044,
-      "TextLength": 162909,
-      "Heat": 8,
+      "Requests": 1288,
+      "TextLength": 137326,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -7717,9 +7717,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 26260,
-      "TextLength": 1096123,
-      "Heat": 31,
+      "Requests": 77824,
+      "TextLength": 2690143,
+      "Heat": 42,
       "category": "其他"
     },
     {
@@ -7784,9 +7784,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": true,
-      "Requests": 3659,
-      "TextLength": 112727,
-      "Heat": 16,
+      "Requests": 2702,
+      "TextLength": 105473,
+      "Heat": 17,
       "category": "其他"
     },
     {
@@ -7851,9 +7851,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 2080,
-      "TextLength": 159558,
-      "Heat": 12,
+      "Requests": 889,
+      "TextLength": 117644,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -7918,9 +7918,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1656,
-      "TextLength": 140116,
-      "Heat": 11,
+      "Requests": 844,
+      "TextLength": 107297,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -7991,9 +7991,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4144,
-      "TextLength": 320195,
-      "Heat": 17,
+      "Requests": 1113,
+      "TextLength": 135307,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -8058,9 +8058,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 994,
-      "TextLength": 108218,
-      "Heat": 8,
+      "Requests": 881,
+      "TextLength": 109271,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -8119,9 +8119,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1630,
-      "TextLength": 159688,
-      "Heat": 11,
+      "Requests": 1412,
+      "TextLength": 157678,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -8186,9 +8186,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 846,
-      "TextLength": 103165,
-      "Heat": 7,
+      "Requests": 1424,
+      "TextLength": 130685,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -8253,9 +8253,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7203,
-      "TextLength": 367189,
-      "Heat": 21,
+      "Requests": 3999,
+      "TextLength": 193807,
+      "Heat": 19,
       "category": "其他"
     },
     {
@@ -8326,9 +8326,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 2822,
-      "TextLength": 169379,
-      "Heat": 14,
+      "Requests": 3350,
+      "TextLength": 163441,
+      "Heat": 18,
       "category": "资讯"
     },
     {
@@ -8393,9 +8393,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 766,
-      "TextLength": 119349,
-      "Heat": 7,
+      "Requests": 1036,
+      "TextLength": 132581,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -8460,9 +8460,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 814,
-      "TextLength": 143171,
-      "Heat": 7,
+      "Requests": 4440,
+      "TextLength": 285530,
+      "Heat": 20,
       "category": "其他"
     },
     {
@@ -8527,9 +8527,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1696,
-      "TextLength": 117505,
-      "Heat": 11,
+      "Requests": 971,
+      "TextLength": 98219,
+      "Heat": 10,
       "category": "演绎"
     },
     {
@@ -8594,8 +8594,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1317,
-      "TextLength": 98245,
+      "Requests": 851,
+      "TextLength": 105536,
       "Heat": 9,
       "category": "演绎"
     },
@@ -8661,9 +8661,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5401,
-      "TextLength": 237948,
-      "Heat": 19,
+      "Requests": 5668,
+      "TextLength": 208817,
+      "Heat": 22,
       "category": "其他"
     },
     {
@@ -8728,9 +8728,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 767,
-      "TextLength": 88753,
-      "Heat": 7,
+      "Requests": 819,
+      "TextLength": 98079,
+      "Heat": 9,
       "category": "演绎"
     },
     {
@@ -8795,9 +8795,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 976,
-      "TextLength": 98973,
-      "Heat": 8,
+      "Requests": 1428,
+      "TextLength": 126307,
+      "Heat": 12,
       "category": "演绎"
     },
     {
@@ -8862,9 +8862,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 943,
-      "TextLength": 100260,
-      "Heat": 8,
+      "Requests": 749,
+      "TextLength": 84475,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -8923,9 +8923,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 811,
-      "TextLength": 124821,
-      "Heat": 7,
+      "Requests": 757,
+      "TextLength": 121616,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -8990,9 +8990,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 2806,
-      "TextLength": 252165,
-      "Heat": 14,
+      "Requests": 3992,
+      "TextLength": 173274,
+      "Heat": 19,
       "category": "其他"
     },
     {
@@ -9057,9 +9057,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 3766,
-      "TextLength": 177033,
-      "Heat": 16,
+      "Requests": 3199,
+      "TextLength": 154572,
+      "Heat": 18,
       "category": "其他"
     },
     {
@@ -9124,9 +9124,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 906,
-      "TextLength": 114008,
-      "Heat": 7,
+      "Requests": 923,
+      "TextLength": 105295,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -9191,9 +9191,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": true,
-      "Requests": 494,
-      "TextLength": 67340,
-      "Heat": 5,
+      "Requests": 555,
+      "TextLength": 56736,
+      "Heat": 7,
       "category": "其他"
     },
     {
@@ -9258,9 +9258,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 810,
-      "TextLength": 107052,
-      "Heat": 7,
+      "Requests": 814,
+      "TextLength": 105027,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -9325,9 +9325,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1039,
-      "TextLength": 146980,
-      "Heat": 8,
+      "Requests": 825,
+      "TextLength": 102356,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -9392,9 +9392,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1016,
-      "TextLength": 106318,
-      "Heat": 8,
+      "Requests": 858,
+      "TextLength": 105536,
+      "Heat": 9,
       "category": "演绎"
     },
     {
@@ -9459,9 +9459,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 776,
-      "TextLength": 99044,
-      "Heat": 7,
+      "Requests": 873,
+      "TextLength": 108605,
+      "Heat": 10,
       "category": "演绎"
     },
     {
@@ -9526,8 +9526,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1434,
-      "TextLength": 119973,
+      "Requests": 988,
+      "TextLength": 104042,
       "Heat": 10,
       "category": "其他"
     },
@@ -9593,9 +9593,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1149,
-      "TextLength": 113418,
-      "Heat": 9,
+      "Requests": 2993,
+      "TextLength": 131505,
+      "Heat": 17,
       "category": "演绎"
     },
     {
@@ -9660,9 +9660,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 737,
-      "TextLength": 97942,
-      "Heat": 6,
+      "Requests": 919,
+      "TextLength": 101693,
+      "Heat": 10,
       "category": "演绎"
     },
     {
@@ -9727,9 +9727,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 769,
-      "TextLength": 102288,
-      "Heat": 7,
+      "Requests": 781,
+      "TextLength": 96449,
+      "Heat": 9,
       "category": "演绎"
     },
     {
@@ -9788,9 +9788,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 728,
-      "TextLength": 97536,
-      "Heat": 6,
+      "Requests": 791,
+      "TextLength": 101986,
+      "Heat": 9,
       "category": "演绎"
     },
     {
@@ -9855,9 +9855,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 3163,
-      "TextLength": 126473,
-      "Heat": 15,
+      "Requests": 3664,
+      "TextLength": 134699,
+      "Heat": 19,
       "category": "演绎"
     },
     {
@@ -9922,9 +9922,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 933,
-      "TextLength": 103465,
-      "Heat": 7,
+      "Requests": 1085,
+      "TextLength": 118500,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -9989,9 +9989,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 936,
-      "TextLength": 159999,
-      "Heat": 7,
+      "Requests": 1028,
+      "TextLength": 208138,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -10056,9 +10056,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 754,
-      "TextLength": 95987,
-      "Heat": 6,
+      "Requests": 706,
+      "TextLength": 93056,
+      "Heat": 8,
       "category": "演绎"
     },
     {
@@ -10129,9 +10129,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 815,
-      "TextLength": 98195,
-      "Heat": 7,
+      "Requests": 708,
+      "TextLength": 93132,
+      "Heat": 8,
       "category": "其他"
     },
     {
@@ -10196,9 +10196,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 800,
-      "TextLength": 101414,
-      "Heat": 7,
+      "Requests": 846,
+      "TextLength": 99445,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -10263,9 +10263,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 756,
-      "TextLength": 96310,
-      "Heat": 6,
+      "Requests": 794,
+      "TextLength": 97707,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -10330,9 +10330,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 754,
-      "TextLength": 96516,
-      "Heat": 6,
+      "Requests": 987,
+      "TextLength": 153126,
+      "Heat": 10,
       "category": "演绎"
     },
     {
@@ -10397,9 +10397,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 777,
-      "TextLength": 109904,
-      "Heat": 7,
+      "Requests": 1846,
+      "TextLength": 163989,
+      "Heat": 14,
       "category": "其他"
     },
     {
@@ -10464,9 +10464,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 2917,
-      "TextLength": 150199,
-      "Heat": 14,
+      "Requests": 2821,
+      "TextLength": 111373,
+      "Heat": 17,
       "category": "其他"
     },
     {
@@ -10537,8 +10537,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": true,
-      "Requests": 1360,
-      "TextLength": 38676,
+      "Requests": 745,
+      "TextLength": 32521,
       "Heat": 9,
       "category": "其他"
     },
@@ -10604,9 +10604,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 8070,
-      "TextLength": 236526,
-      "Heat": 22,
+      "Requests": 8724,
+      "TextLength": 229935,
+      "Heat": 25,
       "category": "演绎"
     },
     {
@@ -10671,9 +10671,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 2363,
-      "TextLength": 50809,
-      "Heat": 13,
+      "Requests": 4767,
+      "TextLength": 75188,
+      "Heat": 21,
       "category": "演绎"
     },
     {
@@ -10738,9 +10738,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": true,
-      "Requests": 860,
-      "TextLength": 31296,
-      "Heat": 7,
+      "Requests": 1049,
+      "TextLength": 51466,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -10805,8 +10805,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4005,
-      "TextLength": 140204,
+      "Requests": 2892,
+      "TextLength": 140519,
       "Heat": 17,
       "category": "演绎"
     },
@@ -10872,9 +10872,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1656,
-      "TextLength": 53539,
-      "Heat": 11,
+      "Requests": 1637,
+      "TextLength": 61145,
+      "Heat": 13,
       "category": "其他"
     },
     {
@@ -10945,9 +10945,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 10189,
-      "TextLength": 241588,
-      "Heat": 24,
+      "Requests": 39284,
+      "TextLength": 660641,
+      "Heat": 37,
       "category": "其他"
     },
     {
@@ -11012,9 +11012,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 3710,
-      "TextLength": 110410,
-      "Heat": 16,
+      "Requests": 1485,
+      "TextLength": 55865,
+      "Heat": 13,
       "category": "其他"
     },
     {
@@ -11079,9 +11079,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 3623,
-      "TextLength": 56467,
-      "Heat": 16,
+      "Requests": 4118,
+      "TextLength": 64434,
+      "Heat": 20,
       "category": "其他"
     },
     {
@@ -11146,9 +11146,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 963,
-      "TextLength": 167084,
-      "Heat": 8,
+      "Requests": 863,
+      "TextLength": 107632,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -11213,9 +11213,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 968,
-      "TextLength": 107812,
-      "Heat": 8,
+      "Requests": 1444,
+      "TextLength": 114062,
+      "Heat": 13,
       "category": "演绎"
     },
     {
@@ -11274,9 +11274,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 748,
-      "TextLength": 73720,
-      "Heat": 6,
+      "Requests": 657,
+      "TextLength": 64107,
+      "Heat": 8,
       "category": "其他"
     },
     {
@@ -11341,9 +11341,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1052,
-      "TextLength": 125152,
-      "Heat": 8,
+      "Requests": 962,
+      "TextLength": 104576,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -11408,9 +11408,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 744,
-      "TextLength": 102258,
-      "Heat": 6,
+      "Requests": 935,
+      "TextLength": 110918,
+      "Heat": 10,
       "category": "演绎"
     },
     {
@@ -11475,9 +11475,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 774,
-      "TextLength": 106509,
-      "Heat": 7,
+      "Requests": 861,
+      "TextLength": 110383,
+      "Heat": 10,
       "category": "演绎"
     },
     {
@@ -11542,9 +11542,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 908,
-      "TextLength": 109881,
-      "Heat": 7,
+      "Requests": 933,
+      "TextLength": 106267,
+      "Heat": 10,
       "category": "演绎"
     },
     {
@@ -11609,9 +11609,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1196,
-      "TextLength": 124757,
-      "Heat": 9,
+      "Requests": 1091,
+      "TextLength": 123715,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -11676,9 +11676,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1116,
-      "TextLength": 139875,
-      "Heat": 8,
+      "Requests": 1099,
+      "TextLength": 171501,
+      "Heat": 11,
       "category": "演绎"
     },
     {
@@ -11743,9 +11743,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 876,
-      "TextLength": 106674,
-      "Heat": 7,
+      "Requests": 814,
+      "TextLength": 103575,
+      "Heat": 9,
       "category": "演绎"
     },
     {
@@ -11810,9 +11810,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 3010,
-      "TextLength": 144024,
-      "Heat": 15,
+      "Requests": 3257,
+      "TextLength": 133373,
+      "Heat": 18,
       "category": "演绎"
     },
     {
@@ -11877,8 +11877,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1455,
-      "TextLength": 195525,
+      "Requests": 979,
+      "TextLength": 115325,
       "Heat": 10,
       "category": "演绎"
     },
@@ -11944,9 +11944,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7152,
-      "TextLength": 337550,
-      "Heat": 21,
+      "Requests": 1508,
+      "TextLength": 127531,
+      "Heat": 13,
       "category": "演绎"
     },
     {
@@ -12011,9 +12011,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 9962,
-      "TextLength": 492782,
-      "Heat": 24,
+      "Requests": 3167,
+      "TextLength": 146835,
+      "Heat": 18,
       "category": "其他"
     },
     {
@@ -12078,8 +12078,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 3765,
-      "TextLength": 203792,
+      "Requests": 2609,
+      "TextLength": 164065,
       "Heat": 16,
       "category": "演绎"
     },
@@ -12145,9 +12145,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 986,
-      "TextLength": 103131,
-      "Heat": 8,
+      "Requests": 840,
+      "TextLength": 77370,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -12206,8 +12206,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6665,
-      "TextLength": 394289,
+      "Requests": 4549,
+      "TextLength": 147628,
       "Heat": 20,
       "category": "其他"
     },
@@ -12267,9 +12267,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": true,
-      "Requests": 984,
-      "TextLength": 66769,
-      "Heat": 8,
+      "Requests": 791,
+      "TextLength": 57890,
+      "Heat": 9,
       "category": "演绎"
     },
     {
@@ -12334,9 +12334,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 843,
-      "TextLength": 87775,
-      "Heat": 7,
+      "Requests": 990,
+      "TextLength": 97939,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -12401,9 +12401,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 916,
-      "TextLength": 80766,
-      "Heat": 7,
+      "Requests": 1234,
+      "TextLength": 138510,
+      "Heat": 12,
       "category": "演绎"
     },
     {
@@ -12462,9 +12462,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7455,
-      "TextLength": 472269,
-      "Heat": 21,
+      "Requests": 3231,
+      "TextLength": 177151,
+      "Heat": 18,
       "category": "其他"
     },
     {
@@ -12529,9 +12529,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 938,
-      "TextLength": 97323,
-      "Heat": 7,
+      "Requests": 965,
+      "TextLength": 97265,
+      "Heat": 10,
       "category": "演绎"
     },
     {
@@ -12590,9 +12590,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 792,
-      "TextLength": 76770,
-      "Heat": 7,
+      "Requests": 742,
+      "TextLength": 71849,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -12651,8 +12651,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1404,
-      "TextLength": 102734,
+      "Requests": 891,
+      "TextLength": 79966,
       "Heat": 10,
       "category": "演绎"
     },
@@ -12718,9 +12718,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 15791,
-      "TextLength": 236306,
-      "Heat": 27,
+      "Requests": 4129,
+      "TextLength": 336380,
+      "Heat": 20,
       "category": "其他"
     },
     {
@@ -12785,9 +12785,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": true,
-      "Requests": 2195,
-      "TextLength": 108363,
-      "Heat": 12,
+      "Requests": 3068,
+      "TextLength": 197437,
+      "Heat": 18,
       "category": "演绎"
     },
     {
@@ -12852,9 +12852,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4162,
-      "TextLength": 298156,
-      "Heat": 17,
+      "Requests": 10244,
+      "TextLength": 439095,
+      "Heat": 26,
       "category": "其他"
     },
     {
@@ -12919,9 +12919,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": true,
-      "Requests": 6979,
-      "TextLength": 592814,
-      "Heat": 21,
+      "Requests": 1320,
+      "TextLength": 85138,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -12980,9 +12980,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4124,
-      "TextLength": 159249,
-      "Heat": 17,
+      "Requests": 3725,
+      "TextLength": 170724,
+      "Heat": 19,
       "category": "演绎"
     },
     {
@@ -13047,9 +13047,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 782,
-      "TextLength": 81049,
-      "Heat": 7,
+      "Requests": 852,
+      "TextLength": 80864,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -13114,9 +13114,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1175,
-      "TextLength": 119588,
-      "Heat": 9,
+      "Requests": 885,
+      "TextLength": 80826,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -13181,9 +13181,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4796,
-      "TextLength": 726387,
-      "Heat": 18,
+      "Requests": 1182,
+      "TextLength": 87448,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -13248,9 +13248,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 2941,
-      "TextLength": 125494,
-      "Heat": 14,
+      "Requests": 1303,
+      "TextLength": 94684,
+      "Heat": 12,
       "category": "演绎"
     },
     {
@@ -13309,9 +13309,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 826,
-      "TextLength": 79116,
-      "Heat": 7,
+      "Requests": 1055,
+      "TextLength": 83624,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -13370,9 +13370,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 19962,
-      "TextLength": 1047885,
-      "Heat": 29,
+      "Requests": 749,
+      "TextLength": 71702,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -13437,9 +13437,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1858,
-      "TextLength": 126387,
-      "Heat": 11,
+      "Requests": 3727,
+      "TextLength": 849106,
+      "Heat": 19,
       "category": "其他"
     },
     {
@@ -13498,9 +13498,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1320,
-      "TextLength": 105852,
-      "Heat": 9,
+      "Requests": 956,
+      "TextLength": 83535,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -13565,9 +13565,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 744,
-      "TextLength": 74306,
-      "Heat": 6,
+      "Requests": 862,
+      "TextLength": 78985,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -13638,9 +13638,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1799,
-      "TextLength": 613462,
-      "Heat": 11,
+      "Requests": 7987,
+      "TextLength": 297267,
+      "Heat": 25,
       "category": "演绎"
     },
     {
@@ -13705,9 +13705,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1046,
-      "TextLength": 110511,
-      "Heat": 8,
+      "Requests": 959,
+      "TextLength": 135721,
+      "Heat": 10,
       "category": "演绎"
     },
     {
@@ -13772,9 +13772,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 792,
-      "TextLength": 77316,
-      "Heat": 7,
+      "Requests": 752,
+      "TextLength": 73054,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -13839,9 +13839,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1427,
-      "TextLength": 391844,
-      "Heat": 10,
+      "Requests": 1643,
+      "TextLength": 124209,
+      "Heat": 13,
       "category": "其他"
     },
     {
@@ -13912,9 +13912,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 11603,
-      "TextLength": 225401,
-      "Heat": 25,
+      "Requests": 2060,
+      "TextLength": 121864,
+      "Heat": 15,
       "category": "其他"
     },
     {
@@ -13979,9 +13979,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 27062,
-      "TextLength": 1814558,
-      "Heat": 32,
+      "Requests": 89604,
+      "TextLength": 5333961,
+      "Heat": 43,
       "category": "演绎"
     },
     {
@@ -14040,9 +14040,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 789,
-      "TextLength": 75713,
-      "Heat": 7,
+      "Requests": 811,
+      "TextLength": 75820,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -14107,9 +14107,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 899,
-      "TextLength": 82316,
-      "Heat": 7,
+      "Requests": 900,
+      "TextLength": 79474,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -14174,9 +14174,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1150,
-      "TextLength": 86871,
-      "Heat": 9,
+      "Requests": 988,
+      "TextLength": 80218,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -14241,9 +14241,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 12294,
-      "TextLength": 421973,
-      "Heat": 25,
+      "Requests": 33764,
+      "TextLength": 688427,
+      "Heat": 36,
       "category": "其他"
     },
     {
@@ -14302,8 +14302,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1474,
-      "TextLength": 141690,
+      "Requests": 988,
+      "TextLength": 82922,
       "Heat": 10,
       "category": "其他"
     },
@@ -14363,9 +14363,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1092,
-      "TextLength": 90757,
-      "Heat": 8,
+      "Requests": 969,
+      "TextLength": 88511,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -14424,9 +14424,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 948,
-      "TextLength": 86070,
-      "Heat": 8,
+      "Requests": 993,
+      "TextLength": 92264,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -14491,9 +14491,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1165,
-      "TextLength": 95424,
-      "Heat": 9,
+      "Requests": 1620,
+      "TextLength": 300456,
+      "Heat": 13,
       "category": "其他"
     },
     {
@@ -14558,9 +14558,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": true,
-      "Requests": 394,
-      "TextLength": 38210,
-      "Heat": 4,
+      "Requests": 428,
+      "TextLength": 37040,
+      "Heat": 6,
       "category": "其他"
     },
     {
@@ -14625,8 +14625,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1153,
-      "TextLength": 88787,
+      "Requests": 832,
+      "TextLength": 77742,
       "Heat": 9,
       "category": "其他"
     },
@@ -14686,9 +14686,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 815,
-      "TextLength": 77218,
-      "Heat": 7,
+      "Requests": 798,
+      "TextLength": 73886,
+      "Heat": 9,
       "category": "演绎"
     },
     {
@@ -14753,9 +14753,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 3008,
-      "TextLength": 189977,
-      "Heat": 15,
+      "Requests": 1307,
+      "TextLength": 112345,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -14820,9 +14820,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": true,
-      "Requests": 469,
-      "TextLength": 46044,
-      "Heat": 5,
+      "Requests": 1524,
+      "TextLength": 50998,
+      "Heat": 13,
       "category": "其他"
     },
     {
@@ -14887,8 +14887,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1621,
-      "TextLength": 830954,
+      "Requests": 1154,
+      "TextLength": 113089,
       "Heat": 11,
       "category": "其他"
     },
@@ -14954,9 +14954,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1256,
-      "TextLength": 111702,
-      "Heat": 9,
+      "Requests": 870,
+      "TextLength": 77043,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -15021,9 +15021,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": true,
-      "Requests": 6228,
-      "TextLength": 258105,
-      "Heat": 20,
+      "Requests": 953,
+      "TextLength": 66521,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -15088,9 +15088,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 3350,
-      "TextLength": 178314,
-      "Heat": 15,
+      "Requests": 1575,
+      "TextLength": 111377,
+      "Heat": 13,
       "category": "其他"
     },
     {
@@ -15149,9 +15149,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 13539,
-      "TextLength": 625400,
-      "Heat": 26,
+      "Requests": 4254,
+      "TextLength": 333407,
+      "Heat": 20,
       "category": "其他"
     },
     {
@@ -15216,9 +15216,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1540,
-      "TextLength": 116343,
-      "Heat": 10,
+      "Requests": 2367,
+      "TextLength": 137055,
+      "Heat": 16,
       "category": "其他"
     },
     {
@@ -15283,9 +15283,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5328,
-      "TextLength": 396782,
-      "Heat": 19,
+      "Requests": 2751,
+      "TextLength": 233892,
+      "Heat": 17,
       "category": "其他"
     },
     {
@@ -15350,9 +15350,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": true,
-      "Requests": 3331,
-      "TextLength": 144924,
-      "Heat": 15,
+      "Requests": 1762,
+      "TextLength": 89312,
+      "Heat": 14,
       "category": "其他"
     },
     {
@@ -15417,8 +15417,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5774,
-      "TextLength": 288307,
+      "Requests": 3743,
+      "TextLength": 172316,
       "Heat": 19,
       "category": "其他"
     },
@@ -15478,9 +15478,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 876,
-      "TextLength": 79534,
-      "Heat": 7,
+      "Requests": 716,
+      "TextLength": 69950,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -15520,9 +15520,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 11828,
-      "TextLength": 359312,
-      "Heat": 25,
+      "Requests": 319868,
+      "TextLength": 10905314,
+      "Heat": 53,
       "category": "其他"
     },
     {
@@ -15562,9 +15562,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 8096,
-      "TextLength": 158820,
-      "Heat": 22,
+      "Requests": 6196,
+      "TextLength": 196744,
+      "Heat": 23,
       "category": "其他"
     },
     {
@@ -15604,9 +15604,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 42050,
-      "TextLength": 1161367,
-      "Heat": 35,
+      "Requests": 15934,
+      "TextLength": 735308,
+      "Heat": 30,
       "category": "其他"
     },
     {
@@ -15646,9 +15646,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6591,
-      "TextLength": 170924,
-      "Heat": 20,
+      "Requests": 2305,
+      "TextLength": 89020,
+      "Heat": 16,
       "category": "其他"
     },
     {
@@ -15688,9 +15688,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 8064,
-      "TextLength": 175719,
-      "Heat": 22,
+      "Requests": 3428,
+      "TextLength": 122473,
+      "Heat": 18,
       "category": "其他"
     },
     {
@@ -15730,9 +15730,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 17943,
-      "TextLength": 587131,
-      "Heat": 28,
+      "Requests": 3626,
+      "TextLength": 151627,
+      "Heat": 19,
       "category": "其他"
     },
     {
@@ -15778,9 +15778,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5165,
-      "TextLength": 86040,
-      "Heat": 18,
+      "Requests": 771,
+      "TextLength": 29546,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -15826,9 +15826,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5131,
-      "TextLength": 85429,
-      "Heat": 18,
+      "Requests": 891,
+      "TextLength": 33576,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -15874,9 +15874,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 13390,
-      "TextLength": 197221,
-      "Heat": 26,
+      "Requests": 14474,
+      "TextLength": 283707,
+      "Heat": 29,
       "category": "其他"
     },
     {
@@ -15922,9 +15922,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7937,
-      "TextLength": 196694,
-      "Heat": 22,
+      "Requests": 18384,
+      "TextLength": 626783,
+      "Heat": 31,
       "category": "其他"
     },
     {
@@ -15970,9 +15970,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5385,
-      "TextLength": 90853,
-      "Heat": 19,
+      "Requests": 827,
+      "TextLength": 32875,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -16018,9 +16018,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5351,
-      "TextLength": 93779,
-      "Heat": 19,
+      "Requests": 1008,
+      "TextLength": 44077,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -16066,9 +16066,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6937,
-      "TextLength": 244089,
-      "Heat": 21,
+      "Requests": 3719,
+      "TextLength": 131270,
+      "Heat": 19,
       "category": "其他"
     },
     {
@@ -16114,9 +16114,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7022,
-      "TextLength": 170019,
-      "Heat": 21,
+      "Requests": 9782,
+      "TextLength": 338421,
+      "Heat": 26,
       "category": "其他"
     },
     {
@@ -16162,8 +16162,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4895,
-      "TextLength": 82458,
+      "Requests": 3419,
+      "TextLength": 118288,
       "Heat": 18,
       "category": "其他"
     },
@@ -16210,9 +16210,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6413,
-      "TextLength": 156513,
-      "Heat": 20,
+      "Requests": 40346,
+      "TextLength": 2698929,
+      "Heat": 37,
       "category": "其他"
     },
     {
@@ -16258,9 +16258,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4868,
-      "TextLength": 82496,
-      "Heat": 18,
+      "Requests": 503,
+      "TextLength": 29557,
+      "Heat": 7,
       "category": "其他"
     },
     {
@@ -16306,9 +16306,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5517,
-      "TextLength": 103178,
-      "Heat": 19,
+      "Requests": 4566,
+      "TextLength": 248333,
+      "Heat": 20,
       "category": "其他"
     },
     {
@@ -16354,8 +16354,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7605,
-      "TextLength": 116742,
+      "Requests": 5209,
+      "TextLength": 88449,
       "Heat": 21,
       "category": "其他"
     },
@@ -16402,9 +16402,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7784,
-      "TextLength": 161581,
-      "Heat": 22,
+      "Requests": 3683,
+      "TextLength": 133381,
+      "Heat": 19,
       "category": "演绎"
     },
     {
@@ -16450,8 +16450,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 13604,
-      "TextLength": 1019632,
+      "Requests": 10400,
+      "TextLength": 1162050,
       "Heat": 26,
       "category": "其他"
     },
@@ -16498,9 +16498,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 11508,
-      "TextLength": 350528,
-      "Heat": 25,
+      "Requests": 5505,
+      "TextLength": 150087,
+      "Heat": 22,
       "category": "其他"
     },
     {
@@ -16546,9 +16546,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4951,
-      "TextLength": 84685,
-      "Heat": 18,
+      "Requests": 440,
+      "TextLength": 14271,
+      "Heat": 6,
       "category": "其他"
     },
     {
@@ -16594,9 +16594,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5565,
-      "TextLength": 109141,
-      "Heat": 19,
+      "Requests": 1289,
+      "TextLength": 47842,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -16642,8 +16642,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5540,
-      "TextLength": 103361,
+      "Requests": 3888,
+      "TextLength": 155437,
       "Heat": 19,
       "category": "其他"
     },
@@ -16690,9 +16690,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 9690,
-      "TextLength": 190197,
-      "Heat": 23,
+      "Requests": 1210,
+      "TextLength": 41455,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -16738,8 +16738,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4969,
-      "TextLength": 83484,
+      "Requests": 3312,
+      "TextLength": 117373,
       "Heat": 18,
       "category": "其他"
     },
@@ -16786,9 +16786,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5076,
-      "TextLength": 82736,
-      "Heat": 18,
+      "Requests": 568,
+      "TextLength": 19279,
+      "Heat": 7,
       "category": "其他"
     },
     {
@@ -16834,9 +16834,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6438,
-      "TextLength": 118436,
-      "Heat": 20,
+      "Requests": 5201,
+      "TextLength": 150802,
+      "Heat": 21,
       "category": "其他"
     },
     {
@@ -16882,9 +16882,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6978,
-      "TextLength": 294560,
-      "Heat": 21,
+      "Requests": 5524,
+      "TextLength": 210829,
+      "Heat": 22,
       "category": "其他"
     },
     {
@@ -16930,9 +16930,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 8084,
-      "TextLength": 173313,
-      "Heat": 22,
+      "Requests": 4848,
+      "TextLength": 72380,
+      "Heat": 21,
       "category": "其他"
     },
     {
@@ -16978,9 +16978,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5041,
-      "TextLength": 91239,
-      "Heat": 18,
+      "Requests": 890,
+      "TextLength": 51735,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -17026,9 +17026,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7109,
-      "TextLength": 195405,
-      "Heat": 21,
+      "Requests": 1291,
+      "TextLength": 73884,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -17074,9 +17074,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5365,
-      "TextLength": 87885,
-      "Heat": 19,
+      "Requests": 3315,
+      "TextLength": 116362,
+      "Heat": 18,
       "category": "其他"
     },
     {
@@ -17122,9 +17122,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5013,
-      "TextLength": 82326,
-      "Heat": 18,
+      "Requests": 745,
+      "TextLength": 35432,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -17170,9 +17170,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5879,
-      "TextLength": 146739,
-      "Heat": 19,
+      "Requests": 3463,
+      "TextLength": 120991,
+      "Heat": 18,
       "category": "其他"
     },
     {
@@ -17218,9 +17218,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5215,
-      "TextLength": 84634,
-      "Heat": 19,
+      "Requests": 589,
+      "TextLength": 24658,
+      "Heat": 8,
       "category": "其他"
     },
     {
@@ -17266,9 +17266,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5683,
-      "TextLength": 103412,
-      "Heat": 19,
+      "Requests": 1894,
+      "TextLength": 62069,
+      "Heat": 14,
       "category": "其他"
     },
     {
@@ -17314,9 +17314,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5756,
-      "TextLength": 110027,
-      "Heat": 19,
+      "Requests": 1425,
+      "TextLength": 52831,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -17362,9 +17362,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 8780,
-      "TextLength": 165648,
-      "Heat": 23,
+      "Requests": 24946,
+      "TextLength": 339062,
+      "Heat": 33,
       "category": "其他"
     },
     {
@@ -17410,9 +17410,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6849,
-      "TextLength": 118590,
-      "Heat": 21,
+      "Requests": 2725,
+      "TextLength": 94645,
+      "Heat": 17,
       "category": "其他"
     },
     {
@@ -17458,9 +17458,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6106,
-      "TextLength": 136391,
-      "Heat": 20,
+      "Requests": 5612,
+      "TextLength": 273079,
+      "Heat": 22,
       "category": "其他"
     },
     {
@@ -17506,8 +17506,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5626,
-      "TextLength": 102810,
+      "Requests": 3514,
+      "TextLength": 127037,
       "Heat": 19,
       "category": "其他"
     },
@@ -17554,9 +17554,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7001,
-      "TextLength": 118043,
-      "Heat": 21,
+      "Requests": 1954,
+      "TextLength": 48602,
+      "Heat": 14,
       "category": "其他"
     },
     {
@@ -17602,9 +17602,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5500,
-      "TextLength": 87307,
-      "Heat": 19,
+      "Requests": 1848,
+      "TextLength": 56952,
+      "Heat": 14,
       "category": "其他"
     },
     {
@@ -17650,9 +17650,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5402,
-      "TextLength": 93705,
-      "Heat": 19,
+      "Requests": 918,
+      "TextLength": 33214,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -17698,9 +17698,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5912,
-      "TextLength": 109019,
-      "Heat": 19,
+      "Requests": 12596,
+      "TextLength": 254860,
+      "Heat": 28,
       "category": "其他"
     },
     {
@@ -17746,9 +17746,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5071,
-      "TextLength": 86550,
-      "Heat": 18,
+      "Requests": 721,
+      "TextLength": 25081,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -17794,9 +17794,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5350,
-      "TextLength": 94908,
-      "Heat": 19,
+      "Requests": 1199,
+      "TextLength": 43214,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -17842,9 +17842,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6668,
-      "TextLength": 110994,
-      "Heat": 20,
+      "Requests": 2418,
+      "TextLength": 63059,
+      "Heat": 16,
       "category": "其他"
     },
     {
@@ -17890,9 +17890,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 11960,
-      "TextLength": 601273,
-      "Heat": 25,
+      "Requests": 4051,
+      "TextLength": 138115,
+      "Heat": 20,
       "category": "其他"
     },
     {
@@ -17938,8 +17938,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4818,
-      "TextLength": 80825,
+      "Requests": 3162,
+      "TextLength": 105652,
       "Heat": 18,
       "category": "其他"
     },
@@ -17986,9 +17986,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5434,
-      "TextLength": 95097,
-      "Heat": 19,
+      "Requests": 843,
+      "TextLength": 35879,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -18034,9 +18034,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5650,
-      "TextLength": 90894,
-      "Heat": 19,
+      "Requests": 1546,
+      "TextLength": 30516,
+      "Heat": 13,
       "category": "其他"
     },
     {
@@ -18082,9 +18082,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5829,
-      "TextLength": 141270,
-      "Heat": 19,
+      "Requests": 989,
+      "TextLength": 38572,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -18130,9 +18130,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7704,
-      "TextLength": 277541,
-      "Heat": 22,
+      "Requests": 1073,
+      "TextLength": 40031,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -18178,9 +18178,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7207,
-      "TextLength": 212174,
-      "Heat": 21,
+      "Requests": 2266,
+      "TextLength": 75265,
+      "Heat": 15,
       "category": "其他"
     },
     {
@@ -18226,9 +18226,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 14165,
-      "TextLength": 392870,
-      "Heat": 26,
+      "Requests": 9008,
+      "TextLength": 183639,
+      "Heat": 25,
       "category": "其他"
     },
     {
@@ -18274,9 +18274,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 8651,
-      "TextLength": 230558,
-      "Heat": 22,
+      "Requests": 3341,
+      "TextLength": 188135,
+      "Heat": 18,
       "category": "其他"
     },
     {
@@ -18322,9 +18322,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 14160,
-      "TextLength": 250558,
-      "Heat": 26,
+      "Requests": 2306,
+      "TextLength": 93287,
+      "Heat": 16,
       "category": "其他"
     },
     {
@@ -18370,8 +18370,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 10899,
-      "TextLength": 337314,
+      "Requests": 7328,
+      "TextLength": 171708,
       "Heat": 24,
       "category": "其他"
     },
@@ -18418,9 +18418,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6239,
-      "TextLength": 140425,
-      "Heat": 20,
+      "Requests": 4783,
+      "TextLength": 175906,
+      "Heat": 21,
       "category": "其他"
     },
     {
@@ -18466,9 +18466,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5107,
-      "TextLength": 84420,
-      "Heat": 18,
+      "Requests": 3675,
+      "TextLength": 119065,
+      "Heat": 19,
       "category": "其他"
     },
     {
@@ -18514,9 +18514,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6644,
-      "TextLength": 145168,
-      "Heat": 20,
+      "Requests": 1560,
+      "TextLength": 55407,
+      "Heat": 13,
       "category": "其他"
     },
     {
@@ -18562,9 +18562,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 22984,
-      "TextLength": 507253,
-      "Heat": 30,
+      "Requests": 4734,
+      "TextLength": 173605,
+      "Heat": 21,
       "category": "其他"
     },
     {
@@ -18610,9 +18610,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7743,
-      "TextLength": 213508,
-      "Heat": 22,
+      "Requests": 7524,
+      "TextLength": 472348,
+      "Heat": 24,
       "category": "其他"
     },
     {
@@ -18658,9 +18658,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5142,
-      "TextLength": 96501,
-      "Heat": 18,
+      "Requests": 1581,
+      "TextLength": 42003,
+      "Heat": 13,
       "category": "其他"
     },
     {
@@ -18706,9 +18706,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5266,
-      "TextLength": 118004,
-      "Heat": 19,
+      "Requests": 673,
+      "TextLength": 29763,
+      "Heat": 8,
       "category": "其他"
     },
     {
@@ -18754,8 +18754,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5139,
-      "TextLength": 88967,
+      "Requests": 3402,
+      "TextLength": 124978,
       "Heat": 18,
       "category": "其他"
     },
@@ -18802,9 +18802,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5023,
-      "TextLength": 83606,
-      "Heat": 18,
+      "Requests": 4563,
+      "TextLength": 151607,
+      "Heat": 20,
       "category": "其他"
     },
     {
@@ -18850,9 +18850,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5417,
-      "TextLength": 90821,
-      "Heat": 19,
+      "Requests": 3500,
+      "TextLength": 119831,
+      "Heat": 18,
       "category": "其他"
     },
     {
@@ -18898,9 +18898,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5303,
-      "TextLength": 92975,
-      "Heat": 19,
+      "Requests": 1073,
+      "TextLength": 53267,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -18946,9 +18946,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5184,
-      "TextLength": 88901,
-      "Heat": 18,
+      "Requests": 1101,
+      "TextLength": 46966,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -18994,9 +18994,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6278,
-      "TextLength": 130081,
-      "Heat": 20,
+      "Requests": 2074,
+      "TextLength": 172911,
+      "Heat": 15,
       "category": "其他"
     },
     {
@@ -19042,9 +19042,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5517,
-      "TextLength": 96343,
-      "Heat": 19,
+      "Requests": 8309,
+      "TextLength": 666677,
+      "Heat": 25,
       "category": "其他"
     },
     {
@@ -19090,9 +19090,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 13746,
-      "TextLength": 393297,
-      "Heat": 26,
+      "Requests": 14318,
+      "TextLength": 653585,
+      "Heat": 29,
       "category": "其他"
     },
     {
@@ -19138,9 +19138,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6289,
-      "TextLength": 129230,
-      "Heat": 20,
+      "Requests": 955,
+      "TextLength": 36457,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -19186,9 +19186,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5677,
-      "TextLength": 167829,
-      "Heat": 19,
+      "Requests": 1234,
+      "TextLength": 91543,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -19234,9 +19234,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6254,
-      "TextLength": 142508,
-      "Heat": 20,
+      "Requests": 1178,
+      "TextLength": 37393,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -19282,9 +19282,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1477748,
-      "TextLength": 31937151,
-      "Heat": 65,
+      "Requests": 3508234,
+      "TextLength": 79786791,
+      "Heat": 72,
       "category": "其他"
     },
     {
@@ -19330,9 +19330,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7999,
-      "TextLength": 282749,
-      "Heat": 22,
+      "Requests": 1807,
+      "TextLength": 48437,
+      "Heat": 14,
       "category": "其他"
     },
     {
@@ -19378,9 +19378,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7649,
-      "TextLength": 240851,
-      "Heat": 21,
+      "Requests": 1684,
+      "TextLength": 134208,
+      "Heat": 14,
       "category": "其他"
     },
     {
@@ -19426,9 +19426,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7884,
-      "TextLength": 226315,
-      "Heat": 22,
+      "Requests": 4238,
+      "TextLength": 157914,
+      "Heat": 20,
       "category": "其他"
     },
     {
@@ -19474,9 +19474,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5132,
-      "TextLength": 92692,
-      "Heat": 18,
+      "Requests": 743,
+      "TextLength": 29289,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -19529,9 +19529,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4091,
-      "TextLength": 170370,
-      "Heat": 17,
+      "Requests": 762,
+      "TextLength": 42972,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -19584,9 +19584,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 2486,
-      "TextLength": 51961,
-      "Heat": 13,
+      "Requests": 514,
+      "TextLength": 29995,
+      "Heat": 7,
       "category": "其他"
     },
     {
@@ -19639,9 +19639,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 3228,
-      "TextLength": 84588,
-      "Heat": 15,
+      "Requests": 1851,
+      "TextLength": 80656,
+      "Heat": 14,
       "category": "其他"
     },
     {
@@ -19694,9 +19694,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 2383,
-      "TextLength": 46853,
-      "Heat": 13,
+      "Requests": 441,
+      "TextLength": 13463,
+      "Heat": 6,
       "category": "其他"
     },
     {
@@ -19749,9 +19749,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 2549,
-      "TextLength": 52102,
-      "Heat": 13,
+      "Requests": 276,
+      "TextLength": 12141,
+      "Heat": 4,
       "category": "其他"
     },
     {
@@ -19804,9 +19804,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 3080,
-      "TextLength": 105657,
-      "Heat": 15,
+      "Requests": 985,
+      "TextLength": 43962,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -19859,9 +19859,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 3248,
-      "TextLength": 91151,
-      "Heat": 15,
+      "Requests": 1040,
+      "TextLength": 30720,
+      "Heat": 11,
       "category": "演绎"
     },
     {
@@ -19914,9 +19914,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 3400,
-      "TextLength": 90764,
-      "Heat": 15,
+      "Requests": 1243,
+      "TextLength": 131960,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -19969,9 +19969,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 3830,
-      "TextLength": 173210,
-      "Heat": 16,
+      "Requests": 5170,
+      "TextLength": 397110,
+      "Heat": 21,
       "category": "其他"
     },
     {
@@ -20024,9 +20024,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 60385,
-      "TextLength": 3288368,
-      "Heat": 38,
+      "Requests": 104144,
+      "TextLength": 2231043,
+      "Heat": 44,
       "category": "其他"
     },
     {
@@ -20066,9 +20066,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 415366,
-      "TextLength": 13455411,
-      "Heat": 55,
+      "Requests": 461904,
+      "TextLength": 14954646,
+      "Heat": 56,
       "category": "其他"
     },
     {
@@ -20108,8 +20108,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 1954825,
-      "TextLength": 92361756,
+      "Requests": 2100412,
+      "TextLength": 105444614,
       "Heat": 68,
       "category": "其他"
     },
@@ -20153,9 +20153,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5197,
-      "TextLength": 84569,
-      "Heat": 19,
+      "Requests": 1188,
+      "TextLength": 34598,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -20198,9 +20198,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5739,
-      "TextLength": 146727,
-      "Heat": 19,
+      "Requests": 1161,
+      "TextLength": 40637,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -20243,9 +20243,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 16916,
-      "TextLength": 471850,
-      "Heat": 28,
+      "Requests": 5829,
+      "TextLength": 210935,
+      "Heat": 22,
       "category": "其他"
     },
     {
@@ -20288,9 +20288,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5408,
-      "TextLength": 92842,
-      "Heat": 19,
+      "Requests": 1287,
+      "TextLength": 43811,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -20332,9 +20332,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5579,
-      "TextLength": 91226,
-      "Heat": 19,
+      "Requests": 835,
+      "TextLength": 30484,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -20376,9 +20376,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5709,
-      "TextLength": 98517,
-      "Heat": 19,
+      "Requests": 1623,
+      "TextLength": 47225,
+      "Heat": 13,
       "category": "其他"
     },
     {
@@ -20420,9 +20420,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5256,
-      "TextLength": 85431,
-      "Heat": 19,
+      "Requests": 2125,
+      "TextLength": 52286,
+      "Heat": 15,
       "category": "其他"
     },
     {
@@ -20465,9 +20465,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5087,
-      "TextLength": 101481,
-      "Heat": 18,
+      "Requests": 3662,
+      "TextLength": 164636,
+      "Heat": 19,
       "category": "其他"
     },
     {
@@ -20510,9 +20510,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7229,
-      "TextLength": 120605,
-      "Heat": 21,
+      "Requests": 1137,
+      "TextLength": 31873,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -20554,8 +20554,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 11445,
-      "TextLength": 282487,
+      "Requests": 8178,
+      "TextLength": 295057,
       "Heat": 25,
       "category": "其他"
     },
@@ -20599,9 +20599,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6580,
-      "TextLength": 117187,
-      "Heat": 20,
+      "Requests": 3932,
+      "TextLength": 142953,
+      "Heat": 19,
       "category": "其他"
     },
     {
@@ -20644,9 +20644,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7880,
-      "TextLength": 147468,
-      "Heat": 22,
+      "Requests": 3184,
+      "TextLength": 74190,
+      "Heat": 18,
       "category": "其他"
     },
     {
@@ -20688,9 +20688,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5060,
-      "TextLength": 83015,
-      "Heat": 18,
+      "Requests": 1880,
+      "TextLength": 58101,
+      "Heat": 14,
       "category": "其他"
     },
     {
@@ -20732,9 +20732,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 9035,
-      "TextLength": 327448,
-      "Heat": 23,
+      "Requests": 1931,
+      "TextLength": 64437,
+      "Heat": 14,
       "category": "其他"
     },
     {
@@ -20776,9 +20776,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 8144,
-      "TextLength": 148179,
-      "Heat": 22,
+      "Requests": 4759,
+      "TextLength": 128344,
+      "Heat": 21,
       "category": "其他"
     },
     {
@@ -20820,9 +20820,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5782,
-      "TextLength": 120053,
-      "Heat": 19,
+      "Requests": 2699,
+      "TextLength": 82866,
+      "Heat": 17,
       "category": "其他"
     },
     {
@@ -20864,8 +20864,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4995,
-      "TextLength": 76028,
+      "Requests": 3343,
+      "TextLength": 99417,
       "Heat": 18,
       "category": "其他"
     },
@@ -20909,9 +20909,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5349,
-      "TextLength": 87618,
-      "Heat": 19,
+      "Requests": 4501,
+      "TextLength": 160720,
+      "Heat": 20,
       "category": "其他"
     },
     {
@@ -20953,9 +20953,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5170,
-      "TextLength": 84813,
-      "Heat": 18,
+      "Requests": 647,
+      "TextLength": 27992,
+      "Heat": 8,
       "category": "其他"
     },
     {
@@ -20997,9 +20997,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5483,
-      "TextLength": 88979,
-      "Heat": 19,
+      "Requests": 918,
+      "TextLength": 29367,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -21042,9 +21042,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7570,
-      "TextLength": 122018,
-      "Heat": 21,
+      "Requests": 965,
+      "TextLength": 36380,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -21086,9 +21086,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5779,
-      "TextLength": 111090,
-      "Heat": 19,
+      "Requests": 2893,
+      "TextLength": 76776,
+      "Heat": 17,
       "category": "其他"
     },
     {
@@ -21130,9 +21130,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5124,
-      "TextLength": 89877,
-      "Heat": 18,
+      "Requests": 521,
+      "TextLength": 18517,
+      "Heat": 7,
       "category": "其他"
     },
     {
@@ -21175,9 +21175,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4940,
-      "TextLength": 84042,
-      "Heat": 18,
+      "Requests": 724,
+      "TextLength": 24486,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -21220,9 +21220,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5745,
-      "TextLength": 145492,
-      "Heat": 19,
+      "Requests": 542,
+      "TextLength": 18992,
+      "Heat": 7,
       "category": "其他"
     },
     {
@@ -21265,9 +21265,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 16840,
-      "TextLength": 276248,
-      "Heat": 28,
+      "Requests": 7443,
+      "TextLength": 175911,
+      "Heat": 24,
       "category": "其他"
     },
     {
@@ -21309,9 +21309,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 14410,
-      "TextLength": 574181,
-      "Heat": 27,
+      "Requests": 9591,
+      "TextLength": 344649,
+      "Heat": 26,
       "category": "其他"
     },
     {
@@ -21354,9 +21354,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5980,
-      "TextLength": 138923,
-      "Heat": 20,
+      "Requests": 1399,
+      "TextLength": 59220,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -21398,9 +21398,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6444,
-      "TextLength": 154212,
-      "Heat": 20,
+      "Requests": 1827,
+      "TextLength": 81684,
+      "Heat": 14,
       "category": "其他"
     },
     {
@@ -21443,9 +21443,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5484,
-      "TextLength": 105755,
-      "Heat": 19,
+      "Requests": 4174,
+      "TextLength": 143112,
+      "Heat": 20,
       "category": "其他"
     },
     {
@@ -21487,9 +21487,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 57592,
-      "TextLength": 916169,
-      "Heat": 38,
+      "Requests": 69777,
+      "TextLength": 1046654,
+      "Heat": 41,
       "category": "其他"
     },
     {
@@ -21531,9 +21531,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 13381,
-      "TextLength": 343076,
-      "Heat": 26,
+      "Requests": 5949,
+      "TextLength": 135037,
+      "Heat": 22,
       "category": "其他"
     },
     {
@@ -21575,9 +21575,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 36981,
-      "TextLength": 731462,
-      "Heat": 34,
+      "Requests": 21003,
+      "TextLength": 488152,
+      "Heat": 32,
       "category": "其他"
     },
     {
@@ -21620,9 +21620,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 13905,
-      "TextLength": 473853,
-      "Heat": 26,
+      "Requests": 5449,
+      "TextLength": 148774,
+      "Heat": 22,
       "category": "其他"
     },
     {
@@ -21664,8 +21664,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 64796,
-      "TextLength": 775443,
+      "Requests": 54344,
+      "TextLength": 759524,
       "Heat": 39,
       "category": "其他"
     },
@@ -21708,9 +21708,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7986,
-      "TextLength": 237931,
-      "Heat": 22,
+      "Requests": 2064,
+      "TextLength": 60863,
+      "Heat": 15,
       "category": "其他"
     },
     {
@@ -21753,9 +21753,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 11373,
-      "TextLength": 415125,
-      "Heat": 25,
+      "Requests": 9243,
+      "TextLength": 669300,
+      "Heat": 26,
       "category": "其他"
     },
     {
@@ -21798,9 +21798,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5487,
-      "TextLength": 99335,
-      "Heat": 19,
+      "Requests": 1407,
+      "TextLength": 73603,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -21843,9 +21843,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7192,
-      "TextLength": 245717,
-      "Heat": 21,
+      "Requests": 8185,
+      "TextLength": 407233,
+      "Heat": 25,
       "category": "其他"
     },
     {
@@ -21885,9 +21885,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6320,
-      "TextLength": 105876,
-      "Heat": 20,
+      "Requests": 3677,
+      "TextLength": 125936,
+      "Heat": 19,
       "category": "其他"
     },
     {
@@ -21933,9 +21933,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 310336,
-      "TextLength": 8664236,
-      "Heat": 52,
+      "Requests": 80088,
+      "TextLength": 2098534,
+      "Heat": 42,
       "category": "其他"
     },
     {
@@ -21981,9 +21981,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 9878,
-      "TextLength": 220813,
-      "Heat": 23,
+      "Requests": 5088,
+      "TextLength": 156764,
+      "Heat": 21,
       "category": "其他"
     },
     {
@@ -22029,9 +22029,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 9661,
-      "TextLength": 204930,
-      "Heat": 23,
+      "Requests": 54218,
+      "TextLength": 1959233,
+      "Heat": 39,
       "category": "其他"
     },
     {
@@ -22077,9 +22077,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4872,
-      "TextLength": 70957,
-      "Heat": 18,
+      "Requests": 800,
+      "TextLength": 28953,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -22125,9 +22125,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4934,
-      "TextLength": 69171,
-      "Heat": 18,
+      "Requests": 865,
+      "TextLength": 33340,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -22173,9 +22173,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5142,
-      "TextLength": 90551,
-      "Heat": 18,
+      "Requests": 2669,
+      "TextLength": 85287,
+      "Heat": 17,
       "category": "其他"
     },
     {
@@ -22221,9 +22221,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5730,
-      "TextLength": 93501,
-      "Heat": 19,
+      "Requests": 3350,
+      "TextLength": 94687,
+      "Heat": 18,
       "category": "其他"
     },
     {
@@ -22269,9 +22269,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 10469,
-      "TextLength": 257197,
-      "Heat": 24,
+      "Requests": 9853,
+      "TextLength": 342145,
+      "Heat": 26,
       "category": "其他"
     },
     {
@@ -22317,9 +22317,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5759,
-      "TextLength": 113984,
-      "Heat": 19,
+      "Requests": 1750,
+      "TextLength": 63269,
+      "Heat": 14,
       "category": "其他"
     },
     {
@@ -22365,9 +22365,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6954,
-      "TextLength": 177567,
-      "Heat": 21,
+      "Requests": 1249,
+      "TextLength": 59583,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -22413,9 +22413,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5167,
-      "TextLength": 76337,
-      "Heat": 18,
+      "Requests": 1088,
+      "TextLength": 33769,
+      "Heat": 11,
       "category": "其他"
     },
     {
@@ -22461,9 +22461,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 9411,
-      "TextLength": 264882,
-      "Heat": 23,
+      "Requests": 35512,
+      "TextLength": 1839233,
+      "Heat": 36,
       "category": "其他"
     },
     {
@@ -22509,9 +22509,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5255,
-      "TextLength": 89960,
-      "Heat": 19,
+      "Requests": 978,
+      "TextLength": 41712,
+      "Heat": 10,
       "category": "其他"
     },
     {
@@ -22557,9 +22557,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 31305,
-      "TextLength": 436466,
-      "Heat": 33,
+      "Requests": 37784,
+      "TextLength": 661421,
+      "Heat": 36,
       "category": "其他"
     },
     {
@@ -22605,9 +22605,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 8125,
-      "TextLength": 661916,
-      "Heat": 22,
+      "Requests": 2387,
+      "TextLength": 170132,
+      "Heat": 16,
       "category": "其他"
     },
     {
@@ -22653,9 +22653,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6437,
-      "TextLength": 98940,
-      "Heat": 20,
+      "Requests": 5740,
+      "TextLength": 159854,
+      "Heat": 22,
       "category": "其他"
     },
     {
@@ -22701,8 +22701,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 10423,
-      "TextLength": 143408,
+      "Requests": 7954,
+      "TextLength": 120743,
       "Heat": 24,
       "category": "其他"
     },
@@ -22749,9 +22749,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4795,
-      "TextLength": 69040,
-      "Heat": 18,
+      "Requests": 2167,
+      "TextLength": 60292,
+      "Heat": 15,
       "category": "其他"
     },
     {
@@ -22797,9 +22797,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5913,
-      "TextLength": 116992,
-      "Heat": 19,
+      "Requests": 1305,
+      "TextLength": 42422,
+      "Heat": 12,
       "category": "其他"
     },
     {
@@ -22845,9 +22845,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 4694,
-      "TextLength": 67473,
-      "Heat": 18,
+      "Requests": 3699,
+      "TextLength": 123765,
+      "Heat": 19,
       "category": "其他"
     },
     {
@@ -22893,9 +22893,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 6263,
-      "TextLength": 119300,
-      "Heat": 20,
+      "Requests": 3993,
+      "TextLength": 138991,
+      "Heat": 19,
       "category": "其他"
     },
     {
@@ -22941,9 +22941,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 8139,
-      "TextLength": 310167,
-      "Heat": 22,
+      "Requests": 4663,
+      "TextLength": 189787,
+      "Heat": 21,
       "category": "其他"
     },
     {
@@ -22989,9 +22989,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 517892,
-      "TextLength": 15265063,
-      "Heat": 57,
+      "Requests": 403112,
+      "TextLength": 10749384,
+      "Heat": 55,
       "category": "其他"
     },
     {
@@ -23037,8 +23037,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 8706,
-      "TextLength": 290340,
+      "Requests": 5827,
+      "TextLength": 214770,
       "Heat": 22,
       "category": "其他"
     },
@@ -23085,9 +23085,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5530,
-      "TextLength": 181350,
-      "Heat": 19,
+      "Requests": 846,
+      "TextLength": 84166,
+      "Heat": 9,
       "category": "其他"
     },
     {
@@ -23133,8 +23133,8 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 7574,
-      "TextLength": 161564,
+      "Requests": 4968,
+      "TextLength": 134974,
       "Heat": 21,
       "category": "其他"
     },
@@ -23181,9 +23181,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 5111,
-      "TextLength": 82349,
-      "Heat": 18,
+      "Requests": 5193,
+      "TextLength": 169688,
+      "Heat": 21,
       "category": "其他"
     },
     {
@@ -23230,9 +23230,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 45627,
-      "TextLength": 2033455,
-      "Heat": 36,
+      "Requests": 24644,
+      "TextLength": 2058898,
+      "Heat": 33,
       "category": "其他"
     },
     {
@@ -23279,9 +23279,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 123655,
-      "TextLength": 7131097,
-      "Heat": 44,
+      "Requests": 113266,
+      "TextLength": 7093306,
+      "Heat": 45,
       "category": "其他"
     },
     {
@@ -23328,9 +23328,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 67978,
-      "TextLength": 5429208,
-      "Heat": 39,
+      "Requests": 141899,
+      "TextLength": 5122393,
+      "Heat": 47,
       "category": "其他"
     },
     {
@@ -23383,9 +23383,9 @@
       "Preview": true,
       "Emoji": "",
       "BidirectionalUnsupport": false,
-      "Requests": 765,
-      "TextLength": 75029,
-      "Heat": 7,
+      "Requests": 741,
+      "TextLength": 72178,
+      "Heat": 9,
       "category": "其他"
     }
   ]
