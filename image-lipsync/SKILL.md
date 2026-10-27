@@ -179,6 +179,11 @@ cue 的 cells/energyCells 等长、状态合法、格数 ≈ effectiveDuration×
 
 ## 已知坑（详见 build-continuous-story-images 教训节）
 
+- **锁回成功仍会有旧眼线/矩形和漏动中景**（borrowed_moonlight R4）：先看供体原画是否
+  真的擦掉旧眼形，再看表情、开口、眨眼组合；每段可见对白检查实际选中的全身 cel
+  是否消费了口型。共享遮罩合成、原生裁区打包脚本与边界见
+  [同图五官遮罩与对白覆盖](../draw-over-animation/references/feature-islands-and-dialogue-coverage.md)。
+
 - **贴回框必须收紧到特征本身**（E04 V1.1，2026-08-30）：整脸框贴回会让
   框内重渲染噪点撑大 rig 矩形，cel 切换时整块脸抖动。用 `--window`/小 rect
   紧贴嘴/眼；自动致密 diff 对平滑人脸有效，毛发纹理和大特写要手工标定。

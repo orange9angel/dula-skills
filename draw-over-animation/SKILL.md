@@ -44,6 +44,9 @@ description: 在已有三维或三渲二动画上制作逐镜二维作画层，�
 只加载当前模式需要的下列参考：
 
 - 设计表情、姿势、关键画和过渡：读[作画与表演](references/acting-and-cels.md)。
+- 嘴眼有矩形、眨眼残留旧眼线或只有特写动嘴：读
+  [同图五官遮罩与对白覆盖](references/feature-islands-and-dialogue-coverage.md)，使用同图区域
+  合成与实际可见对白检查；技术口型摘要不能代替中景和表情组合复看。
 - 实现跟踪、遮挡、曝光、导出或检查能力缺口：读[Dula接入](references/dula-integration.md)。
 - 独立绘制的场景与 3D 投影不重合、人物比例或贴地失败时，读
   [绘画空间与最终接触时钟](references/painted-space.md)。共享相机、天气、粒子重注册

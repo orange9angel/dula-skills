@@ -2,6 +2,20 @@
 const sat=x=>Math.max(0,Math.min(1,x));
 const frac=x=>x-Math.floor(x);
 const rnd=(i,k=0)=>frac(Math.sin(i*127.1+k*311.7)*43758.5453);
+const cloudCache=new WeakMap();
+function cloudLayers(image){
+ if(cloudCache.has(image))return cloudCache.get(image);
+ const layers=[];
+ for(let l=0;l<3;l++){
+  const c=document.createElement('canvas');c.width=image.width;c.height=Math.floor(image.height/3);
+  const q=c.getContext('2d');q.drawImage(image,0,l*image.height/3,image.width,image.height/3,0,0,c.width,c.height);
+  q.globalCompositeOperation='destination-in';
+  for(const vertical of [true,false]){
+   const z=q.createLinearGradient(0,0,vertical?0:c.width,vertical?c.height:0);
+   z.addColorStop(0,'transparent');z.addColorStop(.2,'white');z.addColorStop(.8,'white');z.addColorStop(1,'transparent');q.fillStyle=z;q.fillRect(0,0,c.width,c.height);
+  }layers.push(c);
+ }cloudCache.set(image,layers);return layers;
+}
 export function radialLight(g,x,y,r,color,alpha=.1){
   if(alpha<=0)return;g.save();g.globalCompositeOperation='lighter';g.globalAlpha=alpha;
   const q=g.createRadialGradient(x,y,0,x,y,r);q.addColorStop(0,color);q.addColorStop(1,'rgba(0,0,0,0)');
@@ -16,12 +30,12 @@ export function drawPaintedClouds(g,image,camera,t,{tower=false,warm=false}={}){
   if(!tower){g.moveTo(878,0);g.lineTo(1052,0);g.lineTo(1052,570);g.lineTo(878,570);g.closePath();}
   g.clip('evenodd');
   if(warm)g.filter='sepia(.55) saturate(.75) brightness(1.4)';
-  const layerH=image.height/3;
+  const layers=cloudLayers(image);
   for(let l=0;l<3;l++){
     const w=1700+l*180,h=145+l*35,y=145+l*140;
     const offset=((t*(3+l*2.3)+l*530)%(w+600))-w;
     g.globalAlpha=tower?.23+l*.055:.14+l*.035;
-    for(let tile=0;tile<3;tile++)g.drawImage(image,0,l*layerH,image.width,layerH,offset+tile*(w+350),y,w,h);
+    for(let tile=0;tile<3;tile++)g.drawImage(layers[l],offset+tile*(w+350),y,w,h);
   }g.restore();
 }
 export function drawWeatherParticles(g,t,{width=1280,height=720,kind='snow',foreground=false,strength=1,wind=1}={}){

@@ -58,6 +58,9 @@ baked-cel-clip/particle-stage/story-state 等，prepare 步骤自动同步）。
 - 粒子不平涂：萤火/烟尘/魔法光效保留 3D 粒子层（绝对时钟+固定种子），
   发光层 'lighter' 合成、烟普通 alpha（一锅 alpha 会发灰）。
 - 口型：短句=能量包络 jaw 三态；**长对白镜头不做贴回 cel 口型**（E04 终局纪律）。
+- 既有有限动画的返修必须覆盖实际可见对白的全部选画路径，不能只把肖像特写接到
+  jaw 就声称全片口型完成。R3 中景漏接与矩形贴片的原因、修法见
+  [同图五官遮罩与对白覆盖](../draw-over-animation/references/feature-islands-and-dialogue-coverage.md)。
 - 已否决反模式：整图平移冒充动画、网格扭曲换腿、跨图移植窗口、整脸贴片、
   降采样拼图过脸。
 - **位置、比例和接触必须在最终绘画中同时成立**（borrowed_moonlight R3）：R2 的
