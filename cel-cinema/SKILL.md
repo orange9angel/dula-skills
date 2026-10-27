@@ -86,3 +86,12 @@ baked-cel-clip/particle-stage/story-state 等，prepare 步骤自动同步）。
 verify_full_episode（顺序/seek 逐帧一致、音轨 PCM 相同）→ 主代理逐幕审片 →
 用户审美批准。参考实现细节：draw-over-animation、build-continuous-story-images、
 image-lipsync、cel-look 四个组件 skill。
+
+## 大体量数据与Git归档
+
+保留原画、声音源与溯源、配置、制作入口、精选审片图及摘要；可重建的整轨混音、
+逐帧导出和成片按仓库规则留在本地。动作烘焙JSON也可能很大，不能仅凭扩展名当作
+普通小文本：borrowed_moonlight历史`motion_full.json`达112.47 MiB，需显式LFS管理。
+推送前检查整个未推送提交范围的大对象及LFS总量，不能只统计当前提交。本例R5新增
+约104 MB，但积压历史的LFS上传达3.2 GB；这不是单集成片大小。超限历史修复应保留
+原提交备份、隔离脏工作区，只迁移未发布范围，并核对内容摘要及普通快进推送条件。
