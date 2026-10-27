@@ -35,6 +35,8 @@
   别用 np.convolve 全核——75s×48k 会挂起）。
 - 跨场景换床用交叉淡化；底床在对白 duck 总线里与 BGM 同层受压。
 - 参考实现：`stardust_clad_s1e1/tools/build_audio.py` 的 `build_bed()`。
+- 已提取的精确长度实现：本 skill `scripts/bed_loop.py::bounded_bed`。
+  对固定场景长度输出，禁止循环素材最后一遍越过场景截止点。
 
 ## 5. Foley/事件摆点纪律
 
@@ -46,6 +48,11 @@
   `bio_armor_academy_s1e3/tools/check_audio_sync.py`。
 
 ## 6. 与对白/配乐总线关系
+
+cel-cinema 绘画步态使用 `walk-director/scripts/export_painted_contacts.mjs` 导出最终
+触地表，再运行本 skill `scripts/place_contact_foley.py <episode> --config <json>`。
+JSON 给出 contacts、duration、output、shots[shotId]（source、gain、referenceHeight）。
+工具仅剪接既有录音/Seed-Audio，不生成算法音效；记录源指纹与每一步的增益。
 
 - 优先级：对白 > 叙事关键 SFX > 环境底床 > 音乐；对白 duck −6~-8dB/150ms 平滑窗，
   底床与 BGM 同被 duck。

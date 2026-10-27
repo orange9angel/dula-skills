@@ -93,8 +93,15 @@ Make the world audible without narrating every visible motion. Use picture, dial
 - **走拍脚步逐 stance 对位（2026-11 borrowed_moonlight R2a）**：连续踩雪 excerpt 摆进
   走拍窗会被听出"脚步不沾地"。正法：从素材 onset 分组（<0.35s 同一次踩雪）切单步片，
   按 bake planted false→true 接触时刻逐点摆放（LCG 轮换切片+增益抖动 0.8-1.0 防机枪感）。
-  cel-cinema 管线里 bake 的 planted 表就是画面真值（走拍相位由 bake 距离驱动），
-  不要从成片帧反推接触。参考实现 `borrowed_moonlight/tools/build_footsteps.py`。
+  只有最终 cel 确实仍由 bake 同一相位驱动时，bake 的 planted 表才是接触真值。
+  若重排绘画路径/步数，必须改用最终驱动器的接触表；时长没变也会失效。
+  共享导出见 `walk-director/scripts/export_painted_contacts.mjs`，音频切步与摆点用
+  本 skill 的 `scripts/place_contact_foley.py`，不复制旧集硬编码接触表。
+
+- **底床尾端越界（borrowed_moonlight R3）**：`while start < cueEnd` 并不能保证素材
+  不越过 cueEnd。最后一段必须裁至场景结束；机械停转要有明确声音截止点。
+  `scripts/bed_loop.py` 将源尾折进头部并输出精确长度，再施加整段淡入淡出。
+  平稳度检查与声音材质/距离听感分开记录。
 
 - **画面事件核对的帧差陷阱（同上）**：全帧 diff 扫描会被镜头切换淹没（切镜帧 diff 远大
   于粒子/微光事件），事件对位要 ROI 裁剪到小区域再做差分/亮度扫描，并用 5fps 瓦片网格

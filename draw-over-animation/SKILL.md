@@ -45,6 +45,9 @@ description: 在已有三维或三渲二动画上制作逐镜二维作画层，�
 
 - 设计表情、姿势、关键画和过渡：读[作画与表演](references/acting-and-cels.md)。
 - 实现跟踪、遮挡、曝光、导出或检查能力缺口：读[Dula接入](references/dula-integration.md)。
+- 独立绘制的场景与 3D 投影不重合、人物比例或贴地失败时，读
+  [绘画空间与最终接触时钟](references/painted-space.md)。共享相机、天气、粒子重注册
+  在本 skill 的 `assets/painted-*.js`，不要在每集重新复制实现。
 - 烘焙动作、导出试片、跨集复用控制器：读[共享执行工具](references/executable-pipeline.md)。
   通用代码在本 skill 的 `scripts/` 和 `assets/`；不从另一集复制整套 tools。
 - 将已认可方案覆盖整片，或同时补全身表情、发梢和支撑关系：读
