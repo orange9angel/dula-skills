@@ -62,6 +62,13 @@ Unlock & Download取得188.4秒音频。**后续ffprobe确认下载内容是MP3�
 
 ### 歌声验收的 whisper 阈值坑（2026-10-17《星屑战壳》OP 实测）
 
+2026-10-28《星辰马戏团》已将上述多行歌词的浏览器输入路径落实到
+`scripts/suno_generate.py::fill_first`：contenteditable先真实清空，CDP插入多行文本，
+比较规范化后的实际逐行文本，不相等即在提交之前失败。本轮17行歌词两次验证通过，
+取得四个clip id，下载三个候选。此结果证明输入与提交，不代表歌手遵守角色分工。
+`--count`当前不是自动生成批次数；需按真实回执计数，本轮用两次单独提交取得候选。
+
+
 - **whisper 默认 `no_speech_threshold=0.6` 会把 Suno 歌声整轨拒识成零段落**
   （或只剩"字幕by索兰娅"式幻觉串），不能据此下"纯器乐"结论。复跑须用
   `no_speech_threshold ≤0.2 + condition_on_previous_text=False`，base 模型即可

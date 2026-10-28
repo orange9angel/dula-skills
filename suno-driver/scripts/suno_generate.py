@@ -95,6 +95,27 @@ def fill_first(page, selectors, value, what):
     for sel in selectors:
         loc = page.locator(sel).first
         if loc.count() and loc.is_visible():
+            if loc.get_attribute('contenteditable') == 'true':
+                # Lexical can acknowledge fill() while flattening line breaks or
+                # retaining its previous editor state. Use the browser input path
+                # and verify the actual text before any generation submission.
+                cdp = page.context.new_cdp_session(page)
+                try:
+                    cdp.send('Emulation.setFocusEmulationEnabled', {'enabled': True})
+                    loc.focus()
+                    page.keyboard.press('Control+A')
+                    page.keyboard.press('Backspace')
+                    if loc.inner_text().strip():
+                        raise RuntimeError('Lyric editor did not clear; no generation submitted')
+                    cdp.send('Input.insertText', {'text': value})
+                    normalize = lambda text: '\n'.join(x.strip() for x in text.replace('\r', '').split('\n') if x.strip())
+                    if normalize(loc.inner_text()) != normalize(value):
+                        raise RuntimeError('Lyric editor text differs from source; no generation submitted')
+                finally:
+                    cdp.send('Emulation.setFocusEmulationEnabled', {'enabled': False})
+                    cdp.detach()
+                log(f'{what}: browser input verified ({len(value.splitlines())} lines)')
+                return True
             loc.click()
             try:
                 loc.fill(value)
