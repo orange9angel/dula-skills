@@ -8,11 +8,12 @@ export async function createFeatheredVariantFace(spec){
  const g=canvas.getContext('2d'), patches={};
  for(const [key,v] of Object.entries(spec.variants??{})){
   const im=await load(v.src);
-  if(!v.sourceRect&&(im.width!==base.width||im.height!==base.height))throw Error(`Variant size drift: ${spec.id}/${key}`);
+  if(!v.sourceRect&&!v.sourceAffine&&(im.width!==base.width||im.height!==base.height))throw Error(`Variant size drift: ${spec.id}/${key}`);
   const [x,y,w,h]=v.rect, c=document.createElement('canvas');c.width=w;c.height=h;
   const q=c.getContext('2d',{willReadFrequently:true});
   const sr=v.sourceRect??[x,y,w,h],sx=im.width/(v.sourceSize?.[0]??im.width),sy=im.height/(v.sourceSize?.[1]??im.height);
-  q.drawImage(im,sr[0]*sx,sr[1]*sy,sr[2]*sx,sr[3]*sy,0,0,w,h);
+  if(v.sourceAffine){const a=v.sourceAffine;q.setTransform(a[0][0]/sx,a[1][0]/sx,a[0][1]/sy,a[1][1]/sy,a[0][2]-x,a[1][2]-y);q.drawImage(im,0,0);q.resetTransform();}
+  else q.drawImage(im,sr[0]*sx,sr[1]*sy,sr[2]*sx,sr[3]*sy,0,0,w,h);
   const d=q.getImageData(0,0,w,h), islands=v.islands??[[x+w/2,y+h/2,w/2,h/2]],f=v.feather??.24;
   for(let py=0;py<h;py++)for(let px=0;px<w;px++){
    let a=0;
@@ -29,8 +30,8 @@ export async function createFeatheredVariantFace(spec){
   q.putImageData(d,0,0);patches[key]={canvas:c,x,y};
  }
  function paste(key,alpha=1){const p=patches[key];if(p){g.globalAlpha=alpha;g.drawImage(p.canvas,p.x,p.y);g.globalAlpha=1;}}
- function paint({jaw=0,emotion=null,blink=0,layers=[]}={}){
-  const expressionCel=spec.emotions?.[emotion]??null,mouthCel=jaw>.32?'open':jaw>.075?'half':'closed';
+ function paint({jaw=0,emotion=null,blink=0,layers=[],mouthCel:mouthOverride=null}={}){
+  const expressionCel=spec.emotions?.[emotion]??null,mouthCel=mouthOverride??(jaw>.32?'open':jaw>.075?'half':'closed');
   g.clearRect(0,0,canvas.width,canvas.height);g.drawImage(base,0,0);
   if(expressionCel)paste(expressionCel);
   for(const key of layers)paste(key);

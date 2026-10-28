@@ -53,6 +53,12 @@ episode_dir 默认值从"脚本上一级目录"改为 cwd；`check_lipsync.py` �
 
 ## 环境
 
+图集局部格被生成器放大或平移时，可用 `scripts/register_edit_atlas.py --config TARGETS
+--donor EDITED.png --output REGISTRATION.json` 生成每格的单个相似变换候选（依赖
+opencv-python-headless）。ROI属于项目标定数据，默认头部范围仅作起点；仅适用于
+该格自己的源图编辑。结果应接入draw-over的 `sourceAffine` 后看原生五官裁区，
+不能凭匹配成功宣称没有脸形或眼线问题。
+
 统一用 `dula-story/.venv/Scripts/python.exe`（PIL/numpy 已装）。
 
 ## 标准工作流

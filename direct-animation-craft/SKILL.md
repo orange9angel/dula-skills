@@ -117,6 +117,13 @@ Three.js 是执行环境，基础几何体是建模选择；两者不要混为�
 - 鞋要有脚背、鞋头、鞋跟和可辨的落脚面。隐藏袜鞋缝只能算接缝修理，不能代替足部设计。
 - 形体在空间中可以分件，但最终可见轮廓需要连续；局部皮肤不必每段都带一圈描边。
 
+## 本地审片播放
+
+本地服务须支持媒体定位：仅返回200和Content-Length，Chrome可能报告seekable为
+[0,0]，设置currentTime仍回到零点。可复用 `scripts/http-media.mjs::respondFile`
+处理Accept-Ranges、206/Content-Range、HEAD及416；用实际浏览器测试跳转和同时间
+版本切换，不能只检查MP4或HTTP 200。本例验证了R1/R2均停在3.9秒和1024字节范围响应。
+
 ## 从关键姿势组织动作
 
 混用本地程序动作与 Tripo 等生成动作时，读 [混合动作制作](references/hybrid-motion.md)：
