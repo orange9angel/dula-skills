@@ -29,11 +29,12 @@ export async function createFeatheredVariantFace(spec){
   q.putImageData(d,0,0);patches[key]={canvas:c,x,y};
  }
  function paste(key,alpha=1){const p=patches[key];if(p){g.globalAlpha=alpha;g.drawImage(p.canvas,p.x,p.y);g.globalAlpha=1;}}
- function paint({jaw=0,emotion=null,blink=0}={}){
+ function paint({jaw=0,emotion=null,blink=0,layers=[]}={}){
   const expressionCel=spec.emotions?.[emotion]??null,mouthCel=jaw>.32?'open':jaw>.075?'half':'closed';
   g.clearRect(0,0,canvas.width,canvas.height);g.drawImage(base,0,0);
   if(expressionCel)paste(expressionCel);
-  if(mouthCel!=='closed')paste(spec.mouth?.[mouthCel]);
+  for(const key of layers)paste(key);
+  if(mouthCel!=='closed'||spec.mouth?.closed)paste(spec.mouth?.[mouthCel]);
   const bank=spec.blinkByExpression?.[expressionCel]??spec.blink;
   const blinkCel=typeof bank==='object'?(blink>.80?bank.closed:blink>.18?bank.half:null):(blink>.52?bank:null);
   if(blinkCel)paste(blinkCel);

@@ -158,6 +158,23 @@ Record a rejected or forbidden sound:
 
 Specialists must not regenerate an excluded sound unless the user changes the direction.
 
+## Cue-anchored pilot execution
+
+`scripts/generate_seed_jobs.py EP --config RECIPE` executes source-fingerprinted
+Seed TTS / Seed-Audio candidate jobs, preserving request parameters, output hash,
+actual duration and a candidate status. It loads the established speech credential
+without logging it. `disabled` retains rejected jobs without resubmitting them.
+Always set `durationRange` for an ambience request: a 26-second quiet-theatre prompt
+returned only 0.53 seconds despite API success; a clearer 10-second air-flow prompt
+returned the requested length. An HTTP success or billed duration is insufficient.
+
+`scripts/mix_cue_recipe.py EP --config RECIPE` resolves placements from the current
+story-derived timeline, mixes existing generated assets into separate pilot stems,
+and writes a 100 Hz envelope from the exact placed dialogue bus. It does not generate
+waveforms or approve performances. `check_cue_mix.py` validates exported audio,
+stem summation and Foley transients near authored events independently of dialogue.
+Provisional casting and music excerpts remain explicitly provisional in the recipe.
+
 ## Precedence
 
 Use this precedence:

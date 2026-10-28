@@ -11,5 +11,5 @@ export function createPaintedLightField({bright,dim,width,height,blur=5}){
  const base=new THREE.Texture(bright);base.needsUpdate=true;base.minFilter=base.magFilter=THREE.LinearFilter;base.colorSpace=THREE.NoColorSpace;
  const material=new THREE.ShaderMaterial({depthTest:false,depthWrite:false,uniforms:{base:{value:base},ratio:{value:ratio},strength:{value:1}},vertexShader:'varying vec2 vUv; void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',fragmentShader:'varying vec2 vUv;uniform sampler2D base;uniform sampler2D ratio;uniform float strength;void main(){vec3 c=texture2D(base,vUv).rgb;vec3 r=texture2D(ratio,vUv).rgb*2.;gl_FragColor=vec4(clamp(c*mix(r,vec3(1.),strength),0.,1.),1.);}'});
  const scene=new THREE.Scene(),camera=new THREE.Camera(),quad=new THREE.Mesh(new THREE.PlaneGeometry(2,2),material);quad.frustumCulled=false;scene.add(quad);
- return {scene,camera,material,setStrength:u=>material.uniforms.strength.value=Math.max(0,Math.min(1,u)),dispose(){ratio.dispose();base.dispose();material.dispose();quad.geometry.dispose();}};
+ return {scene,camera,material,setStrength:u=>material.uniforms.strength.value=Math.max(0,Math.min(1,u)),setSource:im=>{base.image=im;base.needsUpdate=true;},dispose(){ratio.dispose();base.dispose();material.dispose();quad.geometry.dispose();}};
 }

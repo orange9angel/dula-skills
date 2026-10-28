@@ -1,5 +1,12 @@
 # 共享执行工具
 
+限定窗口使用从零开始的独立混音时，在 `pilot` 中设置 `audioOffset: 0`；默认仍从
+源音轨的剧本绝对起点截取。该字段只改变输入音频的截取点，不能平移视觉或口型时钟。
+`painted-light-field.setSource(canvas)` 可接收已完成局部 cel 合成的同机位画面，
+沿用共用照明状态；这仍是固定光向的绘画照明，不能代替变化中的三维投影和遮挡。
+`feathered-variant-face.paint({layers:[...]})` 依序叠加经原生裁区配准的局部动作画，
+`mouth.closed` 可显式覆盖原本张口的母版。骨架、大幅走位与转面仍需对应动作资产。
+
 这些是实际可执行的跨集工具，不是让新集重新实现的接口愿望清单。
 入口 [pipeline.mjs](../scripts/pipeline.mjs)，打包实现 [package_pilot.py](../scripts/package_pilot.py)，
 浏览器动作控制模块 [motion-controls.js](../assets/motion-controls.js)。
