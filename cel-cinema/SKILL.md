@@ -100,6 +100,12 @@ baked-cel-clip/particle-stage/story-state 等，prepare 步骤自动同步）。
   修正量（R2 在 A3 已记录的情况下仍复发三处，其中采样器坐标钳把"站位区采样"变成
   左上角天空色，tint 错色而不自知）。凡"修正了但只差一点"的回归，先怀疑修正量被吞。
 
+## 粒子角色与粒子变身
+
+纯程序粒子角色（人偶→肉体感的连续软体、距离蒙皮、逐帧姿态吸附、透光明暗）、发光肖像面片口型、碎球与粒子聚拢成 cel 的
+变身段，见 [references/particle-character-and-transformation.md](references/particle-character-and-transformation.md)
+（crystal_aria，全曲 74s 参考实现）。
+
 ## 验收门禁
 
 重复渲染同一时刻一致不等于连续播放稳定；嘴眼裁区通过也不覆盖人物整体波动或画面

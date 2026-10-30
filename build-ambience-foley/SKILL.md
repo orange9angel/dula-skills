@@ -78,6 +78,10 @@ Make the world audible without narrating every visible motion. Use picture, dial
 
 ## 踩坑记录
 
+- **事件音效对位不能只看 onset 检测**（crystal_aria 2026-10-31）：软起音的光爆、渐强的魔法汇聚在总线上测不到 onset，
+  改读事件点 ±0.2s 内最响的 20ms 位置；放置用 `at = 事件点 − 素材起音偏移`，渐强类素材对齐其**收尾峰**。
+  长尾素材（碎屑落地）里晚落的一声会撞进下一个事件（白光前 0.16s），按下一事件点截尾淡出。参考 `crystal_aria/tools/mix_song.py`。
+
 - **Seed-Audio 素材自带前导淡入，攻击点内偏 0.18-0.44s（2026-10-28
   tomorrow_still_bright T4）**：电表滴 0.184s、接管 0.405s、开关咔哒 0.251s。
   按接触帧摆文件头=瞬头必迟到（meter×3 首轮对位 +0.19s ❌）。正法：impact 类在混音
