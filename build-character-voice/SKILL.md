@@ -33,7 +33,7 @@ Create acting first and audio processing second. Preserve a believable native vo
 
 4. Choose the synthesis path.
    - Use the normal Dula `edge` provider for stable, natural bulk dialogue.
-   - CosyVoice（百炼）是 cat_leads 系列的定型主角声线；需要情感参数
+   - （历史，百炼已于 2026-10-30 停用，新集不再调用）CosyVoice（百炼）是 cat_leads 系列的定型主角声线；需要情感参数
      （emotion/emotion_scale）或更多角色声音时，第二通路走火山豆包
      seed-tts-2.0——接入与排坑见 [references/volcano-seedtts.md](references/volcano-seedtts.md)。
    - **说话镜头的画面侧**：对口型视频走 OmniHuman 1.5（即梦），取代贴回型口型

@@ -84,7 +84,9 @@ Read [provider-adapters.md](references/provider-adapters.md) before invoking Ima
 - **Variable or unordered group output:** save every return as an unassigned candidate, then map candidates to shots by visual action-phase review.
 - **Reference edit but no sequential group:** generate the first approved frame from master references, then use master references plus the nearest approved frame for each next shot.
 - **Text-only generation:** keep the same model, aspect ratio, seed when available, and full locks, but report lower confidence; create a character sheet first when possible.
-- **DashScope/Bailian（按量付费；2026-08 起为 codex 配额耗尽后的 fallback，不再是主通路）:** read [dashscope-bailian.md](references/dashscope-bailian.md) and use `scripts/run_dashscope_sequence.py`. **角色 cel 局部编辑（眨眼/口型/互动中间画）只有 codex 局部编辑一条达标通路；配额耗尽就等配额，不要 fallback**——qwen-image-edit / wanx 掩码在贴回型 cel 上均已验证不合格（E02 V2–V4：喊叫嘴、半眯眼、贴回区色调漂移），qwen 全图变体只允许作为整帧独立镜头（不贴回）或废案 donor，见 [qwen-image-edit-local-cels.md](references/qwen-image-edit-local-cels.md)。
+- **（已停用，2026-10-30）DashScope/Bailian:** read [dashscope-bailian.md](references/dashscope-bailian.md) and use `scripts/run_dashscope_sequence.py`. **角色 cel 局部编辑（眨眼/口型/互动中间画）只有 codex 局部编辑一条达标通路；配额耗尽就等配额，不要 fallback**——qwen-image-edit / wanx 掩码在贴回型 cel 上均已验证不合格（E02 V2–V4：喊叫嘴、半眯眼、贴回区色调漂移），qwen 全图变体只允许作为整帧独立镜头（不贴回）或废案 donor，见 [qwen-image-edit-local-cels.md](references/qwen-image-edit-local-cels.md)。
+
+**通道决议（2026-10-30，用户）：百炼/DashScope 已停用（整体弱于火山，不再连接）。图像与视频只有两条通道：codex（会员额度，局部编辑与原画首选）+ 火山（Seedream 出图 / Seedance I2V / OmniHuman，付费）。下文涉及 DashScope/qwen/wanx 的内容仅为历史记录，不得再调用。**
 
 #### Lightweight single-image mode (no sequence plan)
 
@@ -116,7 +118,7 @@ ordering, never let codex save into the project, serial foreground runs only.
 变体要求框外逐像素一致，只有 codex 的编辑模式达标。codex 配额耗尽时的
 变体兜底：用时间线 crossfade（≤0.25s）替代中间帧（E07 V4 结尾光斑实测）。
 
-**（历史）Default chain: `scripts/gen_image_auto.py` — Codex first, DashScope
+**（历史，DashScope 段已停用）Default chain: `scripts/gen_image_auto.py` — Codex first, DashScope
 fallback（已被上方 2026-09-05 决议取代为主路，此段保留作备胎参考）.**
 Codex bills against the ChatGPT subscription quota (zero marginal cost, 2026-08
 用户决策：优先用 codex，配额耗尽自动切百炼）. The wrapper runs

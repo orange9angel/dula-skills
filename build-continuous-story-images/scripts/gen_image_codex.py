@@ -108,7 +108,8 @@ def main() -> None:
         cmd = ["cmd", "/c", *cmd]  # npm shim: needs the cmd interpreter
 
     before = time.time()
-    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=args.timeout)
+    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=args.timeout,
+                          stdin=subprocess.DEVNULL)  # codex exec waits on an open stdin ("Reading additional input from stdin...") under agent harnesses
     log = (proc.stdout or "") + "\n" + (proc.stderr or "")
     if proc.returncode != 0:
         sys.exit(f"codex exec failed ({proc.returncode}):\n{log[-3000:]}")

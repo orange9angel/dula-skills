@@ -74,3 +74,14 @@ codex 订阅配额在一天内可能多次耗尽（E03 26 张变体被撞停两�
 按错误信息里的重置时间点挂一次性定时任务自动续跑。E03 两轮续跑零废案、
 零 fallback 污染。注意：撞限后同一脚本里排在后面的任务会连续快速失败，
 日志里每个 MISSING 都对应一条 usage limit 报错，属预期，重跑即可。
+
+## 2026-10-29 starlight_circus：codex exec 在代理环境里卡死等 stdin
+
+- 症状：`gen_image_codex.py` 跑满 600s 超时、`generated_images` 无新目录、无报错。直接跑 `codex exec`
+  可见首行 `Reading additional input from stdin...`——父进程（Claude Code 等代理 harness）给子进程留了
+  未关闭的 stdin，codex 一直等 EOF，根本没开始生图。
+- 修复：`gen_image_codex.py` 的 `subprocess.run` 已加 `stdin=subprocess.DEVNULL`；手动调用时加 `< /dev/null`。
+  修复后单张 65–80s（负载高时约 3 分钟）。批量脚本嵌套调用时外层也传 `stdin=DEVNULL`。
+- 排查时不要按进程名强杀 codex.exe：用户可能开着其他 codex 会话，只停自己启动的任务。
+- 透明底人物 cel（1024x1536 真 alpha）实测：codex 会在脚下画一层低 alpha 的地面雾（带服装色，合成到
+  暖色地板上读成青色斑）。合成前把 alpha<70 清零、腐蚀 1px 再轻模糊；接触影由合成器自己画。

@@ -25,7 +25,7 @@ imagegen 产物完全一致，零适配成本。
 | 镜头类型 | 通路 |
 |----------|------|
 | 动作 cel（走路循环、姿态序列、口型/眨眼） | 本 skill（程序化） |
-| 建立镜头、复杂构图、画味要求高的母版 | `build-continuous-story-images` 的 DashScope 轻量通路（`scripts/gen_image.py` / `gen_batch.py`） |
+| 建立镜头、复杂构图、画味要求高的母版 | `build-continuous-story-images` 的轻量单图通路（codex 优先、火山 Seedream 备选；DashScope 已于 2026-10-30 停用）（`scripts/gen_image.py` / `gen_batch.py`） |
 | 订阅额度内的零边际成本兜底 | Codex imagegen（见 build-continuous-story-images/references/codex-cli-imagegen.md） |
 
 ## 渲染工具

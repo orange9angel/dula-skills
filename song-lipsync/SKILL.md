@@ -22,7 +22,8 @@ description: 程序绘制角色的唱歌/说话口型（lip sync）全链路 —
 2. **逐字对齐**：有原文就用 Whisper `find_alignment`（已知文本 DTW），
    不要用 `transcribe(initial_prompt=...)` 冒充对齐——后者是带提示的转写，
    字界不准。中文逐字编码，多字 token 不要机械均分时长。
-3. **起音锚定**：DTW 字界有逐字抖动（实测 58/80 字偏差 >80ms）。用分离人声
+3. **起音锚定**（位图/cel 角色唱段用 `audio-perception-review/scripts/align_sung_lyrics.py`：唱歌 DTW 偏差
+   常达 0.2–0.4s，按擦音爆发/浊音起点/换音/能量谷做单调 DP 吸附，换气另列）：DTW 字界有逐字抖动（实测 58/80 字偏差 >80ms）。用分离人声
    的 onset 包络把每个字起始吸附到 ±150ms 内的起音沿，预留 30ms 口型提前量
    （真人先摆嘴型后出声）。字窗必须不重叠（前字 end 要随之后移），
    重叠时旧字会遮住新字口型。

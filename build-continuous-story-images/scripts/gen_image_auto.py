@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Provider chain: Codex built-in imagegen first, DashScope/Bailian fallback.
+"""Codex built-in imagegen wrapper. DashScope/Bailian fallback RETIRED (2026-10-30, user decision):
+the only image channels are codex and Volcano (Seedream via Ark). On codex quota exhaustion this
+wrapper stops and says so; resume after the quota resets (scripts are idempotent) or generate whole
+frames deliberately through Volcano. Local-edit variants stay codex-only.
+
+Historical docstring:
+Provider chain: Codex built-in imagegen first, DashScope/Bailian fallback.
 
 Policy (2026-08, user decision): codex imagegen bills against the ChatGPT
 subscription quota (zero marginal cost), so it is always tried first. Only
@@ -45,7 +51,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--overwrite", action="store_true")
     p.add_argument("--timeout", type=int, default=600)
     p.add_argument("--provider", choices=["auto", "codex", "dashscope"], default="auto",
-                   help="auto = codex first, dashscope on quota failure (default)")
+                   help="auto/codex = codex only (dashscope retired 2026-10-30)")
     p.add_argument("--dashscope-model", default="wan2.7-image-pro")
     p.add_argument("--dashscope-size", default="2K", help="fallback size token 1K/2K/4K")
     args = p.parse_args()
@@ -106,9 +112,14 @@ def main() -> int:
             print(f"== codex failed ({'quota' if quota_hit else 'error'}); "
                   "no fallback", file=sys.stderr, flush=True)
             return result.returncode or 1
-        print("== codex quota/rate limit hit; falling back to DashScope (paid)",
-              flush=True)
+        print("== codex quota/rate limit hit. DashScope fallback is retired (2026-10-30); wait for the "
+              "quota reset and rerun, or use Volcano Seedream deliberately for whole frames.",
+              file=sys.stderr, flush=True)
+        return 3
 
+    if args.provider == "dashscope":
+        print("== DashScope/Bailian is retired (2026-10-30, user decision); refusing to call it.", file=sys.stderr)
+        return 2
     print(f"== dashscope -> {args.out}", flush=True)
     result = run(GEN_DASHSCOPE, dashscope_argv(args))
     return result.returncode

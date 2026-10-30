@@ -65,3 +65,9 @@
 3e. **敬畏≠神秘**（E07 V3 导演定调）：科幻暗线镜头要"高阶智能降临"的
    干净敬畏感——prompt 写"眼神清亮笃定、像讲述美好事物、毫无阴霾"，
    不要写"神秘/眉头微蹙/悠远"（会出鬼片感）。
+
+## 共享 TOS 上传（2026-10-29 晋升）
+
+`tos_upload.py` 原在 cat_leads_e04–e09 六集 tools/ 各有一份逐字节相同的副本，已晋升到
+`dula-skills/build-character-voice/scripts/tos_upload.py`；桶名可用环境变量 `DULA_TOS_BUCKET` 覆盖
+（默认仍为 `dula-e04-omnihuman-assets`）。新集直接调用 skill 脚本，不再复制。
